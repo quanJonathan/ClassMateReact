@@ -15,18 +15,18 @@ const theme  = responsiveFontSizes(createTheme({
   palette: {
     mode: 'light',
     primary: {
-      main: '#cda4d2',
+      main: '#B6A5FF',
     },
     secondary: {
-      main: '#861c93',
+      main: '#7A5EF3',
     },
     transitionColorBegin: palette.augmentColor({
         color: {
-            main: '#cda4d2'
+            main: '#FCE9FF'
     }}),
     transitionColorEnd: palette.augmentColor({
         color: {
-            main: '#cda4d2'
+            main: '#F9D0FF'
         }
     })
   },

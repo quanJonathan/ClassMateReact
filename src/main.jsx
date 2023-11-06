@@ -7,11 +7,17 @@ import Root from "./routes/root"
 
 import { RouterProvider, createBrowserRouter } from 'react-router-dom'
 import { ThemeProvider } from '@emotion/react'
+import SignIn from './routes/sign-in'
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <Root/>,
+    children: [],
+  },
+  {
+    path: "/sign-in",
+    element: <SignIn/>,
     children: [],
   }
 ])
