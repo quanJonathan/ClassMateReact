@@ -1,16 +1,20 @@
 import { createTheme, responsiveFontSizes } 
     from '@mui/material/styles'; 
 
-
-const {palette} = createTheme()
-
 const theme  = responsiveFontSizes(createTheme({
   typography:{
     fontFamily: [
         'Poppins',
-        'Raleway',
         'Open Sans'
     ].join(','),
+    appName: {
+      background: "-webkit-linear-gradient(#cda4d2, #ffffff)",
+      "-webkit-background-clip": "text",
+      "-webkit-text-fill-color": "transparent",
+      backgroundClip: "text",
+      textFillColor: "transparent",
+      fontSize: '2.4rem'
+    }
   },
   palette: {
     mode: 'light',
@@ -20,15 +24,15 @@ const theme  = responsiveFontSizes(createTheme({
     secondary: {
       main: '#861c93',
     },
-    transitionColorBegin: palette.augmentColor({
-        color: {
-            main: '#cda4d2'
-    }}),
-    transitionColorEnd: palette.augmentColor({
-        color: {
-            main: '#cda4d2'
-        }
-    })
+    transitionColorBegin: {
+        main: '#cda4d2'
+    },
+    transitionColorEnd: {
+        main: '#861c93'
+    },
+    appBarColor:{
+      main: '#f0f1f2'
+    }
   },
 }));
 
