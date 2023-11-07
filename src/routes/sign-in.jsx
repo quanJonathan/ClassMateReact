@@ -11,6 +11,7 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 
 import { Paper } from '@mui/material';
+import WebAppBar from '../component/AppBar';
 
 function Copyright(props) {
     return (
@@ -37,6 +38,8 @@ export default function SignIn() {
     };
 
     return (
+        <>
+        <WebAppBar/>
         <Grid container component="main"
             sx={{
                 height: '100vh', p: '5%',
@@ -134,7 +137,6 @@ export default function SignIn() {
             </Box>
 
         </Grid>
-
-
+         </>
     );
 }

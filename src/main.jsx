@@ -21,8 +21,6 @@ const router = createBrowserRouter([
     element: <SignIn/>,
     children: [],
    }
-    ],
-  }
 ])
 
 ReactDOM.createRoot(document.getElementById('root')).render(

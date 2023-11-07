@@ -1,4 +1,4 @@
-import { Container, Divider, Button, Box } from "@mui/material";
+import { Container, Divider, Button, Box, IconButton, Typography } from "@mui/material";
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import AppName from "./WebName";
@@ -32,15 +32,21 @@ function WebAppBar() {
               sx={{ display: { xs: "none", md: "flex", alignItems: "center" } }}
               style={{ marginLeft: "auto" }}
             >
-              <Button component={NavLink} sx={{my: 2, color: "black"}} to='\about' >
-                About us
-              </Button>
-              <Button component={NavLink} sx={{my: 2, color: "black"}} to='\login'>
-                Log in
-              </Button>
-              <Button component={NavLink} sx={{ my: 2, outlineStyle: "none" }} to='\signup'>
-                Sign up
-              </Button>
+              <NavLink to="/about" style={{ textDecoration: "none" }}>
+                <Button  sx={{ my: 2, color: "black" }}>
+                  <Typography>About</Typography>
+                </Button>
+              </NavLink>
+              <NavLink to="/sign-in" style={{ textDecoration: "none" }}>
+                <Button  sx={{ my: 2, color: "black" }}>
+                  <Typography>Login</Typography>
+                </Button>
+              </NavLink>
+              <NavLink to="/sign-up" style={{ textDecoration: "none" }}>
+                <Button sx={{ my: 2}}>
+                  <Typography>Sign up</Typography>
+                </Button>
+              </NavLink>
             </Box>
           </Toolbar>
         </Container>
