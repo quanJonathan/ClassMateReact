@@ -6,22 +6,21 @@ import theme from './theme'
 import Root from "./routes/root"
 
 import { RouterProvider, createBrowserRouter } from 'react-router-dom'
+
+import SignIn from './routes/sign-in'
 import { ThemeProvider, CssBaseline } from '@mui/material'
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <Root/>,
-    children: [
-      {
-        path: "/login"
-      },
-      {
-        path: "/signup"
-      },
-      {
-        path: "/logout"
-      }
+    children: [],
+  },
+  {
+    path: "/sign-in",
+    element: <SignIn/>,
+    children: [],
+   }
     ],
   }
 ])
