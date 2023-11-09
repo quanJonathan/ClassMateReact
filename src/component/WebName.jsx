@@ -5,9 +5,9 @@ import {Box} from '@mui/material'
 function AppName() {
   return (
     <Box component="img"
-    sx={{height: 30, width: 30}}
+    sx={{height: 50, width: 50}}
       alt='appname'
-      src='../assets/appName.jpg'
+      src='../src/assets/appName.svg'
     />  
   );
 }

@@ -9,6 +9,7 @@ import { RouterProvider, createBrowserRouter } from 'react-router-dom'
 
 import SignIn from './routes/sign-in'
 import { ThemeProvider, CssBaseline } from '@mui/material'
+import SignUp from './routes/sign-up'
 
 const router = createBrowserRouter([
   {
@@ -20,7 +21,12 @@ const router = createBrowserRouter([
     path: "/sign-in",
     element: <SignIn/>,
     children: [],
-   }
+   },
+   {
+     path: "/sign-up",
+     element: <SignUp/>,
+     children: [],
+    }
 ])
 
 ReactDOM.createRoot(document.getElementById('root')).render(

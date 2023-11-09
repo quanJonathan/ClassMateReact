@@ -10,8 +10,9 @@ import Box from '@mui/material/Box';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 
-import { Paper } from '@mui/material';
+import { Divider, Paper } from '@mui/material';
 import WebAppBar from '../component/AppBar';
+import { NavLink } from 'react-router-dom';
 
 function Copyright(props) {
     return (
@@ -39,104 +40,155 @@ export default function SignIn() {
 
     return (
         <>
-        <WebAppBar/>
-        <Grid container component="main"
-            sx={{
-                height: '100vh', p: '5%',
-
-                backgroundImage: 'url(../src/assets/log-in.png)',
-                backgroundRepeat: 'no-repeat',
-                backgroundColor: (t) =>
-                    t.palette.mode === 'light' ? t.palette.grey[50] : t.palette.grey[900],
-                backgroundSize: '100% 100%',
-                backgroundPosition: 'center',
-            }}>
-            <CssBaseline />
-            <Box  xs={true} width="100%" borderRadius={7} sx={{display: "flex", justifyContent: "space-between", border:"10px solid white" }} component={Paper} elevation={6}>
-            <Grid
-                item
-                xs={false}
-                sm={4}
-                md={7}
+            <Grid container component="main"
                 sx={{
-                    // backgroundImage: 'url(https://source.unsplash.com/random?wallpapers)',
-                    backgroundImage: 'url(../src/assets/log-in-2.png)',
+                    height: '105vh', paddingY: '5%', paddingX: '10%',
 
+                    backgroundImage: 'url(../src/assets/log-in.png)',
                     backgroundRepeat: 'no-repeat',
-                    
-                    backgroundSize: '70%',
+                    backgroundColor: (t) =>
+                        t.palette.mode === 'light' ? t.palette.grey[50] : t.palette.grey[900],
+                    backgroundSize: '100% 100%',
                     backgroundPosition: 'center',
-                }}
-            />
-            <Grid item xs={12} sm={8} md={5}  square>
-                <Box
-                    sx={{
-                        my: 8,
-                        mx: 4,
-                        display: 'flex',
-                        flexDirection: 'column',
-                        alignItems: 'center',
-                    }}
-                >
-                    <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
-                        <LockOutlinedIcon />
-                    </Avatar>
-                    <Typography component="h1" variant="h3">
-                        Welcome Back
-                    </Typography>
-                    <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1 }}>
-                        <TextField
-                            InputProps={{ sx: { borderRadius: 10 } }}
-                            margin="normal"
-                            required
-                            fullWidth
-                            id="email"
-                            label="Email Address"
-                            name="email"
-                            autoComplete="email"
-                            autoFocus
-                        />
-                        <TextField
-                            InputProps={{ sx: { borderRadius: 10 } }}
-                            margin="normal"
-                            required
-                            fullWidth
-                            name="password"
-                            label="Password"
-                            type="password"
-                            id="password"
-                            autoComplete="current-password"
-                        />
-                        <Box sx={{display: "flex", justifyContent: "space-between"}} >
-                            <FormControlLabel
-                                control={<Checkbox value="remember" color="primary" />}
-                                label="Remember me"
+                }}>
+                <CssBaseline />
+                <Box xs="true" width="100%" borderRadius={7} sx={{ display: "flex", justifyContent: "space-between", border: "10px solid white" }} component={Paper} elevation={6}>
+                    <Grid
+                        item
+                        xs={0}
+                        sm={4}
+                        md={6}
+                        sx={{
+                            // backgroundImage: 'url(https://source.unsplash.com/random?wallpapers)',
+                            backgroundImage: 'url(../src/assets/log-in-2.png)',
+
+                            backgroundRepeat: 'no-repeat',
+
+                            backgroundSize: '70%',
+                            backgroundPosition: 'center',
+                        }}
+                    />
+                    <Grid item xs={12} sm={8} md={6} square sx={{ mr: 4 }}>
+                        <Grid container height='50px' spacing={1} sx={{ mt: 2, ml: 0 }}>
+                            <Grid
+                                item
+                                xs={2}
+                                sm={2}
+                                sx={{
+                                    // backgroundImage: 'url(https://source.unsplash.com/random?wallpapers)',
+                                    backgroundImage: 'url(../src/assets/appName.svg)',
+
+                                    backgroundRepeat: 'no-repeat',
+
+                                    backgroundPosition: 'center',
+                                }}
                             />
-                            <Link href="#" variant="body2" alignSelf="center">
-                                Forgot password?
-                            </Link>
-                        </Box>
+                            <Grid item sm={4} xs="false">
+                                <Divider sx={{ mt: 3, mb: 3 }} />
+                            </Grid>
+                            <Grid item sm={6}>
+                                <Typography sx={{ mt: 1, mb: 1 }} align='center'>{"Don't have an account?"}
+                                    {<NavLink to="/sign-up" variant="body2"> Sign Up</NavLink>}
+                                </Typography>
+                            </Grid>
 
-                        <Button
-                            type="submit"
-                            fullWidth
-                            variant="contained"
-                            sx={{ mt: 3, mb: 2, borderRadius: 4, color: "white" }}
+                        </Grid>
+                        <Box
+                            sx={{
+                                my: 4,
+                                mr: 4,
+                                display: 'flex',
+                                flexDirection: 'column',
+                                alignItems: 'center',
+                            }}
                         >
-                            Sign In
-                        </Button>
 
-                        <Link href="#" variant="body2">
-                            {"Don't have an account? Sign Up"}
-                        </Link>
+                            {/* <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
+                                <LockOutlinedIcon />
+                            </Avatar> */}
+                            <Typography component="h1" variant="h3" sx={{ my: 2 }}>
+                                Welcome Back
+                            </Typography>
+                            <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1 }}>
+                                <Grid container spacing={1}>
 
-                        <Copyright sx={{ mt: 5 }} />
-                    </Box>
+                                    <Grid item xs={12}>
+                                        <TextField
+                                            InputProps={{ sx: { borderRadius: 10 } }}
+                                            margin="normal"
+                                            required
+                                            fullWidth
+                                            id="email"
+                                            label="Email Address"
+                                            name="email"
+                                            autoComplete="email"
+                                            autoFocus
+                                        />
+                                    </Grid>
+                                    <Grid item xs={12}>
+                                        <TextField
+                                            InputProps={{ sx: { borderRadius: 10 } }}
+                                            margin="normal"
+                                            required
+                                            fullWidth
+                                            name="password"
+                                            label="Password"
+                                            type="password"
+                                            id="password"
+                                            autoComplete="current-password"
+                                        />
+                                    </Grid>
+                                </Grid>
+                                <Box sx={{ display: "flex", justifyContent: "space-between" }} >
+                                    <FormControlLabel
+                                        control={<Checkbox value="remember" color="primary" />}
+                                        label="Remember me"
+                                    />
+                                    <Link href="#" variant="body2" alignSelf="center">
+                                        Forgot password?
+                                    </Link>
+                                </Box>
+
+                                <Button
+                                    type="submit"
+                                    fullWidth
+                                    variant="contained"
+                                    sx={{ mt: 3, mb: 2, borderRadius: 4, color: "white" }}
+                                >
+                                    Sign In
+                                </Button>
+
+                                {/* <Copyright sx={{ mt: 5 }} /> */}
+
+                                <Grid container spacing={1} sx={{ mt: 2, ml: 0 }}>
+
+                                    <Grid item sm={4}>
+                                        <Divider sx={{ mt: 3, mb: 3 }} />
+                                    </Grid>
+                                    <Grid item sm={4}>
+                                        <Typography sx={{ mt: 1, mb: 1 }} align='center'>{"or sign in with"}
+                                        </Typography>
+                                    </Grid>
+                                    <Grid item sm={4}>
+                                        <Divider sx={{ mt: 3, mb: 3 }} />
+                                    </Grid>
+                                    <Grid item container>
+                                        <Button variant="outlined">
+                                            Google
+                                        </Button>
+                                        <Button variant="outlined">
+                                            Facebook
+                                        </Button>
+                                    </Grid>
+
+                                </Grid>
+
+                            </Box>
+                        </Box>
+                    </Grid>
                 </Box>
-            </Grid>
-            </Box>
 
-        </Grid>
-         </>
+            </Grid>
+        </>
     );
 }
