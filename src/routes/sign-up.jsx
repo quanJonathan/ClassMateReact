@@ -1,4 +1,3 @@
-import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
@@ -7,10 +6,9 @@ import Checkbox from '@mui/material/Checkbox';
 import Link from '@mui/material/Link';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 
-import { Divider, Paper } from '@mui/material';
+import { Divider, IconButton, Paper } from '@mui/material';
 import { NavLink } from 'react-router-dom';
 
 function Copyright(props) {
@@ -41,13 +39,13 @@ export default function SignUp() {
         <>
             <Grid container component="main"
                 sx={{
-                    height: '105vh', paddingY: '5%', paddingX: '10%',
+                    paddingY: '5%', paddingX: '10%',
 
                     backgroundImage: 'url(../src/assets/log-in.png)',
                     backgroundRepeat: 'no-repeat',
                     backgroundColor: (t) =>
                         t.palette.mode === 'light' ? t.palette.grey[50] : t.palette.grey[900],
-                    backgroundSize: '100% 100%',
+                    backgroundSize: '100%',
                     backgroundPosition: 'center',
                 }}>
                 <CssBaseline />
@@ -184,7 +182,7 @@ export default function SignUp() {
                                 {/* <Copyright sx={{ mt: 5 }} /> */}
 
                                 
-                                <Grid container spacing={1} sx={{ mt: 2, ml: 0 }}>
+                                <Grid container spacing={1} sx={{ mt: 2, ml: 0, justifyContent:'center'}}>
 
                                     <Grid item sm={4}>
                                         <Divider sx={{ mt: 3, mb: 3 }} />
@@ -196,13 +194,13 @@ export default function SignUp() {
                                     <Grid item sm={4}>
                                         <Divider sx={{ mt: 3, mb: 3 }} />
                                     </Grid>
-                                    <Grid item container>
-                                        <Button variant="outlined">
-                                            Google
-                                        </Button>
-                                        <Button variant="outlined">
-                                            Facebook
-                                        </Button>
+                                    <Grid item container sx={{justifyContent: 'center', alignContent: 'space-around'}}>
+                                        <IconButton sx={{border: 1}}>
+                                            <img src='../src/assets/log-in-gg.svg'/>
+                                        </IconButton>
+                                        <IconButton sx={{border: 1}}>
+                                            <img src="../src/assets/log-in-fb.svg"/>
+                                        </IconButton>
                                     </Grid>
 
                                 </Grid>
