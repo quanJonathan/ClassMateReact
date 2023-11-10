@@ -12,7 +12,6 @@ export const HomeLayout = () => {
 
   return (
     <div>
-      <WebAppBar/>
       {outlet}
     </div>
   );

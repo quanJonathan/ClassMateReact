@@ -9,33 +9,33 @@ function WebAppBar() {
   const { user} = useAuth();
 
   return (
-    <Box sx={{ flexGrow: 1, bgcolor: "appBarColor" }}>
-      <AppBar position="fixed" sx={{ bgcolor: "appBarColor.main" }}>
-        <Container maxWidth="x1">
-          <Toolbar disableGutters>
+    <Box sx={{ flexGrow: 1 }}>
+      <AppBar position="fixed" color="transparent" elevation={0}>
+        <Container maxWidth="x1" >
+          <Toolbar disableGutters sx={{maxHeight: '10vh'}}>
             <AppName />
             <Box sx={{ flexGrow: 1 }}>
               <Divider sx={{ ml: 2, mr: 2 }} />
             </Box>
             <Box
               sx={{ display: { xs: "none", md: "flex", alignItems: "center" } }}
-              style={{ marginLeft: "auto" }}
+              style={{ marginLeft: "100px" }}
             >
               <NavLink to="/about" style={{ textDecoration: "none" }}>
-                <Button sx={{ my: 2, color: "black" }}>
-                  <Typography>About</Typography>
+                <Button sx={{ my: 2, color: "black", textTransform: 'none' }}>
+                  <Typography sx={{fontSize: "20px"}}>About Us</Typography>
                 </Button>
               </NavLink>
               {!user && (
                 <>
                   <NavLink to="/sign-in" style={{ textDecoration: "none" }}>
-                    <Button sx={{ my: 2, color: "black" }}>
-                      <Typography>Login</Typography>
+                    <Button sx={{ my: 2, color: "black", textTransform: 'none' }}>
+                      <Typography sx={{fontSize: "20px"}}>Login</Typography>
                     </Button>
                   </NavLink>
                   <NavLink to="/sign-up" style={{ textDecoration: "none" }}>
-                    <Button sx={{ my: 2 }}>
-                      <Typography>Sign up</Typography>
+                    <Button sx={{ my: 2, textTransform: 'none' }}>
+                      <Typography sx={{fontSize: "20px"}}>Sign Up</Typography>
                     </Button>
                   </NavLink>
                 </>
