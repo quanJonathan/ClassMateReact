@@ -1,15 +1,15 @@
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
 import Link from '@mui/material/Link';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 
-import { Divider, IconButton, Paper } from '@mui/material';
-import { NavLink } from 'react-router-dom';
+import { Divider, FormControl, IconButton, InputAdornment, InputLabel, OutlinedInput, Paper } from '@mui/material';
+import { NavLink, useNavigate } from 'react-router-dom';
+import { ArrowBack, Visibility, VisibilityOff } from '@mui/icons-material';
+import { useState } from 'react';
 
 function Copyright(props) {
     return (
@@ -32,8 +32,20 @@ export default function SignUp() {
         console.log({
             email: data.get('email'),
             password: data.get('password'),
+            firstName: data.get('firstName'),
+            lastName: data.get('lastName')
         });
     };
+
+    const [showPassword, setShowPassword] = useState(false);
+
+    const handleClickShowPassword = () => setShowPassword((show) => !show);
+
+    const handleMouseDownPassword = (event) => {
+        event.preventDefault();
+    };
+
+    const navigate = useNavigate();
 
     return (
         <>
@@ -49,26 +61,39 @@ export default function SignUp() {
                     backgroundPosition: 'center',
                 }}>
                 <CssBaseline />
-                <Box xs="true" width="100%" borderRadius={7} sx={{ display: "flex", justifyContent: "space-between", border: "10px solid white" }} component={Paper} elevation={6}>
+                <Box width="100%" borderRadius={7} sx={{ display: "flex", justifyContent: "space-between", border: "10px solid white" }} component={Paper} elevation={6}>
                     <Grid
                         item
+                        container
                         xs={0}
                         sm={4}
                         md={6}
                         sx={{
                             // backgroundImage: 'url(https://source.unsplash.com/random?wallpapers)',
-                            backgroundImage: 'url(../src/assets/log-in-2.png)',
+                            backgroundImage: "url(../src/assets/log-in-2.png)",
 
-                            backgroundRepeat: 'no-repeat',
+                            backgroundRepeat: "no-repeat",
 
-                            backgroundSize: '70%',
-                            backgroundPosition: 'center',
+                            backgroundSize: "70%",
+                            backgroundPosition: "center",
                         }}
-                    />
-                    <Grid item xs={12} sm={8} md={6} square sx={{ mr: 4 }}>
+                    >
+                        <Grid item xs={12}>
+                            <IconButton sx={{ mt: 2 }}>
+                                {/* <img width={30} src="../src/assets/log-in-gg.svg" /> */}
+                                <NavLink to="/" variant="body2">
+                                    <ArrowBack color='primary' />
+
+                                </NavLink>
+                            </IconButton>
+                        </Grid>
+                    </Grid>
+                    <Grid item xs={12} sm={8} md={6} sx={{ mr: 4 }}>
                         <Grid container height='50px' spacing={1} sx={{ mt: 2, ml: 0 }}>
+
                             <Grid
                                 item
+                                onClick={() => navigate('/')}
                                 xs={2}
                                 sm={2}
                                 sx={{
@@ -80,7 +105,7 @@ export default function SignUp() {
                                     backgroundPosition: 'center',
                                 }}
                             />
-                            <Grid item sm={4} xs="false">
+                            <Grid item sm={4}>
                                 <Divider sx={{ mt: 3, mb: 3 }} />
                             </Grid>
                             <Grid item sm={6}>
@@ -106,7 +131,7 @@ export default function SignUp() {
                             <Typography component="h1" variant="h3" sx={{ my: 2 }}>
                                 Sign Up
                             </Typography>
-                            <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1 }}>
+                            <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1 }}  paddingX={4}>
                                 <Grid container spacing={1}>
                                     <Grid item xs={12} sm={6} pl={0}>
                                         <TextField
@@ -147,7 +172,7 @@ export default function SignUp() {
                                         />
                                     </Grid>
                                     <Grid item xs={12}>
-                                        <TextField
+                                        {/* <TextField
                                             InputProps={{ sx: { borderRadius: 10 } }}
                                             margin="normal"
                                             required
@@ -157,18 +182,41 @@ export default function SignUp() {
                                             type="password"
                                             id="password"
                                             autoComplete="current-password"
-                                        />
+                
+                                        /> */}
+                                        <FormControl fullWidth required variant="outlined">
+                                            <InputLabel htmlFor="outlined-adornment-password">Password</InputLabel>
+                                            <OutlinedInput
+                                                name="password"
+                                                sx={{ borderRadius: 10 }}
+                                                id="outlined-adornment-password"
+                                                type={showPassword ? 'text' : 'password'}
+                                                endAdornment={
+                                                    <InputAdornment position="end">
+                                                        <IconButton
+                                                            aria-label="toggle password visibility"
+                                                            onClick={handleClickShowPassword}
+                                                            onMouseDown={handleMouseDownPassword}
+                                                            edge="end"
+                                                        >
+                                                            {showPassword ? <VisibilityOff /> : <Visibility />}
+                                                        </IconButton>
+                                                    </InputAdornment>
+                                                }
+                                                label="Password"
+                                            />
+                                        </FormControl>
                                     </Grid>
                                 </Grid>
-                                <Box sx={{ display: "flex", justifyContent: "space-between" }} >
+                                {/* <Box sx={{ display: "flex", justifyContent: "space-between" }} >
                                     <FormControlLabel
                                         control={<Checkbox value="remember" color="primary" />}
-                                        label="Remember me"
+                                        label="Sign me in!"
                                     />
                                     <Link href="#" variant="body2" alignSelf="center">
                                         Forgot password?
                                     </Link>
-                                </Box>
+                                </Box> */}
 
                                 <Button
                                     type="submit"
@@ -181,8 +229,8 @@ export default function SignUp() {
 
                                 {/* <Copyright sx={{ mt: 5 }} /> */}
 
-                                
-                                <Grid container spacing={1} sx={{ mt: 2, ml: 0, justifyContent:'center'}}>
+
+                                <Grid container spacing={1} sx={{ mt: 2, ml: 0, justifyContent: 'center' }}>
 
                                     <Grid item sm={4}>
                                         <Divider sx={{ mt: 3, mb: 3 }} />
@@ -194,12 +242,12 @@ export default function SignUp() {
                                     <Grid item sm={4}>
                                         <Divider sx={{ mt: 3, mb: 3 }} />
                                     </Grid>
-                                    <Grid item container sx={{justifyContent: 'center', alignContent: 'space-around'}}>
-                                        <IconButton sx={{border: 1}}>
-                                            <img src='../src/assets/log-in-gg.svg'/>
+                                    <Grid item container sx={{ justifyContent: 'center', alignContent: 'space-around' }}>
+                                        <IconButton sx={{ border: 1 }}>
+                                            <img src='../src/assets/log-in-gg.svg' />
                                         </IconButton>
-                                        <IconButton sx={{border: 1}}>
-                                            <img src="../src/assets/log-in-fb.svg"/>
+                                        <IconButton sx={{ border: 1 }}>
+                                            <img src="../src/assets/log-in-fb.svg" />
                                         </IconButton>
                                     </Grid>
 
