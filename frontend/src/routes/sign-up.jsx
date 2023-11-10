@@ -10,6 +10,7 @@ import { Divider, FormControl, IconButton, InputAdornment, InputLabel, OutlinedI
 import { NavLink, useNavigate } from 'react-router-dom';
 import { ArrowBack, Visibility, VisibilityOff } from '@mui/icons-material';
 import { useState } from 'react';
+import axios from 'axios';
 
 function Copyright(props) {
     return (
@@ -26,15 +27,27 @@ function Copyright(props) {
 
 
 export default function SignUp() {
-    const handleSubmit = (event) => {
+
+    let navigate = useNavigate()
+
+    const handleSubmit = async (event) => {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
-        console.log({
+        // console.log({
+        //     email: data.get('email'),
+        //     password: data.get('password'),
+        //     firstName: data.get('firstName'),
+        //     lastName: data.get('lastName')
+        // });
+
+        const form = {
+            fullname: data.get('firstName') + ' ' + data.get('lastName'),
             email: data.get('email'),
-            password: data.get('password'),
-            firstName: data.get('firstName'),
-            lastName: data.get('lastName')
-        });
+            password: data.get('password')
+        };
+
+        await axios.post("localhost/api/v1/user/sign-up", form);
+        navigate('/')
     };
 
     const [showPassword, setShowPassword] = useState(false);
@@ -44,8 +57,6 @@ export default function SignUp() {
     const handleMouseDownPassword = (event) => {
         event.preventDefault();
     };
-
-    const navigate = useNavigate();
 
     return (
         <>
@@ -224,7 +235,7 @@ export default function SignUp() {
                                     variant="contained"
                                     sx={{ mt: 3, mb: 2, borderRadius: 4, color: "white" }}
                                 >
-                                    Sign In
+                                    Sign Up
                                 </Button>
 
                                 {/* <Copyright sx={{ mt: 5 }} /> */}

@@ -1,23 +1,12 @@
-import { Container, Divider, Button, Box, IconButton, Typography } from "@mui/material";
+import { Container, Divider, Button, Box, Typography } from "@mui/material";
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import AppName from "./WebName";
-import { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
-
-//  TO-DO
+import { useAuth } from "../hook/useAuth.jsx";
 
 function WebAppBar() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-
-  function checkForLogin() {
-    setIsLoggedIn(true);
-  }
-
-  useEffect(() => {
-    checkForLogin();
-    return () => {};
-  }, [isLoggedIn]);
+  const { user} = useAuth();
 
   return (
     <Box sx={{ flexGrow: 1, bgcolor: "appBarColor" }}>
@@ -33,20 +22,24 @@ function WebAppBar() {
               style={{ marginLeft: "auto" }}
             >
               <NavLink to="/about" style={{ textDecoration: "none" }}>
-                <Button  sx={{ my: 2, color: "black" }}>
+                <Button sx={{ my: 2, color: "black" }}>
                   <Typography>About</Typography>
                 </Button>
               </NavLink>
-              <NavLink to="/sign-in" style={{ textDecoration: "none" }}>
-                <Button  sx={{ my: 2, color: "black" }}>
-                  <Typography>Login</Typography>
-                </Button>
-              </NavLink>
-              <NavLink to="/sign-up" style={{ textDecoration: "none" }}>
-                <Button sx={{ my: 2}}>
-                  <Typography>Sign up</Typography>
-                </Button>
-              </NavLink>
+              {!user && (
+                <>
+                  <NavLink to="/sign-in" style={{ textDecoration: "none" }}>
+                    <Button sx={{ my: 2, color: "black" }}>
+                      <Typography>Login</Typography>
+                    </Button>
+                  </NavLink>
+                  <NavLink to="/sign-up" style={{ textDecoration: "none" }}>
+                    <Button sx={{ my: 2 }}>
+                      <Typography>Sign up</Typography>
+                    </Button>
+                  </NavLink>
+                </>
+              )}
             </Box>
           </Toolbar>
         </Container>
@@ -55,4 +48,4 @@ function WebAppBar() {
   );
 }
 
-export default WebAppBar;
+export default WebAppBar

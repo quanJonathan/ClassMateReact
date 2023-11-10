@@ -1,9 +1,9 @@
 import { Box, Container } from '@mui/material';
-import WebAppBar from '../component/AppBar';
+import WebAppBar from '../components/AppBar';
 import React from 'react';
 
-
 export default function Root() {
+    
    return (
     <React.Fragment>
         <WebAppBar/>
