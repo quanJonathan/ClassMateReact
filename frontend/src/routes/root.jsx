@@ -1,15 +1,32 @@
 import { Box, Container } from '@mui/material';
 import WebAppBar from '../components/AppBar';
-import React from 'react';
-
+import IntroSection from '../components/IntroSection';
+import ImpactSection from '../components/ImpactSection';
+import CoursesSection from '../components/CoursesSection';
+import BenefitSection from '../components/BenefitSection';
+import GetStarted from '../components/GetStarted';
+import Footer from '../components/Footer';
 export default function Root() {
     
    return (
-    <React.Fragment>
+    <Box sx={{backgroundImage: "url(../src/assets/landing-background.png)",
+    position: 'absolute',
+    top: 0,
+    right: 0,
+    left: 0,
+    minHeight: "100vh",
+    backgroundSize: "100%",
+    backgroundRepeat: "no-repeat",
+    }}>
+        <Container>
         <WebAppBar/>
-        <Container maxWidth="sm">
-            <Box sx={{ bgcolor: '#cfe8fc', height: '100vh' }} />
+        <IntroSection/>
+        <ImpactSection/>
+        <CoursesSection/>
+        <BenefitSection/>
+        <GetStarted/>
         </Container>
-    </React.Fragment>
+        <Footer/>
+    </Box>
    );
 }

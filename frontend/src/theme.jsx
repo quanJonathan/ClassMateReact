@@ -4,6 +4,7 @@ import { createTheme, responsiveFontSizes }
 const theme  = responsiveFontSizes(createTheme({
   typography:{
     fontFamily: [
+      'Poppins',
       '-apple-system',
       'BlinkMacSystemFont',
       '"Segoe UI"',
