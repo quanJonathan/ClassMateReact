@@ -1,15 +1,15 @@
 import { Box, Container } from '@mui/material';
+<<<<<<< Updated upstream:src/routes/root.jsx
 import WebAppBar from '../component/AppBar';
 import React from 'react';
+=======
+>>>>>>> Stashed changes:frontend/src/routes/root.jsx
 
 
 export default function Root() {
    return (
-    <React.Fragment>
-        <WebAppBar/>
-        <Container maxWidth="sm">
-            <Box sx={{ bgcolor: '#cfe8fc', height: '100vh' }} />
-        </Container>
-    </React.Fragment>
+    <Container maxWidth="sm">
+        <Box sx={{ bgcolor: '#cfe8fc', height: '100vh' }} />
+    </Container>
    );
 }
