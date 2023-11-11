@@ -7,10 +7,9 @@ function IntroSection() {
     const CustomBox = styled(Box)(({ theme }) => ({
         display: "flex",
         justifyContent: "center",
-        top: "150px",
-        position: "relative",
         gap: theme.spacing(5),
-        height: "calc(90vh - 80px)",
+        height: "calc(90vh-80px)",
+        marginTop: "150px",
         [theme.breakpoints.down("md")]: {
           flexDirection: "column",
           alignItems: "center",

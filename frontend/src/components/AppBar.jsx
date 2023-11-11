@@ -4,12 +4,22 @@ import Toolbar from "@mui/material/Toolbar";
 import AppName from "./WebName";
 import { NavLink } from "react-router-dom";
 import { useAuth } from "../hook/useAuth.jsx";
+import useScrollPosition from "../hook/useStrollPosition.js";
+
 
 function WebAppBar() {
   const { user} = useAuth();
-
+  const scrollPosition = useScrollPosition();
   return (
-      <AppBar position="fixed" color="transparent" elevation={0} sx={{padding: "40px"}}>
+      <AppBar position="fixed" 
+      elevation={scrollPosition > 10 ? 4 : 0} 
+      color="transparent"
+      sx={{
+        py: 2,
+        px: "40px",
+        height: "auto",
+        bgcolor: scrollPosition > 10 ? "#FFF" : "transparent",
+      }}>
         <Container maxWidth="x1" >
           <Toolbar disableGutters sx={{maxHeight: '10vh'}}>
             <AppName />
