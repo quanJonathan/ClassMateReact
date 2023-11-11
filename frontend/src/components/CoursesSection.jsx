@@ -38,11 +38,9 @@ function CoursesSection() {
         width: "100%",
         [theme.breakpoints.down("md")]: {
           width: "100%",
-        },
-        [theme.breakpoints.down("sm")]: {
           marginBottom: "0",
           flexDirection: "column",
-        },
+        }
       }));
     return (
         <Box
@@ -90,7 +88,7 @@ function CoursesSection() {
               item={course}
             />
           ))}
-    
+
       </CourseBoxes>
         </Box>
   

@@ -3,6 +3,7 @@ import WebAppBar from '../components/AppBar';
 import IntroSection from '../components/IntroSection';
 import ImpactSection from '../components/ImpactSection';
 import CoursesSection from '../components/CoursesSection';
+import BenefitSection from '../components/BenefitSection';
 export default function Root() {
     
    return (
@@ -20,6 +21,7 @@ export default function Root() {
         <IntroSection/>
         <ImpactSection/>
         <CoursesSection/>
+        <BenefitSection/>
         </Container>
 
     </Box>
