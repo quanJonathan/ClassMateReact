@@ -5,6 +5,7 @@ import ImpactSection from '../components/ImpactSection';
 import CoursesSection from '../components/CoursesSection';
 import BenefitSection from '../components/BenefitSection';
 import GetStarted from '../components/GetStarted';
+import Footer from '../components/Footer';
 export default function Root() {
     
    return (
@@ -25,7 +26,7 @@ export default function Root() {
         <BenefitSection/>
         <GetStarted/>
         </Container>
-
+        <Footer/>
     </Box>
    );
 }
