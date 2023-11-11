@@ -15,7 +15,7 @@ export const AuthLayout = () => {
         resolve={userPromise}
         errorElement={<Alert severity="error">Something went wrong!</Alert>}
         children={(user) => (
-          <AuthProvider userData="null">{outlet}</AuthProvider>
+          <AuthProvider userData={user}>{outlet}</AuthProvider>
         )}
       />
     </Suspense>

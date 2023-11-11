@@ -2,7 +2,7 @@ import {
   Route,
   createBrowserRouter,
   createRoutesFromElements,
-  defer
+  defer,
 } from "react-router-dom";
 import Root from "./src/routes/root";
 import SignIn from "./src/routes/sign-in";
@@ -20,18 +20,17 @@ const getUserData = () =>
     }, 3000)
   );
 
-
 export const router = createBrowserRouter(
   createRoutesFromElements(
     <Route
       element={<AuthLayout />}
       loader={() => defer({ userPromise: getUserData() })}
-      >
+    >
       <Route element={<HomeLayout />}>
         <Route path="/" element={<Root />} />
       </Route>
 
-      <Route path="/home" element={<ProtectedLayout />}>
+      <Route path="/user" element={<ProtectedLayout />}>
         <Route path="profile" element={<ProfilePage />} />
       </Route>
       <Route path="/sign-in" element={<SignIn />} />

@@ -4,8 +4,17 @@ import { createTheme, responsiveFontSizes }
 const theme  = responsiveFontSizes(createTheme({
   typography:{
     fontFamily: [
-        'Poppins',
-        'Open Sans'
+      'Poppins',
+      '-apple-system',
+      'BlinkMacSystemFont',
+      '"Segoe UI"',
+      'Roboto',
+      '"Helvetica Neue"',
+      'Arial',
+      'sans-serif',
+      '"Apple Color Emoji"',
+      '"Segoe UI Emoji"',
+      '"Segoe UI Symbol"',
     ].join(','),
     appName: {
       background: "-webkit-linear-gradient(#cda4d2, #ffffff)",

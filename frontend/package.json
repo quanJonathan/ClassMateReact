@@ -15,12 +15,6 @@
     "@mui/icons-material": "^5.14.16",
     "@mui/material": "^5.14.16",
     "@mui/system": "^5.14.16",
-<<<<<<< Updated upstream:package.json
-=======
-    "axios": "^1.6.1",
-    "cors": "^2.8.5",
-    "jwt-decode": "^4.0.0",
->>>>>>> Stashed changes:frontend/package.json
     "localforage": "^1.10.0",
     "match-sorter": "^6.3.1",
     "mui-image": "^1.0.7",
