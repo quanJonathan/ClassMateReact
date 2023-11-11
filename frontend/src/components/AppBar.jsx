@@ -9,8 +9,7 @@ function WebAppBar() {
   const { user} = useAuth();
 
   return (
-    <Box sx={{ flexGrow: 1 }}>
-      <AppBar position="fixed" color="transparent" elevation={0}>
+      <AppBar position="fixed" color="transparent" elevation={0} sx={{padding: "40px"}}>
         <Container maxWidth="x1" >
           <Toolbar disableGutters sx={{maxHeight: '10vh'}}>
             <AppName />
@@ -44,7 +43,6 @@ function WebAppBar() {
           </Toolbar>
         </Container>
       </AppBar>
-    </Box>
   );
 }
 

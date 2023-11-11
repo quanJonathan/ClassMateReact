@@ -1,12 +1,19 @@
-import { Grid } from '@mui/material';
+import { Box, Container } from '@mui/material';
 import WebAppBar from '../components/AppBar';
-
+import IntroSection from '../components/IntroSection';
 export default function Root() {
     
    return (
-    <div>
+    <Box sx={{backgroundImage: "url(../src/assets/landing-background.png)",
+    minHeight: "100vh",
+    backgroundSize: "100%",
+    backgroundRepeat: "no-repeat",
+    }}>
+        <Container sx={{height: "100vh"}}>
         <WebAppBar/>
-        
-    </div>
+        <IntroSection/>
+        </Container>
+
+    </Box>
    );
 }
