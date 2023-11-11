@@ -30,7 +30,7 @@ function WebAppBar() {
               sx={{ display: { xs: "none", md: "flex", alignItems: "center" } }}
               style={{ marginLeft: "100px" }}
             >
-              <NavLink to="/about" style={{ textDecoration: "none",
+              <NavLink to="/" style={{ textDecoration: "none",
               
             
             }}>
