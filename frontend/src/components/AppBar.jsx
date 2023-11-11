@@ -5,10 +5,21 @@ import AppName from "./WebName";
 import { NavLink } from "react-router-dom";
 import { useAuth } from "../hook/useAuth.jsx";
 import useScrollPosition from "../hook/useStrollPosition.js";
+import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 
 function WebAppBar() {
   const { user, logout } = useAuth();
+  const [anchorElNav, setAnchorElNav] = useState(null);
   const scrollPosition = useScrollPosition();
+
+  const navigate = useNavigate();
+  const handleCloseNavMenu = (path) => {
+    setAnchorElNav(null);
+    if (path) {
+      navigate(path);
+    }
+  };
   return (
     <AppBar
       position="fixed"
@@ -47,7 +58,7 @@ function WebAppBar() {
                 </Typography>
               </Button>
             </NavLink>
-            {!!user && (
+            {user === null && (
               <>
                 <NavLink to="/sign-in" style={{ textDecoration: "none" }}>
                   <Button sx={{ my: 2, textTransform: "none" }}>

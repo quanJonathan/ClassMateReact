@@ -1,6 +1,6 @@
 import { Navigate, useOutlet } from "react-router-dom";
 import { useAuth } from "../hook/useAuth";
-import { WebAppBar } from "./AppBar";
+import  WebAppBar  from "./AppBar";
 
 export const ProtectedLayout = () => {
   const { user } = useAuth();
@@ -12,11 +12,7 @@ export const ProtectedLayout = () => {
 
   return (
     <div>
-      <WebAppBar
-        pages={[
-          { label: "Profile", path: "profile" }
-        ]}
-      />
+      <WebAppBar pages={[{ label: "Profile", path: "profile" }]} />
       {outlet}
     </div>
   );

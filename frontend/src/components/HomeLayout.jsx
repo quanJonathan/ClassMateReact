@@ -1,7 +1,6 @@
 import { Navigate, useOutlet } from "react-router-dom";
 import { useAuth } from "../hook/useAuth.jsx";
-import {WebAppBar} from "./AppBar";
-import { jwtDecode } from "jwt-decode";
+import WebAppBar from "./AppBar";
 
 export const HomeLayout = () => {
   const { user, logout } = useAuth();
