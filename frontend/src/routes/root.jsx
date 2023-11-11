@@ -2,11 +2,15 @@ import { Box, Container } from '@mui/material';
 import WebAppBar from '../components/AppBar';
 import IntroSection from '../components/IntroSection';
 import ImpactSection from '../components/ImpactSection';
+import CoursesSection from '../components/CoursesSection';
 export default function Root() {
     
    return (
     <Box sx={{backgroundImage: "url(../src/assets/landing-background.png)",
-    position: 'relative',
+    position: 'absolute',
+    top: 0,
+    right: 0,
+    left: 0,
     minHeight: "100vh",
     backgroundSize: "100%",
     backgroundRepeat: "no-repeat",
@@ -15,6 +19,7 @@ export default function Root() {
         <WebAppBar/>
         <IntroSection/>
         <ImpactSection/>
+        <CoursesSection/>
         </Container>
 
     </Box>

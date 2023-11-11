@@ -4,6 +4,7 @@ function ImpactSection(){
     const ImpactBoxes = styled(Box)(({ theme }) => ({
         display: "flex",
         justifyContent: "center",
+        alignItems: "center",
         width: "100%",
         [theme.breakpoints.down("md")]: {
           width: "100%",
@@ -50,7 +51,7 @@ function ImpactSection(){
           </Typography>
           <Typography
           >
-            Hours content
+            Hours
           </Typography>
             </ImpactBox>
 

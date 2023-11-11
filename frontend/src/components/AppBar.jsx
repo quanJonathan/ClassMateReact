@@ -24,27 +24,45 @@ function WebAppBar() {
           <Toolbar disableGutters sx={{maxHeight: '10vh'}}>
             <AppName />
             <Box sx={{ flexGrow: 1 }}>
-              <Divider sx={{ ml: 2, mr: 2 }} />
+              <Divider sx={{ ml: 2, mr: 2, display: { xs: "none", md: "flex"} }} />
             </Box>
             <Box
               sx={{ display: { xs: "none", md: "flex", alignItems: "center" } }}
               style={{ marginLeft: "100px" }}
             >
-              <NavLink to="/about" style={{ textDecoration: "none" }}>
-                <Button sx={{ my: 2, color: "black", textTransform: 'none' }}>
-                  <Typography sx={{fontSize: "20px"}}>About Us</Typography>
+              <NavLink to="/about" style={{ textDecoration: "none",
+              
+            
+            }}>
+                <Button sx={{ my: 2, textTransform: 'none', 
+                
+              
+              }}>
+                  <Typography sx={{fontSize: "16px",
+                      color: "black",
+                     fontWeight: "medium",
+                     cursor: "pointer",
+                
+                }}>About Us</Typography>
                 </Button>
               </NavLink>
               {!user && (
                 <>
                   <NavLink to="/sign-in" style={{ textDecoration: "none" }}>
-                    <Button sx={{ my: 2, color: "black", textTransform: 'none' }}>
-                      <Typography sx={{fontSize: "20px"}}>Login</Typography>
+                    <Button sx={{ my: 2, textTransform: 'none' }}>
+                      <Typography sx={{fontSize: "16px",
+                       color: "black",
+                       fontWeight: "medium",
+                       cursor: "pointer",
+                      }}>Login</Typography>
                     </Button>
                   </NavLink>
                   <NavLink to="/sign-up" style={{ textDecoration: "none" }}>
                     <Button sx={{ my: 2, textTransform: 'none' }}>
-                      <Typography sx={{fontSize: "20px"}}>Sign Up</Typography>
+                      <Typography sx={{fontSize: "16px",
+                         fontWeight: "medium",
+                         cursor: "pointer",
+                    }}>Sign Up</Typography>
                     </Button>
                   </NavLink>
                 </>
