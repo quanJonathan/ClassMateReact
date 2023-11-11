@@ -4,6 +4,7 @@ import IntroSection from '../components/IntroSection';
 import ImpactSection from '../components/ImpactSection';
 import CoursesSection from '../components/CoursesSection';
 import BenefitSection from '../components/BenefitSection';
+import GetStarted from '../components/GetStarted';
 export default function Root() {
     
    return (
@@ -22,6 +23,7 @@ export default function Root() {
         <ImpactSection/>
         <CoursesSection/>
         <BenefitSection/>
+        <GetStarted/>
         </Container>
 
     </Box>
