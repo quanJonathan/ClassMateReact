@@ -21,7 +21,7 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { ArrowBack, Visibility, VisibilityOff } from "@mui/icons-material";
 import { useState } from "react";
 import axios from "axios";
-import { useAuth } from "../hook/useAuth";
+import { useAuth } from "../hook/useAuth.jsx";
 
 function Copyright(props) {
   return (
@@ -54,19 +54,7 @@ export default function SignIn() {
       save: formData.get("remember-me"),
     };
 
-    const data = await axios.post("http://localhost:3001/auth/signIn", form);
-    console.log(data);
-    if (data.status === parseInt("401")) {
-      setErrorMessage(data.response);
-    } else {
-      localStorage.setItem("token", data.token);
-      login({
-        fullname: data.name,
-        email: data.email,
-      });
-      console.log(data);
-      navigate("/", { replace: true });
-    }
+    login(form);
 
     // console.log({
     //     email: data.get("email"),

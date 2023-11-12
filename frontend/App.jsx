@@ -12,19 +12,10 @@ import { AuthLayout } from "./src/components/AuthLayout";
 import { ProtectedLayout } from "./src/components/ProtectedLayout";
 import ProfilePage from "./src/routes/profile";
 
-const getUserData = () =>
-  new Promise((resolve) =>
-    setTimeout(() => {
-      const user = window.localStorage.getItem("user");
-      resolve(user);
-    }, 3000)
-  );
-
 export const router = createBrowserRouter(
   createRoutesFromElements(
     <Route
       element={<AuthLayout />}
-      loader={() => defer({ userPromise: getUserData() })}
     >
       <Route element={<HomeLayout />}>
         <Route path="/" element={<Root />} />

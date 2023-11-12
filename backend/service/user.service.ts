@@ -4,7 +4,6 @@ import { JwtService } from '@nestjs/jwt';
 import { secret } from 'utils/constants';
 import * as bcrypt from 'bcrypt'
 import { InjectModel } from '@nestjs/mongoose';
-import { UserModule } from 'modules/user.module';
 import { UserDocument } from 'model/user.schema';
 import { Model } from 'mongoose';
 
