@@ -2,7 +2,10 @@
 import {
   Body,
   Controller,
+  Get,
   HttpStatus,
+  NotFoundException,
+  Param,
   Post,
   Res,
 } from '@nestjs/common';
@@ -31,4 +34,15 @@ export class UserController {
     console.log(fullData)
     return response.status(HttpStatus.OK).json(fullData);
   }
+
+  @Get('profile/:email')
+  getUserByEmail(@Param('email') email: string){
+    const user = this.userService.getOne(email)
+    if(user){
+      return user; 
+    }else{
+      throw new NotFoundException('User not found');
+    }
+  }
+
 }

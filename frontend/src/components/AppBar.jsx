@@ -1,4 +1,13 @@
-import { Container, Divider, Button, Box, Typography } from "@mui/material";
+import {
+  Container,
+  Divider,
+  Button,
+  Box,
+  Typography,
+  IconButton,
+  Menu,
+  MenuItem,
+} from "@mui/material";
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import AppName from "./WebName";
@@ -6,16 +15,62 @@ import { NavLink } from "react-router-dom";
 import { useAuth } from "../hook/useAuth.jsx";
 import useScrollPosition from "../hook/useStrollPosition.js";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import AccountCircle from '@mui/icons-material/AccountCircle';
+import * as React from "react";
 
-function WebAppBar() {
-  const { user, logout } = useAuth();
-  const [anchorElNav, setAnchorElNav] = useState(null);
+function WebAppBar({ pages }) {
+  const { logout, isAuthenticated } = useAuth();
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
   const scrollPosition = useScrollPosition();
+
+  const handleProfileMenuOpen = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const isMenuOpen = Boolean(anchorEl);
+  const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
+
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+    handleMobileMenuClose();
+  };
+
+  const handleMobileMenuClose = () => {
+    setMobileMoreAnchorEl(null);
+  };
+
+  const menuId = "primary-search-account-menu";
+  const renderMenu = (
+    <Menu
+      anchorEl={anchorEl}
+      anchorOrigin={{
+        vertical: "top",
+        horizontal: "right",
+      }}
+      id={menuId}
+      keepMounted
+      transformOrigin={{
+        vertical: "top",
+        horizontal: "right",
+      }}
+      open={isMenuOpen}
+      onClose={handleMenuClose}
+    >
+      <MenuItem onClick={() => navigate('/user/profile')}>Profile</MenuItem>
+      <MenuItem onClick={handleMenuClose}>My account</MenuItem>
+      <MenuItem onClick={ () =>  {
+        logout()
+        setAnchorEl(null)
+      }} sx={{ color: "red" }}>
+        Log out
+      </MenuItem>
+    </Menu>
+  );
 
   const navigate = useNavigate();
   const handleCloseNavMenu = (path) => {
-    setAnchorElNav(null);
+    setAnchorEl(null);
     if (path) {
       navigate(path);
     }
@@ -58,7 +113,7 @@ function WebAppBar() {
                 </Typography>
               </Button>
             </NavLink>
-            {user === null && (
+            {!isAuthenticated() ? (
               <>
                 <NavLink to="/sign-in" style={{ textDecoration: "none" }}>
                   <Button sx={{ my: 2, textTransform: "none" }}>
@@ -88,32 +143,24 @@ function WebAppBar() {
                   </Button>
                 </NavLink>
               </>
+            ): (
+              <IconButton
+                size="large"
+                edge="end"
+                aria-label="account of current user"
+                aria-controls={menuId}
+                aria-haspopup="true"
+                onClick={handleProfileMenuOpen}
+                color="inherit"
+              >
+                <AccountCircle />
+              </IconButton>
             )}
-            {user !== null && (
-              <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
-                {pages?.map((page) => (
-                  <Button
-                    key={page.label}
-                    onClick={() => handleCloseNavMenu(page.path)}
-                    sx={{ my: 2, color: "white", display: "block" }}
-                  >
-                    {page.label}
-                  </Button>
-                ))}
-                {!!user && (
-                  <Button
-                    key={"logout"}
-                    onClick={logout}
-                    sx={{ my: 2, color: "white", display: "block" }}
-                  >
-                    {"logout"}
-                  </Button>
-                )}
-              </Box>
-            )}
+
           </Box>
         </Toolbar>
       </Container>
+      {renderMenu}
     </AppBar>
   );
 }

@@ -1,28 +1,23 @@
-import { Navigate, useOutlet } from "react-router-dom";
+import { useNavigate, useOutlet } from "react-router-dom";
 import { useAuth } from "../hook/useAuth.jsx";
 import WebAppBar from "./AppBar";
+import { useEffect } from "react";
 
 export const HomeLayout = () => {
-  const { user, logout } = useAuth();
   const outlet = useOutlet();
+  const { token } = useAuth();
+  const navigate = useNavigate();
 
-  // const token = user && JSON.parse(localStorage.getItem("user"))["token"];
-  // if (jwtDecode(token).exp < Date.now() / 1000) {
-  //   logout();
-  //   localStorage.clear();
-  // }
-
-  logout();
-
-  if (user) {
-    return <Navigate to="/" replace />;
-  } else {
-    logout();
-  }
+  // console.log("token in home " + token);
+  useEffect(() => {
+    if (token) {
+      navigate("/user/profile");
+    }
+  }, [token, navigate]);
 
   return (
     <div>
-      <WebAppBar/>
+      <WebAppBar />
       {outlet}
     </div>
   );

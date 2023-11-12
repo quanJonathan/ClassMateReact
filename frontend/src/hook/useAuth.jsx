@@ -1,31 +1,83 @@
-import { createContext, useContext, useMemo } from "react";
+import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useLocalStorage } from "./useLocalStorage";
+import axios from "axios";
 
 const AuthContext = createContext();
 
-export const AuthProvider = ({ children, userData }) => {
-  const [user, setUser] = useLocalStorage("user", userData);
+export const AuthProvider = ({ children }) => {
+  const [user, setUser] = useLocalStorage("user", localStorage.getItem("user"));
+  const [token, setToken] = useState(localStorage.getItem("token"));
   const navigate = useNavigate();
 
-  const login = async (data) => {
+  useEffect(() => {
+    // Check if the token is expired or not present
+    const isTokenValid = (token1) => {
+      if (!token1) {
+        return false;
+      }
+      try {
+        const decodedToken = JSON.parse(atob(token1.split(".")[1]));
+        return decodedToken.exp * 1000 > Date.now();
+      } catch (error) {
+        console.error("Error decoding token:", error);
+        return false;
+      }
+    };
+
+    if (!isTokenValid(token)) {
+      setToken(null);
+      navigate('/')
+    }
+  }, [token]);
+
+  const login = async (form) => {
+    try {
+      const response = await axios.post(
+        "http://localhost:3001/auth/signIn",
+        form
+      );
+      const { token, name, email } = response.data;
+      //console.log(response.data)
+      setToken(token);
+      localStorage.setItem("token", token);
+      setUser({
+        fullname: name,
+        email: email,
+      });
+      localStorage.setItem("user", user);
+    } catch (error) {
+      console.error("Login failed:", error);
+      navigate("/", { replace: true });
+    }
+
+    navigate("/user/profile", { replace: true });
+  };
+
+  const updateUser = async (data) => {
     setUser(data);
-    // navigate("/dashboard/profile", { replace: true });
+    localStorage.setItem("user", data);
   };
 
-  const logout = () => {
+  const logout = async () => {
     setUser(null);
-    navigate("/", { replace: true });
+    setToken(null);
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
   };
 
-  const value = useMemo(
-    () => ({
-      user,
-      login,
-      logout
-    }),
-    [user]
-  );
+  const isAuthenticated = () => {
+    return !!token;
+  };
+
+  const value = {
+    token,
+    user,
+    login,
+    logout,
+    updateUser,
+    isAuthenticated,
+  };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };

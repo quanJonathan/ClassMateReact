@@ -1,4 +1,5 @@
-import { Module } from '@nestjs/common';
+/* eslint-disable prettier/prettier */
+import { MiddlewareConsumer, Module, RequestMethod } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { JwtModule } from '@nestjs/jwt';
@@ -10,6 +11,7 @@ import { ConfigModule } from '@nestjs/config';
 import { UserController } from 'controllers/user.controller';
 import { UserService } from 'service/user.service';
 import { User, UserSchema } from 'model/user.schema';
+import { isAuthenticated } from './app.middleware';
 
 @Module({
   imports: [
@@ -22,9 +24,17 @@ import { User, UserSchema } from 'model/user.schema';
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', 'public'),
     }),
-    MongooseModule.forRoot('mongodb+srv://tuanquan:YADWOzCfbpvIiu3a@classmatecluster.tcuesuz.mongodb.net/class-mate-react'),
+    MongooseModule.forRoot(
+      'mongodb+srv://tuanquan:nMQxwnon5RLhvgUz@classmatecluster.tcuesuz.mongodb.net/class-mate-react',
+    ),
   ],
   controllers: [AppController, UserController],
   providers: [AppService, UserService],
 })
-export class AppModule {}
+export class AppModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer
+      .apply(isAuthenticated)
+      .exclude({ path: 'auth/profile', method: RequestMethod.GET });
+  }
+}
