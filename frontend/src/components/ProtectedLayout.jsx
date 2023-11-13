@@ -17,7 +17,6 @@ export const ProtectedLayout = () => {
 
   return (
     <div>
-      <WebAppBar pages={[{ label: "Profile", path: "profile" }]} />
       {outlet}
     </div>
   );

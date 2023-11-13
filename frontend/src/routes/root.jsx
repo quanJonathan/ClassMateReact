@@ -5,6 +5,7 @@ import CoursesSection from "../components/CoursesSection";
 import BenefitSection from "../components/BenefitSection";
 import GetStarted from "../components/GetStarted";
 import Footer from "../components/Footer";
+import WebAppBar from "../components/AppBar";
 export default function Root() {
   return (
     <Box
@@ -20,6 +21,7 @@ export default function Root() {
     }}
   >
     <Container>
+        <WebAppBar/>
       <IntroSection />
       <ImpactSection />
       <CoursesSection />
