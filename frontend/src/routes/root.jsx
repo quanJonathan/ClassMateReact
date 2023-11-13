@@ -5,7 +5,7 @@ import CoursesSection from "../components/CoursesSection";
 import BenefitSection from "../components/BenefitSection";
 import GetStarted from "../components/GetStarted";
 import Footer from "../components/Footer";
-import SwipeableTemporaryDrawer from "../components/Drawer";
+import MiniDrawer from "../components/Drawer";
 export default function Root() {
   return (
     <Box
@@ -17,7 +17,7 @@ export default function Root() {
       minHeight: "100vh"
     }}
   >
-    <SwipeableTemporaryDrawer/>
+    <MiniDrawer/>
   </Box>
   );
 }
