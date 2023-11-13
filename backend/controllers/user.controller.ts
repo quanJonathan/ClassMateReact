@@ -9,8 +9,9 @@ import {
   Post,
   Res,
 } from '@nestjs/common';
-import { User, UserService } from '../service/user.service';
+import { UserService } from '../service/user.service';
 import { JwtService } from '@nestjs/jwt';
+import { User } from 'model/user.schema';
 
 @Controller('auth')
 export class UserController {
@@ -22,7 +23,6 @@ export class UserController {
   @Post('signUp')
   async Signup(@Res() response, @Body() user: User) {
     const newUSer = this.userService.signup(user);
-    console.log("running")
     return response.status(HttpStatus.CREATED).json({
       newUSer,
     });
@@ -33,6 +33,15 @@ export class UserController {
     const fullData = await this.userService.signin(user, this.jwtService);
     console.log(fullData)
     return response.status(HttpStatus.OK).json(fullData);
+  }
+
+  @Post('profile/update')
+  async updateData(@Res() response, @Body() user: User){
+    const result = await this.userService.update(user)
+    console.log(result)
+    const u = await this.userService.getOne(user.email)
+    console.log(u)
+    return response.status(HttpStatus.ACCEPTED).json(result)
   }
 
   @Get('profile/:email')

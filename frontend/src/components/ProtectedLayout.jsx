@@ -11,7 +11,7 @@ export const ProtectedLayout = () => {
   // console.log("token in protected " + token);
   useEffect(() => {
     if (!token) {
-      navigate("/sign-in", { replace: true });
+      navigate("/", { replace: true });
     }
   });
 

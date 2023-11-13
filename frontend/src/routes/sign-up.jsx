@@ -52,7 +52,8 @@ export default function SignUp() {
     // });
 
     const form = {
-      fullname: data.get("firstName") + " " + data.get("lastName"),
+      firstName: data.get("firstName").trim(),
+      lastName: data.get("lastName").trim(),
       email: data.get("email"),
       password: data.get("password"),
     };
@@ -66,7 +67,6 @@ export default function SignUp() {
       })
       .then(function (res) {
         console.log(res);
-        navigate("/");
       })
       .catch(function (error) {
         if (error.response) {
