@@ -153,7 +153,6 @@ export default function MiniDrawer() {
     >
       <MenuItem onClick={() => navigate('/user/profile')}>Profile</MenuItem>
       <MenuItem onClick={() => navigate('/dashboard')}>Dashboard</MenuItem>
-      <MenuItem onClick={handleMenuClose}>My account</MenuItem>
       <MenuItem onClick={ () =>  {
         logout()
         setAnchorEl(null)
