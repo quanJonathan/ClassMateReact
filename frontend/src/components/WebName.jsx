@@ -1,11 +1,11 @@
 import { Box, styled } from "@mui/material";
 import { NavLink } from "react-router-dom";
 
-function AppName() {
+function AppName({width}) {
   const CustomLink = styled(NavLink)(({ theme }) => ({
     cursor: "pointer",
     textDecoration: "none",
-    
+    width: width || "auto",
     justifyContent: "flex-start",
     [theme.breakpoints.down("md")]: {
       display: "flex",
@@ -19,7 +19,7 @@ function AppName() {
     <CustomLink to="/">
     <Box
       component="img"
-      sx={{ width: 200 }}
+      sx={{ width: width ? "100%" : 200 }}
       alt="appname"
       src="../src/assets/appName.png"
     />
