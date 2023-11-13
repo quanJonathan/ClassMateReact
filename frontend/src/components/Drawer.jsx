@@ -152,6 +152,7 @@ export default function MiniDrawer() {
       onClose={handleMenuClose}
     >
       <MenuItem onClick={() => navigate('/user/profile')}>Profile</MenuItem>
+      <MenuItem onClick={() => navigate('/dashboard')}>Dashboard</MenuItem>
       <MenuItem onClick={handleMenuClose}>My account</MenuItem>
       <MenuItem onClick={ () =>  {
         logout()
@@ -205,7 +206,7 @@ export default function MiniDrawer() {
               style={{ marginLeft: "100px" }}
             >
         
-              {!isAuthenticated() &&
+              {isAuthenticated() &&
                 (
                 <IconButton
                   size="large"

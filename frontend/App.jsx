@@ -3,7 +3,8 @@ import {
   createBrowserRouter,
   createRoutesFromElements,
   defer,
-  Routes
+  Routes,
+  useNavigate
 } from "react-router-dom";
 import Root from "./src/routes/root";
 import SignIn from "./src/routes/sign-in";
@@ -12,31 +13,23 @@ import Dashboard from "./src/routes/dashboard";
 import { HomeLayout } from "./src/components/HomeLayout";
 import { AuthLayout } from "./src/components/AuthLayout";
 import { ProtectedLayout } from "./src/components/ProtectedLayout";
-import ProfilePage from "./src/routes/profile";
-import { useAuth } from "./src/hook/useAuth";
-
-const AppRoutes = () => {
-
-
-  return (
-    <Routes>
-      <Route element={<AuthLayout />}>
-        <Route element={<HomeLayout />}>
-          <Route path="/" element={ useAuth ? <Dashboard/> : <Root />} />
-          <Route path="/sign-in" element={<SignIn />} />
-          <Route path="/sign-up" element={<SignUp />} />
-        </Route>
-
-        <Route path="/user" element={<ProtectedLayout />}>
-          <Route path="profile" element={<ProfilePage />} />
-        </Route>
-      </Route>
-    </Routes>
-  )
-};
+import ProfilePage from "./src/routes/profile";;
 
 export const router = createBrowserRouter(
   createRoutesFromElements(
-    <Route path="*" element={<AppRoutes />} />
+    <Route element={<AuthLayout />}>
+    <Route element={<HomeLayout />}>
+      <Route path="/" element={ <Root />} />
+      <Route path="/sign-in" element={<SignIn />} />
+      <Route path="/sign-up" element={<SignUp />} />
+    </Route>
+    <Route  element={<ProtectedLayout />}>
+      <Route path="/dashboard" element={<Dashboard />} />
+    </Route>
+
+    <Route path="/user" element={<ProtectedLayout />}>
+      <Route path="profile" element={<ProfilePage />} />
+    </Route>
+  </Route>
   )
 );

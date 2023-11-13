@@ -58,6 +58,7 @@ function WebAppBar({ pages }) {
       onClose={handleMenuClose}
     >
       <MenuItem onClick={() => navigate('/user/profile')}>Profile</MenuItem>
+      <MenuItem onClick={() => navigate('/dashboard')}>Dashboard</MenuItem>
       <MenuItem onClick={handleMenuClose}>My account</MenuItem>
       <MenuItem onClick={ () =>  {
         logout()
