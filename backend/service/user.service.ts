@@ -4,15 +4,8 @@ import { JwtService } from '@nestjs/jwt';
 import { secret } from 'utils/constants';
 import * as bcrypt from 'bcrypt'
 import { InjectModel } from '@nestjs/mongoose';
-import { UserDocument } from 'model/user.schema';
+import { User, UserDocument } from 'model/user.schema';
 import { Model } from 'mongoose';
-
-export class User {
-  fullname: string;
-  email: string;
-  password: string;
-  createdDate: string
-};
 
 @Injectable()
 export class UserService {
@@ -23,10 +16,14 @@ export class UserService {
   async signup(user: User) {
     const salt = await bcrypt.genSalt();
     const hash = await bcrypt.hash(user.password, salt);
+    console.log(user)
     const reqBody = {
-      fullname: user.fullname,
+      firstName: user.firstName,
+      lastName: user.lastName,
       email: user.email,
       password: hash,
+      address: "",
+      phoneNumber: ""
     };
     const newUser = new this.userModel(reqBody);
     return newUser.save();
@@ -38,12 +35,15 @@ export class UserService {
       .exec();
     if (foundUser) {
       const { password } = foundUser;
-      if (bcrypt.compare(user.password, password)) {
+      if (bcrypt.compare(user?.password, password)) {
         const payload = { email: user.email };
         return {
           token: jwt.sign(payload),
-          name: foundUser.fullname,
-          email: foundUser.email
+          firstName: foundUser.firstName,
+          lastName: foundUser.lastName,
+          email: foundUser.email,
+          phoneNumber: foundUser.phoneNumber,
+          address: foundUser.address
         };
       }
       return new HttpException(
@@ -55,6 +55,10 @@ export class UserService {
       'Incorrect username or password',
       HttpStatus.UNAUTHORIZED,
     );
+  }
+
+  async update(user: User) {
+    return await this.userModel.findOneAndUpdate({email: user.email}, {$set: user}).exec()
   }
 
   // signup(user: User) {
@@ -97,7 +101,7 @@ export class UserService {
   //   );
   // }
 
-  async getOne(email: string): Promise<User> {
-    return await this.users.find((userOb) => userOb.email === email);
+  async getOne(email: string): Promise<User | any> {
+    return await this.userModel.findOne({email: email}, {password: 0}).exec()
   }
 }

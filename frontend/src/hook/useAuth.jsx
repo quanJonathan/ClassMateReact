@@ -37,14 +37,11 @@ export const AuthProvider = ({ children }) => {
         "http://localhost:3001/auth/signIn",
         form
       );
-      const { token, name, email } = response.data;
+      const { token, ...user } = response.data;
       //console.log(response.data)
       setToken(token);
       localStorage.setItem("token", token);
-      setUser({
-        fullname: name,
-        email: email,
-      });
+      setUser(user);
       localStorage.setItem("user", user);
     } catch (error) {
       console.error("Login failed:", error);
@@ -55,8 +52,8 @@ export const AuthProvider = ({ children }) => {
   };
 
   const updateUser = async (data) => {
-    setUser(data);
-    localStorage.setItem("user", data);
+    setUser(JSON.stringify(data))
+    localStorage.setItem("user", JSON.stringify(data));
   };
 
   const logout = async () => {
