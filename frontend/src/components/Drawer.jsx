@@ -19,13 +19,13 @@ const drawerWidth = 240;
 const SidebarData = [
   {
     title: 'Home',
-    path: '/',
+    path: '/dashboard',
     icon: <Home />
 
   },
   {
     title: 'Courses',
-    path: '/',
+    path: '',
     icon: <School />,
     iconClosed: <KeyboardArrowDown sx={{display: "flex", alignItems: "center", ml: 2}} />,
     iconOpened: <KeyboardArrowUp sx={{display: "flex", alignItems: "center", ml: 2}} />,
@@ -33,12 +33,12 @@ const SidebarData = [
     subNav: [
       {
         title: 'Course 1',
-        path: '/',
+        path: '',
         icon: <School />
       },
       {
         title: 'Course 2',
-        path: '/',
+        path: '',
         icon: <School />
       }
     ]
