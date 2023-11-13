@@ -40,3 +40,7 @@
 .read-the-docs {
   color: #888;
 }
+
+.shrink-label label {
+  transform: translateY(-12px) scale(0.75);
+}
