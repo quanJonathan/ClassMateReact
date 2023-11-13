@@ -2,6 +2,7 @@ import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useLocalStorage } from "./useLocalStorage";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 const AuthContext = createContext();
 
@@ -39,16 +40,23 @@ export const AuthProvider = ({ children }) => {
       );
       const { token, ...user } = response.data;
       //console.log(response.data)
+      if (token){
       setToken(token);
       localStorage.setItem("token", token);
       setUser(user);
       localStorage.setItem("user", user);
+       toast.success('Successfully Login');
+       navigate("/dashboard", { replace: true });
+      }
+      else {
+        toast.error('Login Failed');
+      }
     } catch (error) {
       console.error("Login failed:", error);
-      navigate("/", { replace: true });
+      toast.error('Login Failed due to :' + error.message);
     }
 
-    navigate("/dashboard", { replace: true });
+    
   };
 
   const updateUser = async (data) => {
@@ -61,6 +69,7 @@ export const AuthProvider = ({ children }) => {
     setToken(null);
     localStorage.removeItem("token");
     localStorage.removeItem("user");
+    navigate("/")
   };
 
   const isAuthenticated = () => {

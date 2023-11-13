@@ -15,6 +15,7 @@ import { AuthLayout } from "./src/components/AuthLayout";
 import { ProtectedLayout } from "./src/components/ProtectedLayout";
 import ProfilePage from "./src/routes/profile";;
 
+
 export const router = createBrowserRouter(
   createRoutesFromElements(
     <Route element={<AuthLayout />}>

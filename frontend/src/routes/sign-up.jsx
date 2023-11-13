@@ -20,6 +20,7 @@ import { ArrowBack, Visibility, VisibilityOff } from "@mui/icons-material";
 import { useState } from "react";
 import axios from "axios";
 import AppName from "../components/WebName";
+import { toast } from "react-toastify";
 
 function Copyright(props) {
   return (
@@ -58,7 +59,17 @@ export default function SignUp() {
       email: data.get("email"),
       password: data.get("password"),
     };
-
+    if (form.firstName==""){
+      toast.warning('First Name is Required');
+    } else if (form.lastName==""){
+      toast.warning('Last Name is Required');
+    } else if (!valid){
+      toast.warning('Email is Invalid');
+    }
+    else if (form.password==""){
+      toast.warning('Password is Required');
+    }
+    else {
     await axios
       .post("http://localhost:3001/auth/signUp", form, {
         headers: {
@@ -68,6 +79,8 @@ export default function SignUp() {
       })
       .then(function (res) {
         console.log(res);
+        toast.success("Sign Up Successfully!");
+        navigate("/sign-in");
       })
       .catch(function (error) {
         if (error.response) {
@@ -76,18 +89,23 @@ export default function SignUp() {
           console.log(error.response.data);
           console.log(error.response.status);
           console.log(error.response.headers);
+          toast.error('Sign Up Failed due to :' + error.response.data);
         } else if (error.request) {
           // The request was made but no response was received
           // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
           // http.ClientRequest in node.js
           console.log(error.request);
+          toast.error('Sign Up Failed');
         } else {
           // Something happened in setting up the request that triggered an Error
           console.log("Error", error.message);
+          toast.error('Sign Up Failed');
+
         }
         console.log(error.config);
         navigate("/sign-up");
       });
+    }
   };
 
   const [showPassword, setShowPassword] = useState(false);
