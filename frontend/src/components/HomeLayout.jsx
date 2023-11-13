@@ -5,19 +5,9 @@ import { useEffect } from "react";
 
 export const HomeLayout = () => {
   const outlet = useOutlet();
-  const { token } = useAuth();
-  const navigate = useNavigate();
-
-  // console.log("token in home " + token);
-  useEffect(() => {
-    if (token) {
-      navigate("/user/profile");
-    }
-  }, [token, navigate]);
 
   return (
     <div>
-      <WebAppBar />
       {outlet}
     </div>
   );

@@ -1,12 +1,13 @@
 import { Box, styled, Typography, Chip } from "@mui/material";
 import { PlayCircle, Star } from "@mui/icons-material";
-function CourseCard({ item }) {
+function CourseCard({ item, courseWidth, courseHeight }) {
   const CourseBox = styled(Box)(({ theme }) => ({
-    maxWidth: 300,
-    height: 400,
+    maxWidth:  courseWidth || 300,
+    height: courseHeight || 400,
     backgroundColor: "#fff",
     borderTopLeftRadius: "20px",
     borderTopRightRadius: "20px",
+    fontSize: courseWidth ? "1rem" : "1.5rem",
     boxShadow:
       "0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)",
     margin: theme.spacing(5, 2, 4, 2),
@@ -16,7 +17,8 @@ function CourseCard({ item }) {
   }));
 
   return (
-    <CourseBox>
+    <CourseBox
+    >
       <Box
         sx={{
           height: "40%",
@@ -56,10 +58,16 @@ function CourseCard({ item }) {
           alignItems: "center",
         }}
       >
-        <Typography variant="h5" sx={{ fontWeight: "700", color: "#0B036B" }}>
+        <Typography  sx={{ fontWeight: "700", color: "#0B036B" }}>
           {item.title}
         </Typography>
-        <Typography variant="body2" sx={{ my: 2, textAlign: "center" }}>
+        <Typography variant="body2" sx={{ my: 2, textAlign: "center",
+          overflow: 'hidden',
+          textOverflow: 'ellipsis',
+          display: '-webkit-box',
+          WebkitLineClamp: '2',
+          WebkitBoxOrient: 'vertical',
+    }}>
           {item.description}
         </Typography>
 
@@ -81,7 +89,9 @@ function CourseCard({ item }) {
             }}
           >
             <PlayCircle color="primary" sx={{ margin: "10px" }} />
-            <Typography variant="body2" sx={{ fontWeight: "bold" }}>
+            <Typography  sx={{ fontWeight: "bold",
+            fontSize: courseWidth ? "12px" : "14px"
+        }}>
               12x Lessons
             </Typography>
           </Box>
@@ -93,7 +103,7 @@ function CourseCard({ item }) {
                   fontWeight: "medium",
                   display: "flex",
                   alignItems: "center",
-                  fontSize: "14px",
+                  fontSize: courseWidth ? "12px" : "10px",
                   justifyContent: "center",
                 }}
               >
@@ -101,9 +111,9 @@ function CourseCard({ item }) {
                 <Star
                   sx={{
                     color: "#FFD700",
-                    height: "20px",
-                    width: "20px",
-                    margin: "5px",
+                    height: courseWidth ? "15px" : "20px",
+                    width: courseWidth ? "15px": "20px",
+                    margin: "3px",
                   }}
                 />
               </Box>

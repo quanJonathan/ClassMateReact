@@ -1,15 +1,16 @@
 import { Box } from "@mui/material";
-// const subName1 = "CLASS";
-// const subName2 = "MATE";
+import { NavLink } from "react-router-dom";
 
 function AppName() {
   return (
+    <NavLink to="/" style={{ textDecoration: "none" }}>
     <Box
       component="img"
       sx={{ height: 200, width: 200 }}
       alt="appname"
       src="../src/assets/appName.svg"
     />
+    </NavLink>
   );
 }
 

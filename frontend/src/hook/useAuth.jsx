@@ -48,7 +48,7 @@ export const AuthProvider = ({ children }) => {
       navigate("/", { replace: true });
     }
 
-    navigate("/user/profile", { replace: true });
+    navigate("/dashboard", { replace: true });
   };
 
   const updateUser = async (data) => {
