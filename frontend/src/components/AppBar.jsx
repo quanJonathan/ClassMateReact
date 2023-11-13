@@ -154,7 +154,7 @@ function WebAppBar({ pages }) {
                 onClick={handleProfileMenuOpen}
                 color="inherit"
               >
-                <AccountCircle />
+                <AccountCircle sx={{width: "40px", height: "40px"}}/>
               </IconButton>
             )}
 

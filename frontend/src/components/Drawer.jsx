@@ -110,7 +110,7 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 );
 
 export default function MiniDrawer() {
-  const { logout, isAuthenticated } = useAuth();
+  const { logout, isAuthenticated, user } = useAuth();
   const theme = useTheme();
   const [open, setOpen] = useState(false);
   const [menuData, setMenuData] = useState("Home");
@@ -217,12 +217,7 @@ export default function MiniDrawer() {
                   onClick={handleProfileMenuOpen}
                   color="inherit"
                 >
-                  <AccountCircle
-                    sx={{
-                        width: "35px",
-                        height: "35px"
-                      }}
-                  />
+                   <AccountCircle sx={{width: "40px", height: "40px"}}/>
                 </IconButton>
               )}
   
@@ -252,7 +247,7 @@ export default function MiniDrawer() {
   
       </Drawer>
       <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
-       {menuData =="Home" && <HomeContent/> }
+       {menuData =="Home" && <HomeContent user={user} /> }
       </Box>
     </>
   );

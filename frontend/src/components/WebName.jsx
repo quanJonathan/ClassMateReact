@@ -6,9 +6,9 @@ function AppName() {
     <NavLink to="/" style={{ textDecoration: "none" }}>
     <Box
       component="img"
-      sx={{ height: 200, width: 200 }}
+      sx={{ width: 200 }}
       alt="appname"
-      src="../src/assets/appName.svg"
+      src="../src/assets/appName.png"
     />
     </NavLink>
   );

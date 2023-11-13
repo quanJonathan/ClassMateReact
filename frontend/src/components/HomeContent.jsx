@@ -2,7 +2,7 @@ import { Box, Button, Divider, Typography, styled } from '@mui/material'
 import React from 'react'
 import CourseCard from './CourseCard';
 
-function HomeContent() {
+function HomeContent({user}) {
   const courses = [
     {
       id: "1",
@@ -95,7 +95,7 @@ function HomeContent() {
         flexDirection: "row",
         alignItems: "center"
       }}>
-      <Typography variant="h4">Hello, Chau</Typography>
+      <Typography variant="h4">Hello, {user.firstName || "" }</Typography>
       <Divider sx={{ ml: 2, mr: 2, display: { xs: "none", md: "flex" }, width: "50%" }} >
 
         
