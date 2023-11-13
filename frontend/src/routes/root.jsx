@@ -10,11 +10,12 @@ export default function Root() {
   return (
     <Box
     sx={{
-      position: "absolute",
-      top: 0,
-      right: 0,
-      left: 0,
-      minHeight: "100vh"
+     display: "flex",
+     position: "absolute",
+     top: 0,
+     right: 0,
+     left: 0,
+     minHeight: "100vh"
     }}
   >
     <MiniDrawer/>
