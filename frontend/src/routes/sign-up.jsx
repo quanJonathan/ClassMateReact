@@ -19,6 +19,7 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { ArrowBack, Visibility, VisibilityOff } from "@mui/icons-material";
 import { useState } from "react";
 import axios from "axios";
+import AppName from "../components/WebName";
 
 function Copyright(props) {
   return (
@@ -96,21 +97,29 @@ export default function SignUp() {
   const handleMouseDownPassword = (event) => {
     event.preventDefault();
   };
+  const [valid,setValid] = useState(true);
+  const [email,setEmail] = useState(null);
+
+  const handleValidation = (e) => {
+    let regEmail = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    setValid(regEmail.test(e.target.value));
+    setEmail(e.target.value);
+  };
 
   return (
-    <Grid
-      container
-      component="main"
+    <Box
       sx={{
-        paddingY: "5%",
+        paddingTop: "5%",
+        paddingBottom: "4.5%",
         paddingX: "10%",
-
         backgroundImage: "url(../src/assets/log-in.png)",
         backgroundRepeat: "no-repeat",
         backgroundColor: (t) =>
           t.palette.mode === "light" ? t.palette.grey[50] : t.palette.grey[900],
-        backgroundSize: "100%",
+        backgroundSize: "100% 100%",
         backgroundPosition: "center",
+        justifyContent: "center",
+        display: "flex"
       }}
     >
       <CssBaseline />
@@ -129,49 +138,32 @@ export default function SignUp() {
           item
           container
           xs={0}
-          sm={4}
-          md={6}
+          sm={8}
           sx={{
-            // backgroundImage: 'url(https://source.unsplash.com/random?wallpapers)',
-            backgroundImage: "url(../src/assets/log-in-2.png)",
-
-            backgroundRepeat: "no-repeat",
-
-            backgroundSize: "70%",
-            backgroundPosition: "center",
+            display: {
+              xs: "none",
+              lg: "block"
+            },
           }}
         >
-          <Grid item xs={12}>
-            <IconButton sx={{ mt: 2 }}>
-              {/* <img width={30} src="../src/assets/log-in-gg.svg" /> */}
-              <NavLink to="/" variant="body2">
-                <ArrowBack color="primary" />
-              </NavLink>
-            </IconButton>
-          </Grid>
-        </Grid>
-        <Grid item xs={12} sm={8} md={6} sx={{ mr: 4 }}>
-          <Grid container height="50px" spacing={1} sx={{ mt: 2, ml: 0 }}>
-            <Grid
-              item
-              onClick={() => navigate("/")}
-              xs={2}
-              sm={2}
-              sx={{
-                // backgroundImage: 'url(https://source.unsplash.com/random?wallpapers)',
-                backgroundImage: "url(../src/assets/appName.svg)",
-
-                backgroundRepeat: "no-repeat",
-
-                backgroundPosition: "center",
-              }}
+           <Box sx={{
+            height: "100%",
+            display: "flex",
+            alignItems: "center",
+          }} >
+            <img alt="signup" src="../src/assets/log-in-2.png" 
+            style={{
+              width: "100%"
+            }}
             />
-            <Grid item sm={4}>
-              <Divider sx={{ mt: 3, mb: 3 }} />
-            </Grid>
-            <Grid item sm={6}>
-              <Typography sx={{ mt: 1, mb: 1 }} align="center">
-                {"Already have an account?"}
+          </Box>
+        </Grid>
+        <Grid item xs={12} sm={4} sx={{ width: {xs: "100%", lg: "auto"}, display: "flex", flexDirection: "column", alignItems: "center"}}>
+            <Box height="20%" sx={{ mt: 2, ml: 0, display: "flex", alignItems: "center",flexDirection: {xs: "column", lg: "row"}, justifyContent: "center", width: {xs: "100%", lg: "auto"} }}>
+            <AppName sx={{height: "100%"}} />
+            <Divider sx={{ mt: 3, mb: 3, mx:2, width: "20%", display: { xs: "none", lg: "flex" }  }} />
+            <Typography sx={{fontSize: "16px", width: {xs: "50%", lg: "100%"}, textAlign: {xs: "center", lg: "right"}}} >
+                {"Already have an account ?"}
                 {
                   <NavLink to="/sign-in" variant="body2">
                     {" "}
@@ -179,12 +171,10 @@ export default function SignUp() {
                   </NavLink>
                 }
               </Typography>
-            </Grid>
-          </Grid>
-          <Box
+            </Box>
+            <Box
             sx={{
-              my: 4,
-              mr: 4,
+              my: 2,
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
@@ -193,7 +183,7 @@ export default function SignUp() {
             {/* <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
                                 <LockOutlinedIcon />
                             </Avatar> */}
-            <Typography component="h1" variant="h3" sx={{ my: 2 }}>
+            <Typography component="h1" variant="h4">
               Sign Up
             </Typography>
             <Box
@@ -203,23 +193,37 @@ export default function SignUp() {
               sx={{ mt: 1 }}
               paddingX={4}
             >
-              <Grid container spacing={1}>
-                <Grid item xs={12} sm={6} pl={0}>
+              <Grid container spacing={1} sx={{justifyContent: "center"}}>
+                <Grid item xs={10} lg={5} sx={{
+                 paddingLeft: {xs: "30px !important", sm: "0px"}, 
+                  paddingRight: {xs: "30px", sm: "0px"}
+                }}>
                   <TextField
-                    InputProps={{ sx: { borderRadius: 10 } }}
+                    InputProps={{ sx: { borderRadius: 10,
+                      paddingLeft: "20px",
+                      paddingRight: "20px",
+                    } }}
                     margin="normal"
                     autoComplete="given-name"
                     name="firstName"
-                    required
                     fullWidth
                     id="firstName"
                     label="First Name"
                     autoFocus
+                    InputLabelProps={{
+                      style: { marginLeft: "5px", marginRight: "5px" },
+                    }}
                   />
                 </Grid>
-                <Grid item xs={12} sm={6}>
+                <Grid item xs={10} lg={5} sx={{
+                  paddingLeft: {xs: "30px !important", sm: "0px" },
+                  paddingRight: {xs: "30px",  sm: "0px"}
+                }}>
                   <TextField
-                    InputProps={{ sx: { borderRadius: 10 } }}
+                    InputProps={{ sx: { borderRadius: 10,
+                      paddingLeft: "20px",
+                      paddingRight: "20px",
+                    } }}
                     margin="normal"
                     required
                     fullWidth
@@ -227,22 +231,41 @@ export default function SignUp() {
                     label="Last Name"
                     name="lastName"
                     autoComplete="family-name"
+                    InputLabelProps={{
+                      style: { marginLeft: "5px", marginRight: "5px" },
+                    }}
                   />
                 </Grid>
-                <Grid item xs={12}>
+                <Grid item xs={10} sx={{
+                  paddingLeft: {xs: "30px !important",  sm: "0px"},
+                  paddingRight: {xs: "30px",  sm: "0px"}
+                }}>
                   <TextField
-                    InputProps={{ sx: { borderRadius: 10 } }}
+                    InputProps={{ sx: { borderRadius: 10,
+                      paddingLeft: "20px",
+                      paddingRight: "20px",
+                    } }}
                     margin="normal"
-                    required
                     fullWidth
                     id="email"
                     label="Email Address"
                     name="email"
                     autoComplete="email"
                     autoFocus
+                    InputLabelProps={{
+                      style: { marginLeft: "5px", marginRight: "5px" },
+                    }}
+                    value={email}
+                    onChange={(e) => handleValidation(e)}
+                    error={!valid}
+                    required={true}
+                    helperText={!valid ? 'Invalid Format' : ' '}
                   />
                 </Grid>
-                <Grid item xs={12}>
+                <Grid item xs={10} sx={{
+                  paddingLeft: {xs: "30px !important",  sm: "0px"},
+                  paddingRight: {xs: "30px",  sm: "0px"}
+                }}>
                   {/* <TextField
                                             InputProps={{ sx: { borderRadius: 10 } }}
                                             margin="normal"
@@ -256,12 +279,19 @@ export default function SignUp() {
                 
                                         /> */}
                   <FormControl fullWidth required variant="outlined">
-                    <InputLabel htmlFor="outlined-adornment-password">
+                    <InputLabel htmlFor="outlined-adornment-password"
+                     sx={{
+                      marginLeft: "5px", marginRight: "5px"
+                    }}
+                    >
                       Password
                     </InputLabel>
                     <OutlinedInput
                       name="password"
-                      sx={{ borderRadius: 10 }}
+                      sx={{ borderRadius: 10,
+                        paddingLeft: "20px",
+                        paddingRight: "20px",
+                      }}
                       id="outlined-adornment-password"
                       type={showPassword ? "text" : "password"}
                       endAdornment={
@@ -290,54 +320,44 @@ export default function SignUp() {
                                         Forgot password?
                                     </Link>
                                 </Box> */}
-
+               <Box sx={{ display: "flex", justifyContent: "center", width: "100%"}}>
               <Button
                 type="submit"
                 fullWidth
                 variant="contained"
-                sx={{ mt: 3, mb: 2, borderRadius: 4, color: "white" }}
+                sx={{ mt: 3, mb: 2, borderRadius: 4, color: "white",  width: "70%" }}
               >
                 Sign Up
               </Button>
-
+              </Box>
               {/* <Copyright sx={{ mt: 5 }} /> */}
 
-              <Grid
-                container
-                spacing={1}
-                sx={{ mt: 2, ml: 0, justifyContent: "center" }}
+              <Box
+                sx={{ justifyContent: "center" }}
               >
-                <Grid item sm={4}>
-                  <Divider sx={{ mt: 3, mb: 3 }} />
-                </Grid>
-                <Grid item sm={4}>
-                  <Typography sx={{ mt: 1, mb: 1 }} align="center">
-                    {"or sign up with"}
-                  </Typography>
-                </Grid>
-                <Grid item sm={4}>
-                  <Divider sx={{ mt: 3, mb: 3 }} />
-                </Grid>
-                <Grid
-                  item
-                  container
+               <Divider sx={{width: "100%", px: 20}}>
+                or sign up with
+               </Divider>
+                <Box
                   sx={{
                     justifyContent: "center",
-                    alignContent: "space-around",
+                    display: "flex"
                   }}
                 >
-                  <IconButton sx={{ border: 1 }}>
-                    <img src="../src/assets/log-in-gg.svg" />
+                  <IconButton sx={{ border: 1, width: "35px", height: "35px", p: 0, m: 1 }}>
+                    <img src="../src/assets/log-in-gg.svg" width="100%" />
                   </IconButton>
-                  <IconButton sx={{ border: 1 }}>
-                    <img src="../src/assets/log-in-fb.svg" />
+                  <IconButton sx={{ border: 1, width: "35px", height: "35px", p: 0, m: 1 }}>
+                    <img src="../src/assets/log-in-fb.svg" width="100%" />
                   </IconButton>
-                </Grid>
-              </Grid>
+                </Box>
+              </Box>
+
+              
             </Box>
-          </Box>
+            </Box>
         </Grid>
       </Box>
-    </Grid>
+    </Box>
   );
 }
