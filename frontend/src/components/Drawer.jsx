@@ -238,7 +238,7 @@ export default function MiniDrawer({children, page}) {
                 <IconButton
                size="large"
                edge="center"
-               onClick={()=> navigate("/user/profile")}
+               onClick={handleProfileMenuOpen}
                color="inherit"
                 >
                <AccountCircle sx={{width: "70px", height: "70px"}}/>
