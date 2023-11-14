@@ -95,7 +95,7 @@ function HomeContent({user}) {
         flexDirection: "row",
         alignItems: "center"
       }}>
-      <Typography variant="h4">Hello, {user.firstName || "" }</Typography>
+      <Typography variant="h4">Hello, {user?.firstName || "" }</Typography>
       <Divider sx={{ ml: 2, mr: 2, display: { xs: "none", md: "flex" }, width: "50%" }} >
 
         
