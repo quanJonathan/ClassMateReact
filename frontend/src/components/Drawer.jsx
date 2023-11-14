@@ -13,6 +13,7 @@ import { useAuth } from "../hook/useAuth.jsx";
 import { useNavigate } from "react-router-dom";
 import SubMenu from './Submenu.jsx';
 
+
 const drawerWidth = 240;
 
 
@@ -68,7 +69,7 @@ const closedMixin = (theme) => ({
 const DrawerHeader = styled('div')(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
-  justifyContent: 'flex-end',
+  justifyContent: 'space-between',
   padding: theme.spacing(0, 1),
   // necessary for content to be below app bar
   ...theme.mixins.toolbar,
@@ -109,7 +110,7 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
   }),
 );
 
-export default function MiniDrawer() {
+export default function MiniDrawer({children, page}) {
   const { logout, isAuthenticated, user } = useAuth();
   const theme = useTheme();
   const [open, setOpen] = useState(false);
@@ -151,7 +152,7 @@ export default function MiniDrawer() {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      <MenuItem onClick={() => navigate('/user/profile')}>Profile</MenuItem>
+      <MenuItem onClick={() => navigate("/user/profile")}>Profile</MenuItem>
       <MenuItem onClick={() => navigate('/dashboard')}>Dashboard</MenuItem>
       <MenuItem onClick={ () =>  {
         logout()
@@ -177,7 +178,8 @@ export default function MiniDrawer() {
       open={open}
       sx={{
         bgcolor: "#FFF",
-        color: "#2f2f2f"
+        color: "#2f2f2f",
+     
       }}>
          <Container maxWidth="x1">
         <Toolbar sx={{maxHeight: "10vh"}}>
@@ -196,7 +198,7 @@ export default function MiniDrawer() {
                     fontWeight: "medium",
                     fontSize: "20px"
                 }}>
-                    Dashboard
+                   {page}
                 </Typography>
             </Box>
 
@@ -227,7 +229,18 @@ export default function MiniDrawer() {
       </AppBar>
       <Drawer variant="permanent" open={open}>
         <DrawerHeader>
-          <IconButton onClick={()=>setOpen(!open)}>
+        
+                {isAuthenticated() && open && (
+                <IconButton
+               size="large"
+               edge="center"
+               onClick={()=> navigate("/user/profile")}
+               color="inherit"
+                >
+               <AccountCircle sx={{width: "70px", height: "70px"}}/>
+             </IconButton>
+                )}
+             <IconButton onClick={()=>setOpen(!open)}>
             {theme.direction === 'rtl' ? <ChevronRight /> : <ChevronLeft />}
           </IconButton>
         </DrawerHeader>
@@ -246,7 +259,10 @@ export default function MiniDrawer() {
   
       </Drawer>
       <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
-       {menuData =="Home" && <HomeContent user={user} /> }
+      
+       {page =="Dashboard" && <HomeContent user={user} /> }
+       { page =="Profile" && children }
+      
       </Box>
     </>
   );

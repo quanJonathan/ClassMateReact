@@ -15,6 +15,8 @@ import { Box, Container } from "@mui/system";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import lodash from 'lodash'
+import MiniDrawer from "../components/Drawer";
+import { toast } from "react-toastify";
 
 export default function ProfilePage() {
   const [isView, setIsView] = useState(true);
@@ -57,7 +59,7 @@ export default function ProfilePage() {
     if (isView) {
       setIsView(false);
     } else {
-      setIsView(true);
+      
       const formData = new FormData(event.currentTarget);
       const form = {
         email: user.email,
@@ -67,7 +69,15 @@ export default function ProfilePage() {
         address: formData.get("address"),
       };
       console.log(form)
+
+      if (form.firstName==""){
+        toast.warning('First Name is Required');
+      } else if (form.lastName==""){
+        toast.warning('Last Name is Required');
+      }
+      else {
       updateUser(form);
+      setIsView(true);
       await axios
         .post("http://localhost:3001/auth/profile/update", form, {
           headers: {
@@ -76,6 +86,7 @@ export default function ProfilePage() {
         })
         .then(function (res) {
           console.log(res);
+          toast.success("Edit Profile Successfully!");
           // navigate("/user/profile");
         })
         .catch(function (error) {
@@ -85,23 +96,29 @@ export default function ProfilePage() {
             console.log(error.response.data);
             console.log(error.response.status);
             console.log(error.response.headers);
+            toast.error('Sign Up Failed due to :' + error.response.data);
           } else if (error.request) {
             // The request was made but no response was received
             // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
             // http.ClientRequest in node.js
             console.log(error.request);
+            toast.error('Sign Up Failed');
           } else {
             // Something happened in setting up the request that triggered an Error
             console.log("Error", error.message);
+            toast.error('Sign Up Failed');
           }
           console.log(error.config);
           navigate("/user/profile");
         });
+      }
     }
   };
 
   return (
-    <Container component="main" maxWidth="xs">
+    <MiniDrawer profile="true" page="Profile">
+    <Container component="main" maxWidth="sm" height="100vh"
+    >
       <CssBaseline/>
       <Box
         sx={{
@@ -109,14 +126,18 @@ export default function ProfilePage() {
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
+          justifyContent: "center"
         }}
       >
         <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}></Avatar>
-        <Box component="form" onSubmit={handleForm} noValidate sx={{ mt: 1 }}>
+        <Box component="form" onSubmit={handleForm} noValidate sx={{ mt: 1, mr: 5, ml: {xs: "100px", md: 5} }}>
           <Grid container spacing={1}>
             <Grid item xs={12} sm={6} pl={0}>
                 <TextField
-                  InputProps={{ sx: { borderRadius: 10 } }}
+                  InputProps={{ sx: { borderRadius: 10,
+                    paddingLeft: "20px",
+                    paddingRight: "20px",
+                  } }}
                   margin="normal"
                   autoComplete="given-name"
                   name="firstName"
@@ -126,13 +147,19 @@ export default function ProfilePage() {
                   label="First Name"
                   value={firstName}
                   autoFocus
+                  InputLabelProps={{
+                    style: { marginLeft: "5px", marginRight: "5px" },
+                  }}
                   onChange={(e) => setFirstName(e.target.value)}
                   disabled={isView}
                 />
             </Grid>
             <Grid item xs={12} sm={6}>
               <TextField
-                InputProps={{ sx: { borderRadius: 10 } }}
+                InputProps={{ sx: { borderRadius: 10,
+                  paddingLeft: "20px",
+                  paddingRight: "20px",
+                } }}
                 margin="normal"
                 required
                 fullWidth
@@ -144,11 +171,17 @@ export default function ProfilePage() {
                 autoFocus
                 onChange={(e) => setLastName(e.target.value)}
                 disabled = {isView}
+                InputLabelProps={{
+                  style: { marginLeft: "5px", marginRight: "5px" },
+                }}
               />
             </Grid>
             <Grid item xs={12}>
               <TextField
-                InputProps={{ sx: { borderRadius: 10 } }}
+                InputProps={{ sx: { borderRadius: 10,
+                  paddingLeft: "20px",
+                  paddingRight: "20px",
+                 } }}
                 margin="normal"
                 fullWidth
                 id="phoneNumber"
@@ -159,11 +192,17 @@ export default function ProfilePage() {
                 autoFocus
                 onChange={(e) => setPhoneNumber(e.target.value)}
                 disabled={isView}
+                InputLabelProps={{
+                  style: { marginLeft: "5px", marginRight: "5px" },
+                }}
               />
             </Grid>
             <Grid item xs={12}>
               <TextField
-                InputProps={{ sx: { borderRadius: 10 } }}
+                InputProps={{ sx: { borderRadius: 10,
+                  paddingLeft: "20px",
+                  paddingRight: "20px",
+                } }}
                 margin="normal"
                 fullWidth
                 id="address"
@@ -174,6 +213,9 @@ export default function ProfilePage() {
                 onChange={(e) => setAddress(e.target.value)}
                 value={address}
                 disabled={isView}
+                InputLabelProps={{
+                  style: { marginLeft: "5px", marginRight: "5px" },
+                }}
               />
             </Grid>
           </Grid>
@@ -189,5 +231,6 @@ export default function ProfilePage() {
         </Box>
       </Box>
     </Container>
+    </MiniDrawer>
   );
 }

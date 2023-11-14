@@ -12,7 +12,7 @@ export default function Dashboard() {
      minHeight: "100vh"
     }}
   >
-    <MiniDrawer/>
+    <MiniDrawer page="Dashboard"/>
   </Box>
   );
 }
