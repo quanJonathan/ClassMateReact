@@ -28,7 +28,8 @@ export const AuthProvider = ({ children }) => {
 
     if (!isTokenValid(token)) {
       setToken(null);
-      navigate('/')
+      setUser(null)
+      navigate("/");
     }
   }, [token]);
 
@@ -40,27 +41,24 @@ export const AuthProvider = ({ children }) => {
       );
       const { token, ...user } = response.data;
       //console.log(response.data)
-      if (token){
-      setToken(token);
-      localStorage.setItem("token", token);
-      setUser(user);
-      localStorage.setItem("user", user);
-       toast.success('Successfully Login');
-       navigate("/dashboard", { replace: true });
-      }
-      else {
-        toast.error('Login Failed');
+      if (token) {
+        setToken(token);
+        localStorage.setItem("token", token);
+        setUser(user);
+        localStorage.setItem("user", user);
+        toast.success("Successfully Login");
+        navigate("/dashboard", { replace: true });
+      } else {
+        toast.error("Login Failed");
       }
     } catch (error) {
       console.error("Login failed:", error);
-      toast.error('Login Failed');
+      toast.error("Login Failed");
     }
-
-    
   };
 
   const updateUser = async (data) => {
-    setUser(JSON.stringify(data))
+    setUser(JSON.stringify(data));
     localStorage.setItem("user", JSON.stringify(data));
   };
 
@@ -69,21 +67,24 @@ export const AuthProvider = ({ children }) => {
     setToken(null);
     localStorage.removeItem("token");
     localStorage.removeItem("user");
-    navigate("/")
+    navigate("/");
   };
 
   const isAuthenticated = () => {
     return !!token;
   };
 
-  const value = {
-    token,
-    user,
-    login,
-    logout,
-    updateUser,
-    isAuthenticated,
-  };
+  const value = useMemo(
+    () => ({
+      token,
+      user,
+      login,
+      logout,
+      updateUser,
+      isAuthenticated,
+    }),
+    [updateUser, logout, login]
+  );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };

@@ -16,7 +16,7 @@ import {
   Paper,
 } from "@mui/material";
 import { NavLink, useNavigate } from "react-router-dom";
-import { ArrowBack, Visibility, VisibilityOff } from "@mui/icons-material";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { useState } from "react";
 import axios from "axios";
 import AppName from "../components/WebName";
@@ -169,7 +169,7 @@ export default function SignUp() {
             display: "flex",
             alignItems: "center",
           }} >
-            <img alt="signup" src="../src/assets/log-in-2.png" 
+            <img alt="signUp" src="../src/assets/log-in-2.png" 
             style={{
               width: "100%"
             }}
@@ -179,7 +179,7 @@ export default function SignUp() {
         <Grid item xs={12} sm={4} sx={{ width: {xs: "100%", lg: "auto"}, display: "flex", flexDirection: "column", alignItems: "center"}}>
             <Box height="20%" sx={{ mt: 2, ml: 0, display: "flex", alignItems: "center",flexDirection: {xs: "column", lg: "row"}, justifyContent: "center", width: {xs: "100%", lg: "auto"} }}>
             <AppName sx={{height: "100%"}} />
-            <Divider sx={{ mt: 3, mb: 3, mx:2, width: "20%", display: { xs: "none", lg: "flex" }  }} />
+            <Divider sx={{ my: 3, mx:2, width: "20%", display: { xs: "none", lg: "flex" }  }} />
             <Typography sx={{fontSize: "16px", width: {xs: "50%", lg: "100%"}, textAlign: {xs: "center", lg: "right"}}} >
                 {"Already have an account ?"}
                 {

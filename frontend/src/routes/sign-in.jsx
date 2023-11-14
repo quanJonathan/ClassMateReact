@@ -18,10 +18,9 @@ import {
   Paper,
   styled
 } from "@mui/material";
-import { NavLink, useNavigate } from "react-router-dom";
-import { ArrowBack, Visibility, VisibilityOff } from "@mui/icons-material";
+import { NavLink } from "react-router-dom";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { useState } from "react";
-import axios from "axios";
 import { useAuth } from "../hook/useAuth.jsx";
 import AppName from "../components/WebName.jsx";
 
@@ -57,7 +56,7 @@ export default function SignIn() {
     },
   }));
 
-  const [errrorMessage, setErrorMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
 
   const { login } = useAuth();
   const handleSubmit = async (event) => {
@@ -86,12 +85,11 @@ export default function SignIn() {
     event.preventDefault();
   };
 
-  const navigate = useNavigate();
 
   return (
     <Box
       sx={{
-        paddingTop: "5%",
+        paddingTop: "4%",
         paddingBottom: "6%",
         paddingX: "10%",
         backgroundImage: "url(../src/assets/log-in.png)",
@@ -272,7 +270,7 @@ export default function SignIn() {
               </Box>
               {/* <Copyright sx={{ mt: 5 }} /> */}
               <Typography component="p" variant="p" color="red">
-                {errrorMessage}
+                {errorMessage}
               </Typography>
 
               <Box

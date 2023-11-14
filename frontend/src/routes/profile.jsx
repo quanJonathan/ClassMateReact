@@ -1,20 +1,16 @@
 import {
   Avatar,
   Button,
-  FormControlLabel,
   Typography,
   TextField,
   Grid,
-  InputLabel,
-  FormControl,
   CssBaseline,
 } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import { useState } from "react";
 import { useAuth } from "../hook/useAuth";
 import { Box, Container } from "@mui/system";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import lodash from 'lodash'
 import MiniDrawer from "../components/Drawer";
 import { toast } from "react-toastify";
 
@@ -76,7 +72,6 @@ export default function ProfilePage() {
         toast.warning('Last Name is Required');
       }
       else {
-      updateUser(form);
       setIsView(true);
       await axios
         .post("http://localhost:3001/auth/profile/update", form, {
@@ -86,8 +81,11 @@ export default function ProfilePage() {
         })
         .then(function (res) {
           console.log(res);
-          toast.success("Edit Profile Successfully!");
+         
           // navigate("/user/profile");
+          updateUser(form); 
+         // window.location.reload(); 
+          toast.success("Edit Profile Successfully!")
         })
         .catch(function (error) {
           if (error.response) {
