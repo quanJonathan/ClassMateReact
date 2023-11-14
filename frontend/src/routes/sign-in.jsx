@@ -92,7 +92,7 @@ export default function SignIn() {
     <Box
       sx={{
         paddingTop: "5%",
-        paddingBottom: "7%",
+        paddingBottom: "6%",
         paddingX: "10%",
         backgroundImage: "url(../src/assets/log-in.png)",
         backgroundRepeat: "no-repeat",
@@ -175,7 +175,7 @@ export default function SignIn() {
               component="form"
               noValidate
               onSubmit={handleSubmit}
-              sx={{ mt: 1 }}
+              sx={{ mt: 1, width: {xs: "80%", sm: "100%"} }}
             >
               <Grid container spacing={1} sx={{justifyContent: "center"}}>
                 <Grid item xs={10} sx={{mx: 10}}>
@@ -241,7 +241,7 @@ export default function SignIn() {
                 </Grid>
               </Grid>
               <Box sx={{display: "flex", justifyContent: "center"}}>
-              <Box sx={{ display: "flex", justifyContent: "space-between", width: "70%", my: 2 }}>
+              <Box sx={{ display: "flex", justifyContent: "space-between", width: "70%", my: 2, p: 1}}>
                 <FormControlLabel
                   control={
                     <Checkbox
@@ -258,7 +258,7 @@ export default function SignIn() {
                 </Link>
               </Box>
               </Box>
-              <Box sx={{ display: "flex", justifyContent: "center", width: "100%"}}>
+              <Box sx={{ display: "flex", justifyContent: "center", p: {xs: 2, sm: 0}}}>
               <Button
                 type="submit"
                 fullWidth
@@ -278,7 +278,7 @@ export default function SignIn() {
               <Box
                 sx={{ justifyContent: "center" }}
               >
-               <Divider sx={{width: "100%", px: 20}}>
+               <Divider sx={{width: "100%", px: 20, display: "flex", justifyContent: "center", alignItems: "center"}}>
                 or sign in with
                </Divider>
                 <Box

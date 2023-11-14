@@ -3,14 +3,18 @@ import { NavLink } from "react-router-dom";
 
 function AppName({width}) {
   const CustomLink = styled(NavLink)(({ theme }) => ({
+    
     cursor: "pointer",
     textDecoration: "none",
     width: width || "auto",
     justifyContent: "flex-start",
     [theme.breakpoints.down("md")]: {
-      display: "flex",
       justifyContent: "center",
       width: "100%",
+      display: "flex"
+    },
+    [theme.breakpoints.down("sm")]: {
+      display: "none"
     },
   }));
 

@@ -129,8 +129,8 @@ export default function ProfilePage() {
           justifyContent: "center"
         }}
       >
-        <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}></Avatar>
-        <Box component="form" onSubmit={handleForm} noValidate sx={{ mt: 1, mr: 5, ml: {xs: "100px", md: 5} }}>
+        <Avatar sx={{ m: 1, bgcolor: "secondary.main", marginTop: "4vh" }}></Avatar>
+        <Box component="form" onSubmit={handleForm} noValidate sx={{ mt: 1, mr: 5, ml: {xs: "50px", md: 5} }}>
           <Grid container spacing={1}>
             <Grid item xs={12} sm={6} pl={0}>
                 <TextField

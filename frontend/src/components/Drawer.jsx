@@ -179,10 +179,10 @@ export default function MiniDrawer({children, page}) {
       sx={{
         bgcolor: "#FFF",
         color: "#2f2f2f",
-     
+        
       }}>
          <Container maxWidth="x1">
-        <Toolbar sx={{maxHeight: "10vh"}}>
+        <Toolbar sx={{height: {xs: "12vh", md: "10vh"}}}>
           <IconButton
             color="inherit"
             aria-label="open drawer"
@@ -192,11 +192,15 @@ export default function MiniDrawer({children, page}) {
             <MenuIcon />
           </IconButton>
 
-          <AppName />
+          <AppName   />
           <Box sx={{ flexGrow: 1 }}>
                 <Typography color="#5f6368"  sx={{
                     fontWeight: "medium",
-                    fontSize: "20px"
+                    fontSize: "20px",
+                    display: {
+                      xs: "none",
+                      md: "block"
+                    }
                 }}>
                    {page}
                 </Typography>
@@ -227,8 +231,8 @@ export default function MiniDrawer({children, page}) {
         </Container>
         {renderMenu}
       </AppBar>
-      <Drawer variant="permanent" open={open}>
-        <DrawerHeader>
+      <Drawer variant="permanent" open={open} >
+        <DrawerHeader sx={{marginTop: {xs: "120px", md: "100px" }}}>
         
                 {isAuthenticated() && open && (
                 <IconButton

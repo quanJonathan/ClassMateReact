@@ -128,7 +128,7 @@ export default function SignUp() {
     <Box
       sx={{
         paddingTop: "5%",
-        paddingBottom: "4.5%",
+        paddingBottom: "3%",
         paddingX: "10%",
         backgroundImage: "url(../src/assets/log-in.png)",
         backgroundRepeat: "no-repeat",
@@ -208,7 +208,7 @@ export default function SignUp() {
               component="form"
               noValidate
               onSubmit={handleSubmit}
-              sx={{ mt: 1 }}
+              sx={{ mt: 1, width: {xs: "70%", sm: "100%"} }}
               paddingX={4}
             >
               <Grid container spacing={1} sx={{justifyContent: "center"}}>
@@ -353,7 +353,7 @@ export default function SignUp() {
               <Box
                 sx={{ justifyContent: "center" }}
               >
-               <Divider sx={{width: "100%", px: 20}}>
+               <Divider sx={{width: "100%", px: 20,  display: "flex", justifyContent: "center", alignItems: "center"}}>
                 or sign up with
                </Divider>
                 <Box
