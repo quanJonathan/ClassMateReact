@@ -84,7 +84,7 @@ export default function ProfilePage() {
          
           // navigate("/user/profile");
           updateUser(form); 
-         // window.location.reload(); 
+          // window.location.reload(); 
           toast.success("Edit Profile Successfully!")
         })
         .catch(function (error) {

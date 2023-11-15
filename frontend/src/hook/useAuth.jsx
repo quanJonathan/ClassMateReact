@@ -8,7 +8,7 @@ const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useLocalStorage("user", localStorage.getItem("user"));
-  const [token, setToken] = useState(localStorage.getItem("token"));
+  const [token, setToken] = useLocalStorage("token", localStorage.getItem("token"));
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -58,7 +58,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   const updateUser = async (data) => {
-    setUser(JSON.stringify(data));
+    // setUser(JSON.stringify(data));
     localStorage.setItem("user", JSON.stringify(data));
   };
 
