@@ -24,7 +24,7 @@ export default function ProfilePage() {
   const [phoneNumber, setPhoneNumber] = useState(user?.phoneNumber || "")
   const [address, setAddress] = useState(user?.address || "")
 
-  console.log(user)
+  // console.log(user)
 
   // console.log(user);
 
@@ -74,7 +74,7 @@ export default function ProfilePage() {
       else {
       setIsView(true);
       await axios
-        .post("http://localhost:3001/auth/profile/update", form, {
+        .post("https://classmatebe.onrender.com/auth/profile/update", form, {
           headers: {
             Authorization: "Bearer " + token,
           },
