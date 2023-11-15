@@ -6,7 +6,7 @@ function HomeContent({user}) {
   const courses = [
     {
       id: "1",
-      img: "../src/assets/writing.jpg",
+      img: "/assets/writing.jpg",
       title: "Creative Writing",
       description:
         "Lorem ipsum dolor sit amet, in sed integer. Scelerisque nam evget imperdiet accumsan, ipsum  turpis cursus. In elit amet, tortor nunc.",
@@ -14,7 +14,7 @@ function HomeContent({user}) {
 
     {
       id: "2",
-      img: "../src/assets/webdev.jpg",
+      img: "/assets/webdev.jpg",
       title: "Web Development",
       description:
         "Lorem ipsum dolor sit amet, in sed integer. Scelerisque nam evget imperdiet accumsan, ipsum  turpis cursus. In elit amet, tortor nunc.",
@@ -22,14 +22,14 @@ function HomeContent({user}) {
 
     {
       id: "3",
-      img: "../src/assets/graphic.jpg",
+      img: "/assets/graphic.jpg",
       title: "Graphic Design",
       description:
         "Lorem ipsum dolor sit amet, in sed integer. Scelerisque nam evget imperdiet accumsan, ipsum  turpis cursus. In elit amet, tortor nunc.",
     },
     {
       id: "4",
-      img: "../src/assets/writing.jpg",
+      img: "/assets/writing.jpg",
       title: "Creative Writing",
       description:
         "Lorem ipsum dolor sit amet, in sed integer. Scelerisque nam evget imperdiet accumsan, ipsum  turpis cursus. In elit amet, tortor nunc.",
@@ -37,7 +37,7 @@ function HomeContent({user}) {
 
     {
       id: "5",
-      img: "../src/assets/webdev.jpg",
+      img: "/assets/webdev.jpg",
       title: "Web Development",
       description:
         "Lorem ipsum dolor sit amet, in sed integer. Scelerisque nam evget imperdiet accumsan, ipsum  turpis cursus. In elit amet, tortor nunc.",

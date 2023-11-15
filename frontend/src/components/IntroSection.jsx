@@ -69,7 +69,7 @@ function IntroSection() {
       <Box sx={{ flex: "2" }}>
         <img
           alt="classmate"
-          src="../src/assets/log-in-2.png"
+          src="/assets/log-in-2.png"
           style={{ width: "100%", marginBottom: "2rem" }}
         />
       </Box>

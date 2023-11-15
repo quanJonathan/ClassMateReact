@@ -25,7 +25,7 @@ function AppName({width}) {
       component="img"
       sx={{ width: width ? "100%" : 200 }}
       alt="appname"
-      src="../src/assets/appName.png"
+      src="/assets/appName.png"
     />
     </CustomLink>
   );

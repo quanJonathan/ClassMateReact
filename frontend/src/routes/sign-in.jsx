@@ -92,7 +92,7 @@ export default function SignIn() {
         paddingTop: "4%",
         paddingBottom: "6%",
         paddingX: "10%",
-        backgroundImage: "url(../src/assets/log-in.png)",
+        backgroundImage: "url(/assets/log-in.png)",
         backgroundRepeat: "no-repeat",
         backgroundColor: (t) =>
           t.palette.mode === "light" ? t.palette.grey[50] : t.palette.grey[900],
@@ -133,7 +133,7 @@ export default function SignIn() {
             display: "flex",
             alignItems: "center",
           }} >
-            <img alt="login" src="../src/assets/log-in-2.png" 
+            <img alt="login" src="/assets/log-in-2.png" 
             style={{
               width: "100%"
             }}
@@ -286,10 +286,10 @@ export default function SignIn() {
                   }}
                 >
                   <IconButton sx={{ border: 1, width: "35px", height: "35px", p: 0, m: 1 }}>
-                    <img src="../src/assets/log-in-gg.svg" width="100%" />
+                    <img src="/assets/log-in-gg.svg" width="100%" />
                   </IconButton>
                   <IconButton sx={{ border: 1, width: "35px", height: "35px", p: 0, m: 1 }}>
-                    <img src="../src/assets/log-in-fb.svg" width="100%" />
+                    <img src="/assets/log-in-fb.svg" width="100%" />
                   </IconButton>
                 </Box>
               </Box>

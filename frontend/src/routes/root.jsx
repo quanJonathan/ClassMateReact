@@ -10,7 +10,7 @@ export default function Root() {
   return (
     <Box
     sx={{
-      backgroundImage: "url(../src/assets/landing-background.png)",
+      backgroundImage: "url(/assets/landing-background.png)",
       position: "absolute",
       top: 0,
       right: 0,

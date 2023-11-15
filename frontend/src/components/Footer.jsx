@@ -46,7 +46,7 @@ export default function Footer() {
               component="img"
               sx={{ width: 200 }}
               alt="appname"
-              src="../src/assets/logowb2.png"
+              src="/assets/logowb2.png"
             />
 
             <Typography
@@ -144,17 +144,17 @@ export default function Footer() {
 
             <IconBox>
               <img
-                src="../src/assets/fbicon.png"
+                src="/assets/fbicon.png"
                 alt="fbIcon"
                 style={{ cursor: "pointer", borderRadius: "50px" }}
               />
               <img
-                src="../src/assets/twittericon.png"
+                src="/assets/twittericon.png"
                 alt="twitterIcon"
                 style={{ cursor: "pointer", borderRadius: "50px" }}
               />
               <img
-                src="../src/assets/linkedinicon.png"
+                src="/assets/linkedinicon.png"
                 alt="linkedinIcon"
                 style={{ cursor: "pointer", borderRadius: "50px" }}
               />

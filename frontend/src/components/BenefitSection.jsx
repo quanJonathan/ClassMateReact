@@ -50,7 +50,7 @@ function BenefitSection() {
       <Box sx={{ flex: "1.5" }}>
         <img
           alt="benefit"
-          src="../src/assets/benefits.png"
+          src="/assets/benefits.png"
           style={{ width: "100%", marginBottom: "2rem" }}
         />
       </Box>
@@ -66,7 +66,7 @@ function BenefitSection() {
 
         <BenefitBox>
           <img
-            src="../src/assets/degree.svg"
+            src="/assets/degree.svg"
             style={{ width: "50px", height: "50px", margin: "10px" }}
           />
           <Typography variant="h5">Online Degree</Typography>
@@ -74,7 +74,7 @@ function BenefitSection() {
 
         <BenefitBox>
           <img
-            src="../src/assets/courses.svg"
+            src="/assets/courses.svg"
             style={{ width: "50px", height: "50px", margin: "10px" }}
           />
           <Typography variant="h5">Short Courses</Typography>
@@ -82,7 +82,7 @@ function BenefitSection() {
 
         <BenefitBox>
           <img
-            src="../src/assets/trainer.svg"
+            src="/assets/trainer.svg"
             style={{ width: "50px", height: "50px", margin: "10px" }}
           />
           <Typography variant="h5">Expert Training</Typography>
