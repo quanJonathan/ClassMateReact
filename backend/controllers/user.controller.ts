@@ -12,6 +12,7 @@ import {
 import { UserService } from '../service/user.service';
 import { JwtService } from '@nestjs/jwt';
 import { User } from 'model/user.schema';
+import { Public } from 'guards/public.guard';
 
 @Controller('auth')
 export class UserController {
@@ -19,7 +20,8 @@ export class UserController {
     private readonly userService: UserService,
     private jwtService: JwtService,
   ) {}
-
+  
+  @Public()
   @Post('signUp')
   async Signup(@Res() response, @Body() user: User) {
     const newUSer = this.userService.signup(user);
@@ -28,6 +30,7 @@ export class UserController {
     });
   }
 
+  @Public()
   @Post('signIn')
   async SignIn(@Res() response, @Body() user: User) {
     const fullData = await this.userService.signin(user, this.jwtService);

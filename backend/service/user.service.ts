@@ -1,7 +1,6 @@
 /* eslint-disable prettier/prettier */
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { secret } from 'utils/constants';
 import * as bcrypt from 'bcrypt'
 import { InjectModel } from '@nestjs/mongoose';
 import { User, UserDocument } from 'model/user.schema';
