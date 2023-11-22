@@ -1,3 +1,5 @@
+/* eslint-disable prettier/prettier */
+
 import { ExecutionContext, Injectable } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { IS_PUBLIC_KEY } from './public.guard';

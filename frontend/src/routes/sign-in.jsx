@@ -58,7 +58,7 @@ export default function SignIn() {
 
   const [errorMessage, setErrorMessage] = useState("");
 
-  const { login } = useAuth();
+  const { login, loginWithGoogle, loginWithFaceBook } = useAuth();
   const handleSubmit = async (event) => {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
@@ -75,7 +75,16 @@ export default function SignIn() {
     //     password: data.get("password"),
     //     save: data.get("remember-me")
     // });
+
   };
+
+  const handleGoogleLogin = async() =>{
+    loginWithGoogle();
+  }
+
+  const handleFacebookLogin = async() => {
+    loginWithFaceBook();
+  }
 
   const [showPassword, setShowPassword] = useState(false);
 
@@ -285,10 +294,10 @@ export default function SignIn() {
                     display: "flex"
                   }}
                 >
-                  <IconButton sx={{ border: 1, width: "35px", height: "35px", p: 0, m: 1 }}>
+                  <IconButton onClick={handleGoogleLogin} sx={{ border: 1, width: "35px", height: "35px", p: 0, m: 1 }}>
                     <img src="/assets/log-in-gg.svg" width="100%" />
                   </IconButton>
-                  <IconButton sx={{ border: 1, width: "35px", height: "35px", p: 0, m: 1 }}>
+                  <IconButton onClick={handleFacebookLogin} sx={{ border: 1, width: "35px", height: "35px", p: 0, m: 1 }}>
                     <img src="/assets/log-in-fb.svg" width="100%" />
                   </IconButton>
                 </Box>

@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useMemo, useState } from "react";
+import { createContext, useContext, useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { useLocalStorage } from "./useLocalStorage";
 import axios from "axios";
@@ -40,7 +40,7 @@ export const AuthProvider = ({ children }) => {
         form
       );
       const { token, ...user } = response.data;
-      //console.log(response.data)
+      console.log(response.data)
       if (token) {
         setToken(token);
         localStorage.setItem("token", token);
@@ -56,6 +56,37 @@ export const AuthProvider = ({ children }) => {
       toast.error("Login Failed");
     }
   };
+
+  const loginWithGoogle = async() =>{
+    const user = await axios.get(
+      "https://classmatefe.onrender.com/auth/google"
+    )
+    console.log(user)
+  }
+
+  const loginWithFaceBook = async() =>{
+    try{
+      const respond = await axios.post(
+        "https://classmatebe.onrender.com/auth/google"
+      )
+
+      const {token, ...user} = respond.data
+      if (token) {
+        setToken(token);
+        localStorage.setItem("token", token);
+        setUser(user);
+        localStorage.setItem("user", user);
+        toast.success("Successfully Login");
+        navigate("/dashboard", { replace: true });
+      } else {
+        toast.error("Login Failed");
+      }
+    }catch (error) {
+      console.error("Login failed:", error);
+      toast.error("Login Failed");
+    }
+      
+  }
 
   const updateUser = async (data) => {
     // setUser(JSON.stringify(data));
@@ -82,6 +113,8 @@ export const AuthProvider = ({ children }) => {
       logout,
       updateUser,
       isAuthenticated,
+      loginWithGoogle,
+      loginWithFaceBook,
     }),
     [updateUser, logout, login]
   );

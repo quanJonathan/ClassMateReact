@@ -74,7 +74,7 @@ export default function ProfilePage() {
       else {
       setIsView(true);
       await axios
-        .post("https://classmatebe.onrender.com/auth/profile/update", form, {
+        .post("https://classmatebe.onrender.com/user/profile/update", form, {
           headers: {
             Authorization: "Bearer " + token,
           },
@@ -94,17 +94,17 @@ export default function ProfilePage() {
             console.log(error.response.data);
             console.log(error.response.status);
             console.log(error.response.headers);
-            toast.error('Sign Up Failed due to :' + error.response.data);
+            toast.error('Change data Failed due to :' + error.response.data);
           } else if (error.request) {
             // The request was made but no response was received
             // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
             // http.ClientRequest in node.js
             console.log(error.request);
-            toast.error('Sign Up Failed');
+            toast.error('Change data Failed ' + error.request);
           } else {
             // Something happened in setting up the request that triggered an Error
             console.log("Error", error.message);
-            toast.error('Sign Up Failed');
+            toast.error('Change Data Failed ' + error.message);
           }
           console.log(error.config);
           navigate("/user/profile");
