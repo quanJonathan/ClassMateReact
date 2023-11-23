@@ -1,11 +1,20 @@
-import { Box, Button, Divider, Typography, styled } from '@mui/material'
-import React from 'react'
-import CourseCard from './CourseCard';
-import { useAuth } from '../hook/useAuth';
+import { Box, Button, Divider, Typography, styled } from "@mui/material";
+import React, { useEffect, useState } from "react";
+import CourseCard from "./CourseCard";
+import { useAuth } from "../hook/useAuth";
 
-function HomeContent() {
-  const {user} = useAuth();
-  // console.log(user.firstName);
+export default function HomeContent() {
+  const { user, readFromStorage } = useAuth();
+  console.log(user?.firstName);
+
+  // const [isLoading, setLoading] = useState(true);
+  // useEffect(() => {
+  //   if (user) {
+  //     setLoading(false);
+  //   }else{
+  //     readFromStorage()
+  //   }
+  // }, [isLoading, user]);
   const courses = [
     {
       id: "1",
@@ -44,9 +53,7 @@ function HomeContent() {
       title: "Web Development",
       description:
         "Lorem ipsum dolor sit amet, in sed integer. Scelerisque nam evget imperdiet accumsan, ipsum  turpis cursus. In elit amet, tortor nunc.",
-    }
-
-
+    },
   ];
 
   const CustomBox = styled(Box)(({ theme }) => ({
@@ -60,7 +67,6 @@ function HomeContent() {
       alignItems: "center",
       textAlign: "center",
     },
-  
   }));
   const CourseBoxes = styled(Box)(({ theme }) => ({
     display: "flex",
@@ -87,62 +93,91 @@ function HomeContent() {
       width: "100%",
     },
     display: "flex",
-  
   }));
 
   return (
-    <CustomBox
-    >
-      <Box sx={{
-        display: "flex",
-        flexDirection: "row",
-        alignItems: "center"
-      }}>
-      <Typography variant="h4">Hello, {user?.firstName || "" }</Typography>
-      <Divider sx={{ ml: 2, mr: 2, display: { xs: "none", md: "flex" }, width: "50%" }} >
+    <>
+      {/* {isLoading ? (
+        <Typography>Loading</Typography>
+      ) : ( */}
+        <CustomBox>
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "center",
+            }}
+          >
+            <Typography variant="h4">Hello, {user?.firstName || ""}</Typography>
+            <Divider
+              sx={{
+                ml: 2,
+                mr: 2,
+                display: { xs: "none", md: "flex" },
+                width: "50%",
+              }}
+            ></Divider>
+          </Box>
+          <Typography
+            variant="body2"
+            sx={{
+              fontSize: "16px",
+              fontWeight: "500",
+              color: "#5A6473",
+            }}
+          >
+            Recent Courses
+          </Typography>
 
-        
-      </Divider>
-      </Box>
-      <Typography  variant="body2"
-          sx={{
-            fontSize: "16px",
-            fontWeight: "500",
-            color: "#5A6473",
-          }}>Recent Courses</Typography>
-        
-    
-      <CourseBoxes>
-        {courses.map((course) => (
-          <CourseCard key={course.id} item={course} courseWidth={200} courseHeight={300} />
-        ))}
-      </CourseBoxes>
-      <Box sx={{
-          justifyContent: "center",
-          display: "flex"
-      }}>
-      <CustomButton variant="contained">View More</CustomButton>
-     </Box>
-      <Typography  variant="body2"
-          sx={{
-            fontSize: "16px",
-            fontWeight: "500",
-            color: "#5A6473",
-          }}>Favorite Courses</Typography>
-       
-           <CourseBoxes>
-        {courses.map((course) => (
-          <CourseCard key={course.id} item={course} courseWidth={200} courseHeight={300} />
-        ))}
-      </CourseBoxes>
-      <Box sx={{
-          justifyContent: "center",
-          display: "flex"
-      }}>
-      <CustomButton variant="contained">View More</CustomButton>
-     </Box>
-    </CustomBox>
-  )
+          <CourseBoxes>
+            {courses.map((course) => (
+              <CourseCard
+                key={course.id}
+                item={course}
+                courseWidth={200}
+                courseHeight={300}
+              />
+            ))}
+          </CourseBoxes>
+          <Box
+            sx={{
+              justifyContent: "center",
+              display: "flex",
+            }}
+          >
+            <CustomButton variant="contained">View More</CustomButton>
+          </Box>
+          <Typography
+            variant="body2"
+            sx={{
+              fontSize: "16px",
+              fontWeight: "500",
+              color: "#5A6473",
+            }}
+          >
+            Favorite Courses
+          </Typography>
+
+          <CourseBoxes>
+            {courses.map((course) => (
+              <CourseCard
+                key={course.id}
+                item={course}
+                courseWidth={200}
+                courseHeight={300}
+              />
+            ))}
+          </CourseBoxes>
+          <Box
+            sx={{
+              justifyContent: "center",
+              display: "flex",
+            }}
+          >
+            <CustomButton variant="contained">View More</CustomButton>
+          </Box>
+        </CustomBox>
+      {/* )} */}
+    </>
+  );
 }
-
-export default HomeContent

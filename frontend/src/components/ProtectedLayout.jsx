@@ -11,6 +11,7 @@ export const ProtectedLayout = () => {
   useEffect(() => {
     if (!token) {
       navigate("/", { replace: true });
+      console.log("expired!")
     }
   });
 

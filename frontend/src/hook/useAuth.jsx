@@ -17,8 +17,6 @@ export const AuthProvider = ({ children }) => {
     // Check if the token is expired or not present
     //console.log(JSON.stringify(token));
     //console.log(user);
-
-    //console.log(localStorage);
     const isTokenValid = (token1) => {
       if (!token1) {
         return false;
@@ -44,7 +42,11 @@ export const AuthProvider = ({ children }) => {
             },
           }
         );
-        return data
+        console.log("update \n" + Object.values(data));
+        if(data){
+          setUser(data)
+          // navigate(0);
+        }
       } catch (exception) {
         console.log(exception);
       }
@@ -56,10 +58,10 @@ export const AuthProvider = ({ children }) => {
       navigate("/");
     }
     if(!user || !token || user.refreshToken !== token.refreshToken){
-      //console.log("call")
+      console.log("fetch data")
       fetchData();
     }
-  }, []);
+  }, [token]);
 
   const login = async (form) => {
     try {
@@ -93,6 +95,10 @@ export const AuthProvider = ({ children }) => {
   const loginWithFaceBook = async() =>{
   }
 
+  const readFromStorage = async() => {
+    setUser(localStorage.getItem('user'))
+  }
+
   const updateUser = async (data) => {
     setUser(JSON.stringify(data));
     localStorage.setItem("user", JSON.stringify(data));
@@ -120,8 +126,9 @@ export const AuthProvider = ({ children }) => {
       isAuthenticated,
       loginWithGoogle,
       loginWithFaceBook,
+      readFromStorage
     }),
-    [updateUser, logout, login, user]
+    [updateUser, logout, login]
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

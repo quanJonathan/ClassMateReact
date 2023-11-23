@@ -125,7 +125,12 @@ export class UserService {
   }
 
   async update(user: User) {
-    return await this.userModel.findOneAndUpdate({email: user.email}, {$set: user})
+    return await this.userModel.findOneAndUpdate({email: user.email}, {$set: {
+      firstName: user.firstName,
+      lastName: user.lastName,
+      address: user.address,
+      phoneNumber: user.phoneNumber
+    }})
   }
 
   async getOne(email: string): Promise<User> {
