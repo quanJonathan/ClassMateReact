@@ -6,9 +6,9 @@ import { IS_PUBLIC_KEY } from './public.guard';
 import { Reflector } from '@nestjs/core';
 
 @Injectable()
-export class JwtAuthGuard extends AuthGuard('jwt') {
+export class LocalAuthGuard extends AuthGuard('local') {
   constructor(private reflector: Reflector) {
-    super();
+    super()
   }
 
   canActivate(context: ExecutionContext) {

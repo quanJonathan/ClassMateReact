@@ -24,32 +24,6 @@ export default function ProfilePage() {
   const [phoneNumber, setPhoneNumber] = useState(user?.phoneNumber || "")
   const [address, setAddress] = useState(user?.address || "")
 
-  // console.log(user)
-
-  // console.log(user);
-
-  // useEffect(() => {
-  //   async function fetchData() {
-  //     try {
-  //       const { data } = await axios.get(
-  //         `http://127.0.0.1:3001/auth/profile/${user?.email}`,
-  //         {
-  //           headers: {
-  //             Authorization: "Bearer " + token,
-  //           },
-  //         }
-  //       );
-  //       console.log(data);
-  //       // updateUser(data);
-  //     } catch (exception) {
-  //       console.log(exception);
-  //       //navigate('/')
-  //     }
-  //   }
-  //   fetchData();
-  //   console.log(user);
-  // }, [updateUser, navigate, token]);
-
   const handleForm = async (event) => {
     event.preventDefault();
     if (isView) {
@@ -64,7 +38,7 @@ export default function ProfilePage() {
         phoneNumber: formData.get("phoneNumber"),
         address: formData.get("address"),
       };
-      console.log(form)
+      // console.log(form)
 
       if (form.firstName==""){
         toast.warning('First Name is Required');
@@ -74,9 +48,9 @@ export default function ProfilePage() {
       else {
       setIsView(true);
       await axios
-        .post("https://classmatebe.onrender.com/user/profile/update", form, {
+        .post("http:localhost:3001/auth/profile/update", form, {
           headers: {
-            Authorization: "Bearer " + token,
+            Authorization: "Bearer " + token.accessToken,
           },
         })
         .then(function (res) {

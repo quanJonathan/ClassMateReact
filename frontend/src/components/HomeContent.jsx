@@ -1,8 +1,11 @@
 import { Box, Button, Divider, Typography, styled } from '@mui/material'
 import React from 'react'
 import CourseCard from './CourseCard';
+import { useAuth } from '../hook/useAuth';
 
-function HomeContent({user}) {
+function HomeContent() {
+  const {user} = useAuth();
+  // console.log(user.firstName);
   const courses = [
     {
       id: "1",

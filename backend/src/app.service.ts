@@ -3,14 +3,7 @@ import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class AppService {
-  googleLogin(req) {
-    if (!req.user) {
-      return 'No user from google';
+    getHello(): string {
+        return `Hello World! ENV=${process.env.NODE_ENV}`;
     }
-
-    return {
-      message: 'User information from google',
-      user: req.user,
-    };
-  }
 }

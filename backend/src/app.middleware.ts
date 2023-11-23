@@ -7,7 +7,7 @@ import {
   HttpStatus,
 } from '@nestjs/common';
 import { Request, Response, NextFunction } from 'express';
-import { UserService } from '../service/user.service';
+import { UserService } from './user/user.service';
 interface UserRequest extends Request {
   user: any;
 }

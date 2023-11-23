@@ -118,7 +118,7 @@ export default function MiniDrawer({children, page}) {
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState(null);
   const [anchorEl, setAnchorEl] = useState(null);
 
-
+  // console.log(open + " " + menuData + " " + mobileMoreAnchorEl + " " + anchorEl);
 
   const handleProfileMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
@@ -264,7 +264,7 @@ export default function MiniDrawer({children, page}) {
       </Drawer>
       <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
       
-       {page =="Dashboard" && <HomeContent user={user} /> }
+       {page =="Dashboard" && <HomeContent /> }
        { page =="Profile" && children }
       
       </Box>

@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useMemo } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useLocalStorage } from "./useLocalStorage";
 import axios from "axios";
 import { toast } from "react-toastify";
@@ -10,42 +10,67 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useLocalStorage("user", localStorage.getItem("user"));
   const [token, setToken] = useLocalStorage("token", localStorage.getItem("token"));
   const navigate = useNavigate();
+  const location = useLocation();
+  const from = (location.state?.from?.pathname === '/auth' ? '/' : location.state?.from?.pathname) || '/';
 
   useEffect(() => {
     // Check if the token is expired or not present
+    //console.log(JSON.stringify(token));
+    //console.log(user);
+
+    //console.log(localStorage);
     const isTokenValid = (token1) => {
       if (!token1) {
         return false;
       }
       try {
-        const decodedToken = JSON.parse(atob(token1.split(".")[1]));
-        return decodedToken.exp * 1000 > Date.now();
+        const decodedAccessToken = JSON.parse(atob(token1.accessToken.split(".")[1]));
+        const decodeRefreshToken = JSON.parse(atob(token1.refreshToken.split(".")[1]))
+        
+        return decodedAccessToken.exp * 1000 > Date.now() && decodeRefreshToken.exp * 1000 > Date.now();
       } catch (error) {
         console.error("Error decoding token:", error);
         return false;
       }
     };
 
+    const fetchData = async () => {
+      try {
+        const { data } = await axios.get(
+          'http://localhost:3001/auth/profile',
+          {
+            headers: {
+              Authorization: "Bearer " + token.accessToken,
+            },
+          }
+        );
+        return data
+      } catch (exception) {
+        console.log(exception);
+      }
+    }
+    
     if (!isTokenValid(token)) {
       setToken(null);
       setUser(null)
       navigate("/");
     }
-  }, [token]);
+    if(!user || !token || user.refreshToken !== token.refreshToken){
+      //console.log("call")
+      fetchData();
+    }
+  }, []);
 
   const login = async (form) => {
     try {
       const response = await axios.post(
-        "https://classmatebe.onrender.com/auth/signIn",
+        "http://localhost:3001/auth/signIn",
         form
       );
-      const { token, ...user } = response.data;
-      console.log(response.data)
+      const token = response.data;
       if (token) {
         setToken(token);
-        localStorage.setItem("token", token);
-        setUser(user);
-        localStorage.setItem("user", user);
+        localStorage.setItem("token", JSON.stringify(token));
         toast.success("Successfully Login");
         navigate("/dashboard", { replace: true });
       } else {
@@ -58,38 +83,18 @@ export const AuthProvider = ({ children }) => {
   };
 
   const loginWithGoogle = async() =>{
-    const user = await axios.get(
-      "https://classmatefe.onrender.com/auth/google"
-    )
-    console.log(user)
+    try{
+      window.open(`http://classmatebe/auth/google/${from.replaceAll('/', '@')}`, "_self");
+    }catch(error) {
+      console.log(error)
+    }
   }
 
   const loginWithFaceBook = async() =>{
-    try{
-      const respond = await axios.post(
-        "https://classmatebe.onrender.com/auth/google"
-      )
-
-      const {token, ...user} = respond.data
-      if (token) {
-        setToken(token);
-        localStorage.setItem("token", token);
-        setUser(user);
-        localStorage.setItem("user", user);
-        toast.success("Successfully Login");
-        navigate("/dashboard", { replace: true });
-      } else {
-        toast.error("Login Failed");
-      }
-    }catch (error) {
-      console.error("Login failed:", error);
-      toast.error("Login Failed");
-    }
-      
   }
 
   const updateUser = async (data) => {
-    // setUser(JSON.stringify(data));
+    setUser(JSON.stringify(data));
     localStorage.setItem("user", JSON.stringify(data));
   };
 
@@ -116,7 +121,7 @@ export const AuthProvider = ({ children }) => {
       loginWithGoogle,
       loginWithFaceBook,
     }),
-    [updateUser, logout, login]
+    [updateUser, logout, login, user]
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
