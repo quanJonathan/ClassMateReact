@@ -38,13 +38,16 @@ export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
   ): Promise<any> {
     const googleUser: IGoogleUser = {
       provider: authTypeEnum.google,
-      name: profile?.name.givenName,
+      firstName: profile?.name.givenName,
+      lastName: profile?.name.familyName,
       email: profile?.emails[0].value,
       photo: profile?.photos[0].value,
       accessToken,
       refreshToken,
       providerId: ''
     };
+
+    console.log(googleUser.email)
 
     const user = await this.authService.googleUserValidate(googleUser);
 

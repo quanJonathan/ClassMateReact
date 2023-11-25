@@ -13,26 +13,26 @@ import { ProtectedLayout } from "./src/components/ProtectedLayout";
 import ProfilePage from "./src/routes/profile";
 import GoogleOAuthSuccessRedirect from "./src/components/GoogleOAuthSuccessRedirect";
 
-
 export const router = createBrowserRouter(
   createRoutesFromElements(
     <Route element={<AuthLayout />}>
-    <Route element={<HomeLayout />}>
-      <Route path="/" element={ <Root />} />
-      <Route path="/sign-in" element={<SignIn />} />
-      <Route path="/sign-up" element={<SignUp />} />
-    </Route>
-    <Route  element={<ProtectedLayout />}>
-      <Route path="/dashboard" element={<Dashboard />} />
-    </Route>
+      <Route path="/" element={<HomeLayout />}>
+        <Route path="" element={<Root />} />
+        <Route path="sign-in" element={<SignIn />} />
+        <Route path="sign-up" element={<SignUp />} />
+      </Route>
+      <Route path="/google-oauth-success-redirect" >
+        <Route
+          path=":accessToken/:refreshToken"
+          element={<GoogleOAuthSuccessRedirect />}/>
+      </Route>
+      <Route element={<ProtectedLayout />}>
+        <Route path="/dashboard" element={<Dashboard />} />
+      </Route>
 
-    <Route path="google-oauth-success-redirect">
-     <Route path=":accessToken/:refreshToken/:from" element={<GoogleOAuthSuccessRedirect/>} />
+      <Route path="/user" element={<ProtectedLayout />}>
+        <Route path="profile" element={<ProfilePage />} />
+      </Route>
     </Route>
-
-    <Route path="/user" element={<ProtectedLayout />}>
-      <Route path="profile" element={<ProfilePage />} />
-    </Route>
-  </Route>
   )
 );

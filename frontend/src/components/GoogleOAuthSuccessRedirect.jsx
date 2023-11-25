@@ -1,20 +1,30 @@
 import { useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom';
-import { useAppDispatch } from '../redux/hooks';
-import { setAuthTokens } from '../redux/authSlice';
+import { useAuth } from '../hook/useAuth';
 
-const GoogleOAuthSuccessRedirect = () => {
+const GoogleOAuthSuccessRedirect = ({props}) => {
 
-    let { accessToken, refreshToken, from } = useParams();
+    let { accessToken, refreshToken, from} = useParams();
+    const {setToken} = useAuth();
     const navigate = useNavigate();
-    const dispatch = useAppDispatch()
+    //const dispatch = useAppDispatch()
+
+    console.log("accessToken" + accessToken)
+    console.log("freshToken" + refreshToken)
+    console.log("from" + from)
 
     useEffect(() => {
-        if (from && accessToken && refreshToken) {
-            dispatch(setAuthTokens({ accessToken, refreshToken }))
-            navigate('/' + from, { replace: true });
+        if ( accessToken && refreshToken) {
+            //dispatch(setAuthTokens({ accessToken, refreshToken }))
+            const token = {
+                accessToken: accessToken,
+                refreshToken: refreshToken
+            }
+            setToken(token)
+            localStorage.setItem('token', JSON.stringify(token));
+            navigate('/dashboard', { replace: true })     
         }
-    }, [accessToken, dispatch, from, navigate, refreshToken])
+    }, [accessToken, from, navigate, refreshToken, setToken])
 
 
     return (

@@ -18,7 +18,7 @@ import {
   Paper,
   styled
 } from "@mui/material";
-import { NavLink } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { useState } from "react";
 import { useAuth } from "../hook/useAuth.jsx";
@@ -57,8 +57,9 @@ export default function SignIn() {
   }));
 
   const [errorMessage, setErrorMessage] = useState("");
-
-  const { login, loginWithGoogle, loginWithFaceBook } = useAuth();
+  const location = useLocation();
+  const from = (location.state?.from?.pathname === '/auth' ? '/' : location.state?.from?.pathname) || '/';
+  const { login } = useAuth();
   const handleSubmit = async (event) => {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
@@ -78,12 +79,21 @@ export default function SignIn() {
 
   };
 
-  const handleGoogleLogin = async() =>{
-    loginWithGoogle();
+  const loginWithGoogle = async() =>{
+    console.log('click')
+    try{
+      window.open(`https://classmatebe.onrender.com/auth/google/${from.replaceAll('/', '@')}`, "_self");
+    }catch(error) {
+      console.log(error)
+    }
   }
 
-  const handleFacebookLogin = async() => {
-    loginWithFaceBook();
+  const loginWithFaceBook = async() => {
+    try{
+      window.open(`https://classmatebe.onrender.com/auth/facebook`, "_self");
+    }catch(error) {
+      console.log(error)
+    }
   }
 
   const [showPassword, setShowPassword] = useState(false);
@@ -294,11 +304,11 @@ export default function SignIn() {
                     display: "flex"
                   }}
                 >
-                  <IconButton onClick={handleGoogleLogin} sx={{ border: 1, width: "35px", height: "35px", p: 0, m: 1 }}>
-                    <img src="/assets/log-in-gg.svg" width="100%" />
-                  </IconButton>
-                  <IconButton onClick={handleFacebookLogin} sx={{ border: 1, width: "35px", height: "35px", p: 0, m: 1 }}>
+                  <IconButton onClick={loginWithFaceBook} sx={{ border: 1, width: "35px", height: "35px", p: 0, m: 1 }}>
                     <img src="/assets/log-in-fb.svg" width="100%" />
+                  </IconButton>
+                  <IconButton onClick={loginWithGoogle} sx={{ border: 1, width: "35px", height: "35px", p: 0, m: 1 }}>
+                    <img src="/assets/log-in-gg.svg" width="100%" />
                   </IconButton>
                 </Box>
               </Box>

@@ -17,6 +17,8 @@ import { AccessTokenGuard } from '../guards/access-token.guard';
 import { RefreshTokenGuard } from '../guards/refresh-token.guard';
 import { authTypeEnum } from 'src/enum/authType.enum';
 import { UserService } from 'src/user/user.service';
+import { FacebookOAuthGuard } from 'src/guards/facebook-oauth.guard';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('auth')
 export class AuthController {
@@ -25,17 +27,37 @@ export class AuthController {
     private userService: UserService,
   ) {}
 
-  @Get('google')
+  @Get('google/:from')
   @UseGuards(GoogleOAuthGuard)
-  async googleAuth() {}
+  async googleAuth(@Req() req: Request) {}
 
   @Get('google-redirect')
   @UseGuards(GoogleOAuthGuard)
   async googleAuthRedirect(@Req() req: Request, @Res() res: Response) {
-    const auth = await this.authService.googleUserValidate(req.userEntity);
-
+    console.log(req.user);
+    const auth = await this.authService.login(req.user as User);
+    console.log('from ' + req.params.from);
+    console.log('accessToken of google ' + auth.accessToken);
+    console.log('refreshToken ' + auth.refreshToken);
     res.redirect(
       `https://classmatefe.onrender.com/google-oauth-success-redirect/${auth.accessToken}/${auth.refreshToken}${req.params.from}`,
+    );
+  }
+
+  @Get('facebook')
+  @UseGuards(AuthGuard('facebook'))
+  async facebookAuth(@Req() req: Request) {}
+
+  @Get('facebook-redirect')
+  @UseGuards(AuthGuard('facebook'))
+  async facebookAuthRedirect(@Req() req: Request, @Res() res: Response) {
+    console.log(req.user);
+    const auth = await this.authService.login(req.user as User);
+    console.log('from ' + req.params.from);
+    console.log('accessToken of facebook ' + auth.accessToken);
+    console.log('refreshToken ' + auth.refreshToken);
+    res.redirect(
+      `https://classmatefe.onrender.com/facebook-oauth-success-redirect/${auth.accessToken}/${auth.refreshToken}${req.params.from}`,
     );
   }
 
@@ -76,19 +98,17 @@ export class AuthController {
   }
 
   @Get('profile')
-  @UseGuards(AccessTokenGuard)
+  @UseGuards(RefreshTokenGuard)
   getProfile(@Req() req: Request) {
-    console.log(req.user);
+    //console.log(req.user);
     return req.user;
   }
 
   @Post('profile/update')
-  @UseGuards(AccessTokenGuard)
+  @UseGuards(RefreshTokenGuard)
   async updateData(@Res() response, @Body() user: User) {
     const result = await this.userService.update(user);
     console.log(result);
-    const u = await this.userService.getOne(user.email);
-    console.log(u);
     return response.status(HttpStatus.ACCEPTED).json(result);
   }
 }

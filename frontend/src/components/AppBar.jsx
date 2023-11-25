@@ -11,7 +11,7 @@ import {
   ListItem,
   ListItemButton,
   ListItemText,
-  styled
+  styled,
 } from "@mui/material";
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
@@ -20,18 +20,17 @@ import { NavLink } from "react-router-dom";
 import { useAuth } from "../hook/useAuth.jsx";
 import useScrollPosition from "../hook/useStrollPosition.js";
 import { useNavigate } from "react-router-dom";
-import AccountCircle from '@mui/icons-material/AccountCircle';
+import AccountCircle from "@mui/icons-material/AccountCircle";
 import * as React from "react";
-import Drawer from '@mui/material/Drawer';
+import Drawer from "@mui/material/Drawer";
 import { Menu as MenuIcon } from "@mui/icons-material";
-
 
 function WebAppBar({ pages }) {
   const { logout, isAuthenticated } = useAuth();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
   const scrollPosition = useScrollPosition();
-  
+
   const [mobileDrawer, setMobileDrawer] = React.useState({
     left: false,
   });
@@ -49,75 +48,82 @@ function WebAppBar({ pages }) {
 
   const list = (anchor) => (
     <Box
-      sx={{ width: anchor === 'top' || anchor === 'bottom' ? 'auto' : 250 }}
+      sx={{ width: anchor === "top" || anchor === "bottom" ? "auto" : 250 }}
       role="presentation"
       onClick={toggleDrawer(anchor, false)}
       onKeyDown={toggleDrawer(anchor, false)}
     >
-      {!isAuthenticated() ? (<List>
-        {['About Us', 'Login', 'Sign Up'].map((text, index) => (
-          <ListItem key={text} disablePadding>
-            <ListItemButton  onClick={() =>{
-              if (index == 0) {
-                navigate("/")
-              }
-              else if (index == 1) {
-                navigate("/sign-in")
-              }
-              else {
-                navigate("/sign-up")
-              }
-            }}>
-              <ListItemText primary={text} sx={{
-              justifyContent: "center",
-              display: "flex"
-            }} />
-            </ListItemButton>
-          </ListItem>
-        ))}
-      </List>)
-      :
-  (
-    <List>
-        {['Avatar', 'About Us', 'Logout'].map((text, index) => (
-          <ListItem key={text} disablePadding
-          sx={{
-            justifyContent: "center"
-          }}
-          >
-
-            {index === 1 ? (<ListItemButton onClick={()=> navigate("/")}>
-            <ListItemText primary={text}  
-            sx={{
-              justifyContent: "center",
-              display: "flex"
-            }}
-            />
-            </ListItemButton>) : ( index === 2 ? (<ListItemButton onClick={()=>logout()}>
-            <ListItemText primary={text}  
-            sx={{
-              justifyContent: "center",
-              display: "flex",
-              color: "red"
-            }}
-            />
-            </ListItemButton>) :
-               <IconButton
-               size="large"
-               edge="end"
-               onClick={()=> navigate("/dashboard")}
-               color="inherit"
-             >
-               <AccountCircle sx={{width: "70px", height: "70px"}}/>
-             </IconButton>
-            )
-            }
-           
-          </ListItem>
-        ))}
-      </List>
-  )
-}
+      {!isAuthenticated() ? (
+        <List>
+          {["About Us", "Login", "Sign Up"].map((text, index) => (
+            <ListItem key={text} disablePadding>
+              <ListItemButton
+                onClick={() => {
+                  if (index == 0) {
+                    navigate("/");
+                  } else if (index == 1) {
+                    navigate("/sign-in");
+                  } else {
+                    navigate("/sign-up");
+                  }
+                }}
+              >
+                <ListItemText
+                  primary={text}
+                  sx={{
+                    justifyContent: "center",
+                    display: "flex",
+                  }}
+                />
+              </ListItemButton>
+            </ListItem>
+          ))}
+        </List>
+      ) : (
+        <List>
+          {["Avatar", "About Us", "Logout"].map((text, index) => (
+            <ListItem
+              key={text}
+              disablePadding
+              sx={{
+                justifyContent: "center",
+              }}
+            >
+              {index === 1 ? (
+                <ListItemButton onClick={() => navigate("/")}>
+                  <ListItemText
+                    primary={text}
+                    sx={{
+                      justifyContent: "center",
+                      display: "flex",
+                    }}
+                  />
+                </ListItemButton>
+              ) : index === 2 ? (
+                <ListItemButton onClick={() => logout()}>
+                  <ListItemText
+                    primary={text}
+                    sx={{
+                      justifyContent: "center",
+                      display: "flex",
+                      color: "red",
+                    }}
+                  />
+                </ListItemButton>
+              ) : (
+                <IconButton
+                  size="large"
+                  edge="end"
+                  onClick={() => navigate("/dashboard")}
+                  color="inherit"
+                >
+                  <AccountCircle sx={{ width: "70px", height: "70px" }} />
+                </IconButton>
+              )}
+            </ListItem>
+          ))}
+        </List>
+      )}
     </Box>
   );
 
@@ -154,12 +160,15 @@ function WebAppBar({ pages }) {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      <MenuItem onClick={() => navigate('/user/profile')}>Profile</MenuItem>
-      <MenuItem onClick={() => navigate('/dashboard')}>Dashboard</MenuItem>
-      <MenuItem onClick={ () =>  {
-        logout()
-        setAnchorEl(null)
-      }} sx={{ color: "red" }}>
+      <MenuItem onClick={() => navigate("/user/profile")}>Profile</MenuItem>
+      <MenuItem onClick={() => navigate("/dashboard")}>Dashboard</MenuItem>
+      <MenuItem
+        onClick={() => {
+          logout();
+          setAnchorEl(null);
+        }}
+        sx={{ color: "red" }}
+      >
         Log out
       </MenuItem>
     </Menu>
@@ -193,10 +202,12 @@ function WebAppBar({ pages }) {
       }}
     >
       <Container maxWidth="x1">
-        <Toolbar disableGutters sx={{ maxHeight: "10vh", justifyContent: "space-between" }}>
-
-            <CustomMenuIcon onClick={toggleDrawer("left", true)}  />
-            <Drawer
+        <Toolbar
+          disableGutters
+          sx={{ maxHeight: "10vh", justifyContent: "space-between" }}
+        >
+          <CustomMenuIcon onClick={toggleDrawer("left", true)} />
+          <Drawer
             anchor="left"
             open={mobileDrawer["left"]}
             onClose={toggleDrawer("left", false)}
@@ -258,7 +269,7 @@ function WebAppBar({ pages }) {
                   </Button>
                 </NavLink>
               </>
-            ): (
+            ) : (
               <IconButton
                 size="large"
                 edge="end"
@@ -268,10 +279,9 @@ function WebAppBar({ pages }) {
                 onClick={handleProfileMenuOpen}
                 color="inherit"
               >
-                <AccountCircle sx={{width: "40px", height: "40px"}}/>
+                <AccountCircle sx={{ width: "40px", height: "40px" }} />
               </IconButton>
             )}
-
           </Box>
         </Toolbar>
       </Container>
