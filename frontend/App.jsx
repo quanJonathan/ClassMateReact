@@ -23,7 +23,7 @@ export const router = createBrowserRouter(
       </Route>
       <Route path="/google-oauth-success-redirect" >
         <Route
-          path=":accessToken/:refreshToken"
+          path=":accessToken/:refreshToken/:from"
           element={<GoogleOAuthSuccessRedirect />}/>
       </Route>
       <Route element={<ProtectedLayout />}>
