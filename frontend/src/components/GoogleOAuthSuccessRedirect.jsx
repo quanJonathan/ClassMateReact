@@ -14,7 +14,7 @@ const GoogleOAuthSuccessRedirect = ({props}) => {
     console.log("from" + from)
 
     useEffect(() => {
-        if ( from && accessToken && refreshToken) {
+        if ( accessToken && refreshToken) {
             //dispatch(setAuthTokens({ accessToken, refreshToken }))
             const token = {
                 accessToken: accessToken,
@@ -22,7 +22,7 @@ const GoogleOAuthSuccessRedirect = ({props}) => {
             }
             setToken(token)
             localStorage.setItem('token', JSON.stringify(token));
-            navigate('/dashboard', { replace: true })     
+            navigate('/' , { replace: true })     
         }
     }, [accessToken, from, navigate, refreshToken, setToken])
 
