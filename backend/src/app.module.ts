@@ -8,6 +8,11 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { UserController } from './user/user.controller';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from 'src/user/user.module';
+import { EmailConfirmationController } from './email/emailConfirmation.controller';
+import EmailService from './email/email.service';
+import { EmailConfirmationService } from './email/emailConfirmation.service';
+import { EmailModule } from './email/email.module';
+import { JwtModule } from '@nestjs/jwt';
 
 @Module({
   imports: [
@@ -26,8 +31,10 @@ import { UsersModule } from 'src/user/user.module';
     }),
     AuthModule,
     UsersModule,
+    EmailModule,
+    JwtModule.register({}),
   ],
-  controllers: [UserController],
-  providers: [AppService],
+  controllers: [UserController, EmailConfirmationController],
+  providers: [AppService, EmailConfirmationService, EmailService],
 })
 export class AppModule {}

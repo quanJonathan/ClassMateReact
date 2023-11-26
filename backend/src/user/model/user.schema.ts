@@ -2,6 +2,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { authTypeEnum } from 'src/enum/authType.enum';
 import { Document } from 'mongoose';
+import { userStateEnum } from 'src/enum/userState.enum';
 export type UserDocument = User & Document;
 
 @Schema()
@@ -34,6 +35,8 @@ export class User {
   accessToken: string;
   @Prop()
   photo: string;
+  @Prop({default: userStateEnum.notActivated, enum: userStateEnum})
+  state: string;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

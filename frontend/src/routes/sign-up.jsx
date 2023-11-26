@@ -79,8 +79,8 @@ export default function SignUp() {
       })
       .then(function (res) {
         console.log(res);
-        toast.success("Sign Up Successfully!");
-        navigate("/sign-in");
+        toast.success("Sign Up Successfully! Check your email!");
+        navigate("/confirm-email/send");
       })
       .catch(function (error) {
         if (error.response) {

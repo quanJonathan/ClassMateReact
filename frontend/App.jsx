@@ -12,6 +12,8 @@ import { AuthLayout } from "./src/components/AuthLayout";
 import { ProtectedLayout } from "./src/components/ProtectedLayout";
 import ProfilePage from "./src/routes/profile";
 import GoogleOAuthSuccessRedirect from "./src/components/GoogleOAuthSuccessRedirect";
+import ConfirmEmail from "./src/routes/confirm-email";
+import ConfirmEmailRecieve from "./src/routes/confirm-email-recieve";
 
 
 export const router = createBrowserRouter(
@@ -24,6 +26,11 @@ export const router = createBrowserRouter(
     </Route>
     <Route  element={<ProtectedLayout />}>
       <Route path="/dashboard" element={<Dashboard />} />
+    </Route>
+
+    <Route path="/confirm-email">
+      <Route path="send/" element={<ConfirmEmail/>} />
+      <Route path="receive/:refreshToken" element={<ConfirmEmailRecieve/>} />
     </Route>
 
     <Route path="google-oauth-success-redirect">

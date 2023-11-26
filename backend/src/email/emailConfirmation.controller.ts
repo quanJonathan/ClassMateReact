@@ -13,20 +13,22 @@ import {
 
    
   @Controller('email-confirmation')
-  @UseInterceptors(ClassSerializerInterceptor)
   export class EmailConfirmationController {
     constructor(
       private readonly emailConfirmationService: EmailConfirmationService
     ) {}
 
     @Post('resend-confirmation-link')
-    async resendConfirmationLink(@Req() request: Request) {
-      await this.emailConfirmationService.resendConfirmationLink(request.userEntity.email);
+    async resendConfirmationLink(@Req() request) {
+      //console.log(request);
+      await this.emailConfirmationService.resendConfirmationLink(request.email);
     }
    
-    @Post('confirm')
+    @Post('verify')
     async confirm(@Body() confirmationData: ConfirmEmailDto) {
+      //console.log(confirmationData.token);
       const email = await this.emailConfirmationService.decodeConfirmationToken(confirmationData.token);
+      console.log(email);
       await this.emailConfirmationService.confirmEmail(email);
     }
   }
