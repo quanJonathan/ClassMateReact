@@ -48,7 +48,7 @@ export default function ProfilePage() {
       else {
       setIsView(true);
       await axios
-        .post("https://classmatebe.onrender.com/auth/profile/update", form, {
+        .post("https://classmatebetest.onrender.com/auth/profile/update", form, {
           headers: {
             Authorization: "Bearer " + token.accessToken,
           },

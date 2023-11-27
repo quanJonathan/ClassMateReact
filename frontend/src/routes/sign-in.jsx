@@ -82,7 +82,7 @@ export default function SignIn() {
   const loginWithGoogle = async() =>{
     console.log('click')
     try{
-      window.open(`https://classmatebe.onrender.com/auth/google/${from.replaceAll('/', '@')}`, "_self");
+      window.open(`https://classmatebetest.onrender.com/auth/google/${from.replaceAll('/', '@')}`, "_self");
     }catch(error) {
       console.log(error)
     }
@@ -90,7 +90,7 @@ export default function SignIn() {
 
   const loginWithFaceBook = async() => {
     try{
-      window.open(`https://classmatebe.onrender.com/auth/facebook`, "_self");
+      window.open(`https://classmatebetest.onrender.com/auth/facebook`, "_self");
     }catch(error) {
       console.log(error)
     }

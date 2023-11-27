@@ -44,7 +44,7 @@ export const AuthProvider = ({ children }) => {
     const fetchData = async () => {
       console.log(token)
       try {
-        const { data } = await axios.get("https://classmatebe.onrender.com/auth/profile", {
+        const { data } = await axios.get("https://classmatebetest.onrender.com/auth/profile", {
           headers: {
             Authorization: "Bearer " + token.refreshToken,
           },
@@ -76,7 +76,7 @@ export const AuthProvider = ({ children }) => {
   const login = async (form) => {
     try {
       const response = await axios.post(
-        "https://classmatebe.onrender.com/auth/signIn",
+        "https://classmatebetest.onrender.com/auth/signIn",
         form
       );
       const token = response.data;
@@ -99,7 +99,7 @@ export const AuthProvider = ({ children }) => {
   const loginWithGoogle = async () => {
     try {
       window.open(
-        `http://classmatebe/auth/google/${from.replaceAll("/", "@")}`,
+        `http://classmatebetest/auth/google/${from.replaceAll("/", "@")}`,
         "_self"
       );
     } catch (error) {
