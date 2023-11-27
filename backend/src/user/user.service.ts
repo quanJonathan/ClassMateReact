@@ -56,11 +56,36 @@ export class UserService {
 
     const defaultUserRoles = [UserRoles.student];
 
+    console.log(googleUser.firstName)
+    console.log(googleUser.lastName)
+
     // Create new User
     const user = this.userModel.create({
       ...googleUser,
       roles: defaultUserRoles
     });
+
+
+    return (await user).save();
+  }
+
+  async createUserWithFacebook(facebookUser: IFaceBookUser): Promise<User> {
+    const [userExists] = await this.findByEmail(facebookUser.email);
+    if (userExists) {
+      throw new BadRequestException('User already exists');
+    }
+
+    const defaultUserRoles = [UserRoles.student];
+
+    console.log(facebookUser.firstName)
+    console.log(facebookUser.lastName)
+
+    // Create new User
+    const user = this.userModel.create({
+      ...facebookUser,
+      roles: defaultUserRoles
+    });
+
 
     return (await user).save();
   }

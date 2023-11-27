@@ -71,7 +71,7 @@ export default function SignUp() {
     }
     else {
     await axios
-      .post("http://localhost:3001/auth/signUp", form, {
+      .post("https://classmatebetest.onrender.com/auth/signUp", form, {
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",
           "Access-Control-Allow-Origin": "*",

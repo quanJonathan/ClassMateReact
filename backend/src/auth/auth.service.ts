@@ -14,6 +14,7 @@ import { UserService } from '../user/user.service';
 
 @Injectable()
 export class AuthService {
+
   constructor(
     private configService: ConfigService<IconfigService>,
     private userService: UserService,
@@ -48,10 +49,32 @@ export class AuthService {
     return null;
   }
 
+  async facebookUserValidate(
+    facebookUser: IFaceBookUser
+    ): Promise<Partial<User> | null> {
+      console.log(facebookUser.email)
+      const [user] = await this.userService.findByEmail(facebookUser?.email);
+      if (!user) {
+        const newUser = await this.userService.createUserWithFacebook(facebookUser);
+        return newUser;
+      }
+      if (user.provider !== authTypeEnum.facebook) {
+        throw new NotAcceptableException(
+          `${facebookUser.email} address has registered via ${user.provider}!`,
+        );
+      }
+      if (user) {
+        return user;
+      }
+  
+      return null;
+  }
+
   async googleUserValidate(
     googleUser: IGoogleUser,
   ): Promise<Partial<User> | null> {
-    const [user] = await this.userService.findByEmail(googleUser.email);
+    console.log(googleUser.email)
+    const [user] = await this.userService.findByEmail(googleUser?.email);
     if (!user) {
       const newUser = await this.userService.createUserWithGoogle(googleUser);
       return newUser;
@@ -83,7 +106,7 @@ export class AuthService {
   }
 
   async login(user: User): Promise<IJWTTokensPair> {
-    console.log(Object.values(user));
+    // console.log(Object.values(user));
     const tokens = await this.getTokens(
       user.email,
       authTypeEnum[user.provider],
@@ -131,9 +154,12 @@ export class AuthService {
       }),
     ]);
 
+    console.log("accessToken " + accessToken);
+    console.log("refreshToken " + refreshToken);
+
     return {
-      accessToken,
-      refreshToken,
+      accessToken: accessToken,
+      refreshToken: refreshToken,
     };
   }
 

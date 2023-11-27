@@ -13,10 +13,32 @@ declare global {
     OAUTH_GOOGLE_REDIRECT_URL?: string;
   }
 
+  interface IconfigServiceFB{
+    COOKIE_KEY?: string;
+    DB_NAME?: string;
+    JWT_ACCESS_SECRET?: string;
+    JWT_REFRESH_SECRET?: string;
+    FACEBOOK_ID?: string;
+    FACEBOOK_SECRET?: string;
+    FACEBOOK_REDIRECT_URL?: string;
+  }
+
   interface IGoogleUser {
     provider: string;
     providerId: string;
-    name: string;
+    firstName: string;
+    lastName: string;
+    email: string;
+    photo: string;
+    accessToken?: string;
+    refreshToken?: string;
+  }
+
+  interface IFaceBookUser{
+    provider: string;
+    providerId: string;
+    firstName: string;
+    lastName: string;
     email: string;
     photo: string;
     accessToken?: string;

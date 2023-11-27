@@ -9,6 +9,8 @@ import { GoogleStrategy } from 'strategy/google.strategy';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AccessTokenStrategy } from 'strategy/accessToken.strategy';
 import { RefreshTokenStrategy } from 'strategy/refreshToken.strategy';
+import { FacebookStrategy } from 'strategy/facebook.strategy';
+
 import { EmailConfirmationService } from 'src/email/emailConfirmation.service';
 import EmailService from 'src/email/email.service';
 import { EmailConfirmationController } from 'src/email/emailConfirmation.controller';
@@ -37,8 +39,9 @@ import { EmailConfirmationController } from 'src/email/emailConfirmation.control
     GoogleStrategy,
     AccessTokenStrategy,
     RefreshTokenStrategy,
+    FacebookStrategy,
     EmailConfirmationService,
-    EmailService
+    EmailService,
   ],
 })
 export class AuthModule {}

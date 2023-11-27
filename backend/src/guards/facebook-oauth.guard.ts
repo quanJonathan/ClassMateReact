@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import {
   ExecutionContext,
   Injectable,
@@ -8,14 +9,14 @@ import { AuthGuard, IAuthModuleOptions } from '@nestjs/passport';
 import { Request, Response } from 'express';
 
 @Injectable()
-export class GoogleOAuthGuard extends AuthGuard('google') {
+export class FacebookOAuthGuard extends AuthGuard('facebook') {
   constructor(private configService: ConfigService) {
     super({
       // accessType: 'offline',
       // response_type: "code",
       // display: 'popup',
       // approvalPrompt: 'auto',
-      prompt: 'select_account', //"consent"
+      prompt: 'select_account' //"consent"
     });
   }
 
