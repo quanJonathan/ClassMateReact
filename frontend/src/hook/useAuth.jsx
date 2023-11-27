@@ -73,6 +73,7 @@ export const AuthProvider = ({ children }) => {
     }
   }, [navigate, setToken, setUser, token, user]);
 
+
   const login = async (form) => {
     try {
       const response = await axios.post(
@@ -85,25 +86,21 @@ export const AuthProvider = ({ children }) => {
       if (token) {
         setToken(token);
         localStorage.setItem("token", JSON.stringify(token));
-        toast.success("Successfully Login");
-        navigate("/dashboard", { replace: true });
+        if (user && user.status !== 'activated') {
+          toast.error("Please Check Verification Email!");
+          navigate("/confirm-email/send",  { replace: true });
+          console.log("unactivated")
+        }
+        else {
+          toast.success("Successfully Login");
+          navigate("/dashboard", { replace: true });
+        }
       } else {
         toast.error("Login Failed");
       }
     } catch (error) {
       console.error("Login failed:", error);
       toast.error("Login Failed");
-    }
-  };
-
-  const loginWithGoogle = async () => {
-    try {
-      window.open(
-        `http://classmatebetest/auth/google/${from.replaceAll("/", "@")}`,
-        "_self"
-      );
-    } catch (error) {
-      console.log(error);
     }
   };
 
@@ -137,7 +134,6 @@ export const AuthProvider = ({ children }) => {
       logout,
       updateUser,
       isAuthenticated,
-      loginWithGoogle,
       readFromStorage,
     }),
     [token, setToken, user, isAuthenticated]

@@ -6,6 +6,7 @@ import { Model } from 'mongoose';
 import { UserRoles } from '../enum/userRole.enum';
 import { authTypeEnum } from '../enum/authType.enum';
 import { hashData } from '../helpers/hash-data';
+import { userStateEnum } from 'src/enum/userState.enum';
 
 @Injectable()
 export class UserService {
@@ -32,8 +33,18 @@ export class UserService {
       address: "",
       phoneNumber: "",
       photo: "",
+      state: userStateEnum.notActivated
     })
     return await newUser.save();
+  }
+
+  async markEmailAsConfirmed(email: string) {
+    const user = await this.findByEmail(email);
+    if (!user) {
+      throw new NotFoundException('user not found');
+    }
+    console.log(`user ${email} has activated`);
+    return this.updateState(user[0], userStateEnum.activated); 
   }
 
   async createUserWithGoogle(googleUser: IGoogleUser): Promise<User> {
@@ -113,6 +124,12 @@ export class UserService {
     return find;
   }
 
+  async findByToken(token: string): Promise<User[]> {
+    const find = await this.userModel.find({refreshToken: token}).lean().exec();
+    console.log(find);
+    return find;
+  }
+
   async findOneByEmailAndProvider(email: string, provider: authTypeEnum): Promise<User>{
     const find = await this.userModel.findOne({email: email, provider: provider}).lean().exec();
     // console.log(find);
@@ -155,6 +172,12 @@ export class UserService {
       lastName: user.lastName,
       address: user.address,
       phoneNumber: user.phoneNumber
+    }})
+  }
+
+  async updateState(user: User, state: string) {
+    return await this.userModel.findOneAndUpdate({email: user.email}, {$set: {
+      state: state,
     }})
   }
 

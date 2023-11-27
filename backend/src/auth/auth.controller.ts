@@ -17,15 +17,21 @@ import { AccessTokenGuard } from '../guards/access-token.guard';
 import { RefreshTokenGuard } from '../guards/refresh-token.guard';
 import { authTypeEnum } from 'src/enum/authType.enum';
 import { UserService } from 'src/user/user.service';
+
 import { FacebookOAuthGuard } from 'src/guards/facebook-oauth.guard';
 import { AuthGuard } from '@nestjs/passport';
+
+import { EmailConfirmationService } from 'src/email/emailConfirmation.service';
+
 
 @Controller('auth')
 export class AuthController {
   constructor(
     private authService: AuthService,
     private userService: UserService,
+    private emailConfirmationService: EmailConfirmationService
   ) {}
+
 
   @Get('google/:from')
   @UseGuards(GoogleOAuthGuard)
@@ -86,6 +92,7 @@ export class AuthController {
   @Post('signUp')
   async Signup(@Res() response, @Body() user: User) {
     const newUSer = this.authService.localSignUp(user);
+    await this.emailConfirmationService.sendVerificationLink(user);
     return response.status(HttpStatus.CREATED).json({
       newUSer,
     });
