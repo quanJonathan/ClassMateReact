@@ -4,6 +4,8 @@ import { ConfigService } from '@nestjs/config';
 import VerificationTokenPayload from './verificationTokenPayload.interface';
 import EmailService from '../email/email.service';
 import { UserService } from '../user/user.service';
+import { userStateEnum } from 'src/enum/userState.enum';
+import { User } from 'src/user/model/user.schema';
 
 @Injectable()
 export class EmailConfirmationService {
@@ -15,17 +17,20 @@ export class EmailConfirmationService {
   ) {}
 
   public async resendConfirmationLink(email: string) {
+    console.log(email);
     const user = await this.usersService.findByEmail(email);
-    // if (user.isEmailConfirmed) {
-    //   throw new BadRequestException('Email already confirmed');
-    // }
-    await this.sendVerificationLink(email);
+    console.log(user);
+    if (user[0].state === userStateEnum.activated)
+    {
+      throw new BadRequestException('Email already confirmed');
+    }
+    await this.sendVerificationLink(user[0]);
   }
    
   public async confirmEmail(email: string) {
     const user = await this.usersService.findByEmail(email);
     // if (user.isEmailConfirmed) 
-    if (false)
+    if (user[0].state === userStateEnum.activated)
     {
       throw new BadRequestException('Email already confirmed');
     }
@@ -50,7 +55,8 @@ export class EmailConfirmationService {
     }
   }
 
-  public sendVerificationLink(email: string) {
+  public async sendVerificationLink(user: User) {
+    const email = user.email;
     const payload: VerificationTokenPayload = { email };
     const token = this.jwtService.sign(payload, {
       secret: this.configService.get('JWT_VERIFICATION_TOKEN_SECRET'),
@@ -60,9 +66,10 @@ export class EmailConfirmationService {
     })
     console.log(token);
 
+    //const u = await this.usersService.findByEmail(email);
     const url = `${this.configService.get(
       'EMAIL_CONFIRMATION_URL',
-    )}?token=${token}`;
+    )}/receive/${token}/`;
 
     const text = `Welcome to ClassMate website.\n To confirm the email address, click here: \n${url}`;
     const emailTemplate = {

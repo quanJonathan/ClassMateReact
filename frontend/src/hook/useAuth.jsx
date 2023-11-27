@@ -55,7 +55,7 @@ export const AuthProvider = ({ children }) => {
     if (!isTokenValid(token)) {
       setToken(null);
       setUser(null)
-      navigate("/");
+      //navigate("/");
     }
     if(!user || !token || user.refreshToken !== token.refreshToken){
       console.log("fetch data")
@@ -73,8 +73,15 @@ export const AuthProvider = ({ children }) => {
       if (token) {
         setToken(token);
         localStorage.setItem("token", JSON.stringify(token));
-        toast.success("Successfully Login");
-        navigate("/dashboard", { replace: true });
+        if (user && user.status !== 'activated') {
+          toast.error("Please Check Verification Email!");
+          navigate("/confirm-email/send",  { replace: true });
+          console.log("unactivated")
+        }
+        else {
+          toast.success("Successfully Login");
+          navigate("/dashboard", { replace: true });
+        }
       } else {
         toast.error("Login Failed");
       }

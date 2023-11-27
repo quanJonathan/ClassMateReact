@@ -1,4 +1,4 @@
-import React from "react";
+import React, { StrictMode } from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
 import theme from "./theme";
@@ -10,11 +10,11 @@ import 'react-toastify/dist/ReactToastify.css';
 
 
 ReactDOM.createRoot(document.getElementById("root")).render(
- 
+ <StrictMode>
     <ThemeProvider theme={theme}>
     <ToastContainer theme='colored' position='top-center'></ToastContainer>
       <CssBaseline />
       <RouterProvider router={router} />
     </ThemeProvider>
-
+</StrictMode>
 );
