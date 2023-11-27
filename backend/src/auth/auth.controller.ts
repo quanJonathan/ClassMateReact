@@ -40,7 +40,7 @@ export class AuthController {
     console.log('accessToken of google ' + auth.accessToken);
     console.log('refreshToken ' + auth.refreshToken);
     res.redirect(
-      `https://classmatefe.onrender.com/google-oauth-success-redirect/${auth.accessToken}/${auth.refreshToken}${req.params.from}`,
+      `https://classmatefetest.onrender.com/google-oauth-success-redirect/${auth.accessToken}/${auth.refreshToken}${req.params.from}`,
     );
   }
 
