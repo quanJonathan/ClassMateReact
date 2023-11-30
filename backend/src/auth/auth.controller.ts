@@ -121,7 +121,10 @@ export class AuthController {
     @Body() body: { password: string }) {
     if (params.token) {
       const email = await this.emailConfirmationService.decodeConfirmationToken(params.token);
+      const user = await this.authService.checkUserExist(email);
+      if (user){
       await this.userService.updatePassword(email, body.password);
+      }
     }
   }
 
