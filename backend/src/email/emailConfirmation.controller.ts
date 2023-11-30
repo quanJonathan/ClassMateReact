@@ -20,8 +20,8 @@ import {
 
     @Post('resend-confirmation-link')
     async resendConfirmationLink(@Req() request) {
-      //console.log(request);
-      await this.emailConfirmationService.resendConfirmationLink(request.email);
+      console.log(request);
+      await this.emailConfirmationService.resendConfirmationLink(request.body.email);
     }
    
     @Post('verify')

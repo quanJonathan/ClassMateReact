@@ -94,7 +94,8 @@ export class AuthController {
     const newUSer = this.authService.localSignUp(user);
     await this.emailConfirmationService.sendVerificationLink(user);
     return response.status(HttpStatus.CREATED).json({
-      newUSer,
+      token: newUSer,
+      email: user.email
     });
   }
 

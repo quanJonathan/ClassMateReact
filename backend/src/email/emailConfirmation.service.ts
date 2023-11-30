@@ -18,6 +18,7 @@ export class EmailConfirmationService {
 
   public async resendConfirmationLink(email: string) {
     console.log(email);
+    if (!email) return;
     const user = await this.usersService.findByEmail(email);
     console.log(user);
     if (user[0].state === userStateEnum.activated)

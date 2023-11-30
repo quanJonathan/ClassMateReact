@@ -1,8 +1,10 @@
-import { createContext, useContext, useEffect, useMemo } from "react";
+import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useLocalStorage } from "./useLocalStorage";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { Email } from "@mui/icons-material";
+import { set } from "lodash";
 
 const AuthContext = createContext();
 
@@ -12,6 +14,11 @@ export const AuthProvider = ({ children }) => {
     "token",
     localStorage.getItem("token")
   );
+
+  const [tempEmail, setTempEmail] = useLocalStorage("tempEmail",
+  localStorage.getItem("tempEmail")
+  );
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -77,7 +84,7 @@ export const AuthProvider = ({ children }) => {
   const login = async (form) => {
     try {
       const response = await axios.post(
-        "https://classmatebetest.onrender.com/auth/signIn",
+        "http://localhost:3001/auth/signIn",
         form
       );
       const token = response.data;
@@ -135,8 +142,10 @@ export const AuthProvider = ({ children }) => {
       updateUser,
       isAuthenticated,
       readFromStorage,
+      setTempEmail,
+      tempEmail
     }),
-    [token, setToken, user, isAuthenticated]
+    [token, setToken, user, isAuthenticated, setTempEmail, tempEmail]
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
