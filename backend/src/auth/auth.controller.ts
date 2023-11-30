@@ -7,6 +7,8 @@ import {
   Req,
   Res,
   UseGuards,
+  Query,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { GoogleOAuthGuard } from '../guards/google-oauth.guard';
 import { AuthService } from './auth.service';
@@ -23,15 +25,13 @@ import { AuthGuard } from '@nestjs/passport';
 
 import { EmailConfirmationService } from 'src/email/emailConfirmation.service';
 
-
 @Controller('auth')
 export class AuthController {
   constructor(
     private authService: AuthService,
     private userService: UserService,
-    private emailConfirmationService: EmailConfirmationService
+    private emailConfirmationService: EmailConfirmationService,
   ) {}
-
 
   @Get('google/:from')
   @UseGuards(GoogleOAuthGuard)
@@ -46,7 +46,7 @@ export class AuthController {
     console.log('accessToken of google ' + auth.accessToken);
     console.log('refreshToken ' + auth.refreshToken);
     res.redirect(
-      `https://classmatefetest.onrender.com/google-oauth-success-redirect/${auth.accessToken}/${auth.refreshToken}${req.params.from}`,
+      `http://localhost:5173/google-oauth-success-redirect/${auth.accessToken}/${auth.refreshToken}${req.params.from}`,
     );
   }
 
@@ -63,7 +63,7 @@ export class AuthController {
     console.log('accessToken of facebook ' + auth.accessToken);
     console.log('refreshToken ' + auth.refreshToken);
     res.redirect(
-      `https://classmatefe.onrender.com/facebook-oauth-success-redirect/${auth.accessToken}/${auth.refreshToken}${req.params.from}`,
+      `http://localhost:5173/facebook-oauth-success-redirect/${auth.accessToken}/${auth.refreshToken}${req.params.from}`,
     );
   }
 
@@ -102,6 +102,27 @@ export class AuthController {
   @UseGuards(LocalAuthGuard)
   async SignIn(@Req() req) {
     return this.authService.login(req.user);
+  }
+
+  @Post('forgot-password')
+  async ForgotPassword(@Req() req, @Body() body: { email: string }) {
+    const user = await this.authService.checkUserExist(body.email);
+
+    if (user) {
+      await this.emailConfirmationService.sendResetPasswordLink(user);
+    } else {
+      throw new UnauthorizedException();
+    }
+  }
+
+  @Post('reset-password')
+  async ResetPassword(
+    @Query() params: any,
+    @Body() body: { password: string }) {
+    if (params.token) {
+      const email = await this.emailConfirmationService.decodeConfirmationToken(params.token);
+      await this.userService.updatePassword(email, body.password);
+    }
   }
 
   @Get('profile')

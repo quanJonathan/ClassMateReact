@@ -49,6 +49,29 @@ export class AuthService {
     return null;
   }
 
+
+  async checkUserExist(
+    email: string,
+  ): Promise<Partial<User> | null> {
+    const [user] = await this.userService.findByEmail(email);
+    // console.log(user);
+    if (!user) {
+      throw new NotAcceptableException('could not find the user');
+    }
+    if (user.provider !== authTypeEnum.local) {
+      throw new NotAcceptableException(
+        `${email} address has registered via ${user.provider}!`,
+      );
+    }
+;
+    if (user) {
+      const { password, ...rest } = user;
+      return rest;
+    }
+    return null;
+  }
+
+
   async facebookUserValidate(
     facebookUser: IFaceBookUser
     ): Promise<Partial<User> | null> {
