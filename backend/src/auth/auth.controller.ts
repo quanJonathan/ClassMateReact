@@ -105,14 +105,20 @@ export class AuthController {
   }
 
   @Post('forgot-password')
-  async ForgotPassword(@Req() req, @Body() body: { email: string }) {
+  async ForgotPassword(@Res() response, @Body() body: {email: string}){
     const user = await this.authService.checkUserExist(body.email);
 
     if (user) {
-      await this.emailConfirmationService.sendResetPasswordLink(user);
-    } else {
-      throw new UnauthorizedException();
-    }
+      console.log(user);
+      const sendEmail = await this.emailConfirmationService.sendResetPasswordLink(user);
+      if (sendEmail){
+        return response.status(HttpStatus.ACCEPTED).json({
+          sendEmail
+        });
+
+        
+      }
+    } 
   }
 
   @Post('reset-password')

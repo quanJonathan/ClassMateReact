@@ -24,25 +24,8 @@ import { useState } from "react";
 import { useAuth } from "../hook/useAuth.jsx";
 import AppName from "../components/WebName.jsx";
 
-function Copyright(props) {
-  return (
-    <Typography
-      variant="body2"
-      color="text.secondary"
-      align="center"
-      {...props}
-    >
-      {"Copyright © "}
-      <Link color="inherit" href="https://mui.com/">
-        Your Website
-      </Link>{" "}
-      {new Date().getFullYear()}
-      {"."}
-    </Typography>
-  );
-}
 
-export default function SignIn() {
+export default function ResetPassword() {
 
   const CustomBox = styled(Box)(({ theme }) => ({
     display: "flex",
@@ -97,9 +80,9 @@ export default function SignIn() {
   }
 
   const [showPassword, setShowPassword] = useState(false);
-
+  const [showPassword2, setShowPassword2] = useState(false);
   const handleClickShowPassword = () => setShowPassword((show) => !show);
-
+  const handleClickShowPassword2 = () => setShowPassword2((show) => !show);
   const handleMouseDownPassword = (event) => {
     event.preventDefault();
   };
@@ -186,7 +169,7 @@ export default function SignIn() {
                                 <LockOutlinedIcon />
                             </Avatar> */}
             <Typography component="h1" variant="h4">
-              Welcome Back
+              Reset Password
             </Typography>
             <Box
               component="form"
@@ -213,17 +196,6 @@ export default function SignIn() {
                   />
                 </Grid>
                 <Grid item xs={10} sx={{mx: 10}}>
-                  {/* <TextField
-                        InputProps={{ sx: { borderRadius: 10 } }}
-                        margin="normal"
-                        required
-                        fullWidth
-                        name="password"
-                        label="Password"
-                        type="password"
-                        id="password"
-                        autoComplete="current-password"
-                      /> */}
                   <FormControl fullWidth required variant="outlined">
                     <InputLabel htmlFor="outlined-adornment-password" 
                     sx={{
@@ -256,25 +228,42 @@ export default function SignIn() {
                     />
                   </FormControl>
                 </Grid>
-              </Grid>
-              <Box sx={{display: "flex", justifyContent: "center"}}>
-              <Box sx={{ display: "flex", justifyContent: "space-between", width: "70%", my: 2, p: 1}}>
-                <FormControlLabel
-                  control={
-                    <Checkbox
-                      value="remember-me"
-                      id="remember-me"
-                      color="primary"
-                      name="remember-me"
+
+                <Grid item xs={10} sx={{mx: 10}}>
+                  <FormControl fullWidth required variant="outlined">
+                    <InputLabel htmlFor="outlined-adornment-password" 
+                    sx={{
+                      marginLeft: "5px", marginRight: "5px"
+                    }}
+                    >
+                      Confirm Password
+                    </InputLabel>
+                    <OutlinedInput
+                      name="password"
+                      sx={{ borderRadius: 10,
+                        paddingLeft: "20px",
+                        paddingRight: "20px",
+                      }}
+                      id="outlined-adornment-password"
+                      type={showPassword ? "text" : "password"}
+                      endAdornment={
+                        <InputAdornment position="end">
+                          <IconButton
+                            aria-label="toggle password visibility"
+                            onClick={handleClickShowPassword2}
+                            onMouseDown={handleMouseDownPassword}
+                            edge="end"
+                          >
+                            {showPassword2 ? <VisibilityOff /> : <Visibility />}
+                          </IconButton>
+                        </InputAdornment>
+                      }
+                      label="ConfirmPassword"
                     />
-                  }
-                  label="Remember me"
-                />
-                <NavLink to="/forgot-password" variant="body2" alignSelf="center" textAlign="right">
-                Forgot password?
-                  </NavLink>
-              </Box>
-              </Box>
+                  </FormControl>
+                </Grid>
+              </Grid>
+            
               <Box sx={{ display: "flex", justifyContent: "center", p: {xs: 2, sm: 0}}}>
               <Button
                 type="submit"
@@ -284,7 +273,7 @@ export default function SignIn() {
                   width: "70%"
               }}
               >
-                Sign In
+                Reset
               </Button>
               </Box>
               {/* <Copyright sx={{ mt: 5 }} /> */}

@@ -72,6 +72,8 @@ export class AuthService {
   }
 
 
+
+
   async facebookUserValidate(
     facebookUser: IFaceBookUser
     ): Promise<Partial<User> | null> {

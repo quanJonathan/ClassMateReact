@@ -95,10 +95,10 @@ export class EmailConfirmationService {
       'RESET_PASSWORD_URL',
     )}?token=${token}`;
 
-    const text = `Welcome to ClassMate website.\n To confirm the email address, click here: \n${url}`;
+    const text = `Welcome to ClassMate website.\n To reset password, click here: \n${url}`;
     const emailTemplate = {
       to: email,
-      subject: 'Email confirmation',
+      subject: 'Reset Password',
       text,
     };
     console.log(emailTemplate);
