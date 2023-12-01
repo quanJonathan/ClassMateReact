@@ -23,15 +23,13 @@ import { AuthGuard } from '@nestjs/passport';
 
 import { EmailConfirmationService } from 'src/email/emailConfirmation.service';
 
-
 @Controller('auth')
 export class AuthController {
   constructor(
     private authService: AuthService,
     private userService: UserService,
-    private emailConfirmationService: EmailConfirmationService
+    private emailConfirmationService: EmailConfirmationService,
   ) {}
-
 
   @Get('google/:from')
   @UseGuards(GoogleOAuthGuard)
@@ -51,19 +49,20 @@ export class AuthController {
   }
 
   @Get('facebook')
-  @UseGuards(AuthGuard('facebook'))
+  @UseGuards(FacebookOAuthGuard)
   async facebookAuth(@Req() req: Request) {}
 
   @Get('facebook-redirect')
-  @UseGuards(AuthGuard('facebook'))
+  @UseGuards(FacebookOAuthGuard)
   async facebookAuthRedirect(@Req() req: Request, @Res() res: Response) {
-    console.log(req.user);
+    // console.log(req.user);
+    console.log(req);
     const auth = await this.authService.login(req.user as User);
     console.log('from ' + req.params.from);
     console.log('accessToken of facebook ' + auth.accessToken);
     console.log('refreshToken ' + auth.refreshToken);
     res.redirect(
-      `https://classmatefe.onrender.com/facebook-oauth-success-redirect/${auth.accessToken}/${auth.refreshToken}${req.params.from}`,
+      `http://localhost:5173/facebook-oauth-success-redirect/${auth.accessToken}/${auth.refreshToken}/`,
     );
   }
 

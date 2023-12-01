@@ -90,7 +90,7 @@ export default function SignIn() {
 
   const loginWithFaceBook = async() => {
     try{
-      window.open(`https://classmatebetest.onrender.com/auth/facebook`, "_self");
+      window.open(`http://localhost:3001/auth/facebook`, "_self");
     }catch(error) {
       console.log(error)
     }
