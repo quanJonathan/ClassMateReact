@@ -14,8 +14,9 @@ export class FacebookOAuthGuard extends AuthGuard('facebook') {
     super({
       // accessType: 'offline',
       // response_type: "code",
-      // display: 'popup',
+      //display: 'popup',
       // approvalPrompt: 'auto',
+      authType: 'reauthenticate',
       prompt: 'select_account' //"consent"
     });
   }

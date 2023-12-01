@@ -51,13 +51,14 @@ export class AuthController {
   }
 
   @Get('facebook')
-  @UseGuards(AuthGuard('facebook'))
+  @UseGuards(FacebookOAuthGuard)
   async facebookAuth(@Req() req: Request) {}
 
   @Get('facebook-redirect')
-  @UseGuards(AuthGuard('facebook'))
+  @UseGuards(FacebookOAuthGuard)
   async facebookAuthRedirect(@Req() req: Request, @Res() res: Response) {
-    console.log(req.user);
+    // console.log(req.user);
+    console.log(req);
     const auth = await this.authService.login(req.user as User);
     console.log('from ' + req.params.from);
     console.log('accessToken of facebook ' + auth.accessToken);

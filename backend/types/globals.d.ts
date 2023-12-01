@@ -37,12 +37,12 @@ declare global {
   interface IFaceBookUser{
     provider: string;
     providerId: string;
+    email: string;
     firstName: string;
     lastName: string;
-    email: string;
     photo: string;
-    accessToken?: string;
-    refreshToken?: string;
+    accessToken: string;
+    refreshToken: string;
   }
 
   namespace Express {

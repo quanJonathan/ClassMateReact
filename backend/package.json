@@ -55,6 +55,7 @@
     "@types/express": "^4.17.17",
     "@types/jest": "^29.5.2",
     "@types/node": "^20.3.1",
+    "@types/passport-facebook": "^3.0.3",
     "@types/passport-google-oauth20": "^2.0.14",
     "@types/passport-jwt": "^3.0.13",
     "@types/passport-local": "^1.0.38",
