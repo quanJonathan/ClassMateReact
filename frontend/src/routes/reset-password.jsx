@@ -11,6 +11,7 @@ import Typography from "@mui/material/Typography";
 import {
   Divider,
   FormControl,
+  FormHelperText,
   IconButton,
   InputAdornment,
   InputLabel,
@@ -18,14 +19,29 @@ import {
   Paper,
   styled
 } from "@mui/material";
-import { NavLink, useLocation } from "react-router-dom";
+import { NavLink, useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useAuth } from "../hook/useAuth.jsx";
 import AppName from "../components/WebName.jsx";
-
+import { toast } from "react-toastify";
+import axios from "axios";
 
 export default function ResetPassword() {
+    const navigate = useNavigate();
+    const [searchParams, setSearchParams] = useSearchParams();
+    searchParams.get("token")
+   
+    useEffect(() => {
+        if (!searchParams) {
+          toast.error("Expired Token. Please try again")
+          navigate("/sign-in", { replace: true });
+          console.log("expired!")
+        }
+        else {
+            console.log(searchParams)
+        }
+    });
 
   const CustomBox = styled(Box)(({ theme }) => ({
     display: "flex",
@@ -42,17 +58,55 @@ export default function ResetPassword() {
   const [errorMessage, setErrorMessage] = useState("");
   const location = useLocation();
   const from = (location.state?.from?.pathname === '/auth' ? '/' : location.state?.from?.pathname) || '/';
-  const { login } = useAuth();
-  const handleSubmit = async (event) => {
+  const handleReset = async (event) => {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
+    if (password === confirmPassword){
     const form = {
-      email: formData.get("email"),
       password: formData.get("password"),
-      save: formData.get("remember-me"),
+      token: searchParams
     };
+    await axios
+    .post("http://localhost:3001/auth/reset-password", form, {
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+        "Access-Control-Allow-Origin": "*",
+      },
+    })
+    .then(function (res) {
+      console.log(res);
+      toast.success("Reset Password Successfully");
+      navigate("/sign-in");
+    })
+    .catch(function (error) {
+      if (error.response) {
+        // The request was made and the server responded with a status code
+        // that falls out of the range of 2xx
+        console.log(error.response.data);
+        console.log(error.response.status);
+        console.log(error.response.headers);
+        toast.error('Reset Password Failed due to :' + error.response.data);
+      } else if (error.request) {
+        // The request was made but no response was received
+        // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+        // http.ClientRequest in node.js
+        console.log(error.request);
+        toast.error('Reset Password Failed');
+      } else {
+        // Something happened in setting up the request that triggered an Error
+        console.log("Error", error.message);
+        toast.error('Sign Up Failed');
 
-    login(form);
+      }
+      console.log(error.config);
+      navigate("/sign-up");
+    });
+    } 
+    
+    else {
+        toast.warning('Confirm Password Not Match!');
+    }
+    
 
     // console.log({
     //     email: data.get("email"),
@@ -60,6 +114,19 @@ export default function ResetPassword() {
     //     save: data.get("remember-me")
     // });
 
+  };
+
+  const [valid, setValid] = useState(true)
+  const [password, setPassword] = useState("")
+  const [confirmPassword, setConfirmPassword] = useState("")
+  const handlePassword = (e) => {
+    setPassword(e.target.value)
+  }
+
+
+  const handleValidation = (e) => {
+    setConfirmPassword(e.target.value);
+    setValid(e.target.value === password);
   };
 
   const loginWithGoogle = async() =>{
@@ -91,8 +158,8 @@ export default function ResetPassword() {
   return (
     <Box
       sx={{
-        paddingTop: "4%",
-        paddingBottom: "6%",
+        paddingTop: "8%",
+        paddingBottom: "7%",
         paddingX: "10%",
         backgroundImage: "url(/assets/log-in.png)",
         backgroundRepeat: "no-repeat",
@@ -174,28 +241,11 @@ export default function ResetPassword() {
             <Box
               component="form"
               noValidate
-              onSubmit={handleSubmit}
+              onSubmit={handleReset}
               sx={{ mt: 1, width: {xs: "80%", sm: "100%"} }}
             >
-              <Grid container spacing={1} sx={{justifyContent: "center"}}>
-                <Grid item xs={10} sx={{mx: 10}}>
-                  <TextField
-                    InputProps={{ sx: { borderRadius: 10, paddingLeft: "20px",
-                    paddingRight: "20px", } }}
-                    margin="normal"
-                    required
-                    fullWidth
-                    id="email"
-                    label="Email Address"
-                    name="email"
-                    autoComplete="email"
-                    autoFocus
-                    InputLabelProps={{
-                      style: { marginLeft: "5px", marginRight: "5px" },
-                    }}
-                  />
-                </Grid>
-                <Grid item xs={10} sx={{mx: 10}}>
+              <Grid container spacing={1} sx={{justifyContent: "center", px: 4}}>
+                <Grid item xs={10} sx={{mx: 10, mb: 2}}>
                   <FormControl fullWidth required variant="outlined">
                     <InputLabel htmlFor="outlined-adornment-password" 
                     sx={{
@@ -212,6 +262,7 @@ export default function ResetPassword() {
                       }}
                       id="outlined-adornment-password"
                       type={showPassword ? "text" : "password"}
+                      onChange={handlePassword}
                       endAdornment={
                         <InputAdornment position="end">
                           <IconButton
@@ -229,8 +280,8 @@ export default function ResetPassword() {
                   </FormControl>
                 </Grid>
 
-                <Grid item xs={10} sx={{mx: 10}}>
-                  <FormControl fullWidth required variant="outlined">
+                <Grid item xs={10} sx={{mx: 10, mb: 4}}>
+                  <FormControl fullWidth required variant="outlined" >
                     <InputLabel htmlFor="outlined-adornment-password" 
                     sx={{
                       marginLeft: "5px", marginRight: "5px"
@@ -246,6 +297,8 @@ export default function ResetPassword() {
                       }}
                       id="outlined-adornment-password"
                       type={showPassword ? "text" : "password"}
+                      error={!valid}
+                      onChange={(e) => handleValidation(e)}
                       endAdornment={
                         <InputAdornment position="end">
                           <IconButton
@@ -260,6 +313,11 @@ export default function ResetPassword() {
                       }
                       label="ConfirmPassword"
                     />
+                    {!valid && (
+                            <FormHelperText error id="accountId-error">
+                            Not Matching
+                            </FormHelperText>
+                            )}
                   </FormControl>
                 </Grid>
               </Grid>

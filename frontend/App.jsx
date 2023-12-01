@@ -25,6 +25,7 @@ export const router = createBrowserRouter(
         <Route path="sign-in" element={<SignIn />} />
         <Route path="sign-up" element={<SignUp />} />
         <Route path="forgot-password" element={<ForgotPassword />} />
+        <Route path="reset-password/:token"  element={<ResetPassword/>}/>
       </Route>
       <Route path="/google-oauth-success-redirect" >
         <Route
@@ -39,10 +40,8 @@ export const router = createBrowserRouter(
         <Route path="receive/:refreshToken" element={<ConfirmEmailRecieve/>} />
       </Route>
 
-      <Route path="/reset-password">
-      <Route path="?token" element={<ResetPassword/>} />
-      </Route>
-
+     
+    
       <Route path="/user" element={<ProtectedLayout />}>
         <Route path="profile" element={<ProfilePage />} />
       </Route>

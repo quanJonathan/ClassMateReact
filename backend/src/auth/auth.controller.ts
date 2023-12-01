@@ -123,10 +123,9 @@ export class AuthController {
 
   @Post('reset-password')
   async ResetPassword(
-    @Query() params: any,
-    @Body() body: { password: string }) {
-    if (params.token) {
-      const email = await this.emailConfirmationService.decodeConfirmationToken(params.token);
+    @Body() body: { password: string, token: string }) {
+    if (body.token) {
+      const email = await this.emailConfirmationService.decodeConfirmationToken(body.token);
       const user = await this.authService.checkUserExist(email);
       if (user){
       await this.userService.updatePassword(email, body.password);
