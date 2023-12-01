@@ -21,6 +21,7 @@ import { useState } from "react";
 import axios from "axios";
 import AppName from "../components/WebName";
 import { toast } from "react-toastify";
+import { useAuth } from "../hook/useAuth";
 
 function Copyright(props) {
   return (
@@ -42,6 +43,8 @@ function Copyright(props) {
 
 export default function SignUp() {
   let navigate = useNavigate();
+
+  const {setTempEmail} = useAuth();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -78,9 +81,11 @@ export default function SignUp() {
         },
       })
       .then(function (res) {
-        console.log(res);
+        console.log(res.data.email);
+        setTempEmail(res.data.email);
+        localStorage.setItem("tempEmail", res.data.email);
         toast.success("Sign Up Successfully! Check your email!");
-        navigate("/confirm-email/send");
+        navigate(`/confirm-email/send/`);
       })
       .catch(function (error) {
         if (error.response) {

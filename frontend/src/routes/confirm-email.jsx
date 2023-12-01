@@ -22,6 +22,7 @@ import {
 import { NavLink } from "react-router-dom";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { useState } from "react";
+import { toast } from "react-toastify";
 import { useAuth } from "../hook/useAuth.jsx";
 import AppName from "../components/WebName.jsx";
 
@@ -44,6 +45,7 @@ function Copyright(props) {
 }
 
 async function post(email) {
+  console.log(email);
   return await axios
   .post("http://localhost:3001/email-confirmation/resend-confirmation-link", {email: email}, {
     headers: {
@@ -57,17 +59,18 @@ async function post(email) {
     //navigate("/");
   })
   .catch(function (error) {
-    //console.log(error)
+    console.log(error)
   })
 }
 
 export default function ConfirmEmail() {
 
-  let {user} = useAuth();
+  let {tempEmail, user} = useAuth();
   //let {token} = useParams();
-  const email = user?.email;
-  console.log(user.email);
-  post(user.email);
+  console.log(tempEmail);
+  //const email = user?.email;
+  //console.log(user.email);
+  //post(user.email);
 
   return (
     <Box
@@ -101,15 +104,11 @@ export default function ConfirmEmail() {
           <Box sx={{ mt: 2, ml: 0, display: "flex", alignItems: "center",flexDirection: {xs: "column", lg: "row"}, justifyContent: "center", width: {xs: "100%", lg: "auto"} }}>
             <AppName sx={{height: "100%"}} />
             <Typography sx={{fontSize: "16px", width: {xs: "50%", lg: "100%"}, textAlign: {xs: "center"}}} >
-                {`Email has been sent ${user?.email}.`}
-                {
-                  <NavLink to={`/confirm-email/send`} variant="body2">
-                    {" "}
-                    Resent
-                  </NavLink>
-                
-                }
-                //
+                {`Email has been sent ${user ? user.email : tempEmail}.`}
+
+              </Typography>
+              <Button onClick={() =>  post(user ? user.email : tempEmail) } >Resend Email</Button>
+              <Typography sx={{fontSize: "16px", width: {xs: "50%", lg: "100%"}, textAlign: {xs: "center"}}} >
                 {
                   <NavLink to="/sign-in" variant="body2">
                     {" "}
