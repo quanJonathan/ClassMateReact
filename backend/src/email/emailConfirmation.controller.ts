@@ -1,22 +1,21 @@
 import {
-    Controller,
-    ClassSerializerInterceptor,
-    UseInterceptors,
-    Post,
-    Body,
-    UseGuards,
-    Req,
-  } from '@nestjs/common';
-  import ConfirmEmailDto from './confirmEmail.dto';
-  import { Request, Response } from 'express';
-  import { EmailConfirmationService } from './emailConfirmation.service';
+  Controller,
+  ClassSerializerInterceptor,
+  UseInterceptors,
+  Post,
+  Body,
+  UseGuards,
+  Req,
+} from '@nestjs/common';
+import ConfirmEmailDto from './confirmEmail.dto';
+import { Request, Response } from 'express';
+import { EmailConfirmationService } from './emailConfirmation.service';
 
-   
-  @Controller('email-confirmation')
-  export class EmailConfirmationController {
-    constructor(
-      private readonly emailConfirmationService: EmailConfirmationService
-    ) {}
+@Controller('email-confirmation')
+export class EmailConfirmationController {
+  constructor(
+    private readonly emailConfirmationService: EmailConfirmationService,
+  ) {}
 
     @Post('resend-confirmation-link')
     async resendConfirmationLink(@Req() request) {
@@ -31,4 +30,5 @@ import {
       console.log(email);
       await this.emailConfirmationService.confirmEmail(email);
     }
-  }
+  
+}

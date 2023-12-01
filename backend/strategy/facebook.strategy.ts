@@ -17,7 +17,8 @@ export class FacebookStrategy extends PassportStrategy(Strategy, 'facebook') {
       clientSecret: configService.get<string>('FACEBOOK_SECRET'),
       callbackURL: configService.get<string>('FACEBOOK_REDIRECT_URL'),
       scope: ['email'],
-      profileFields: ['emails', 'name'],
+      profileFields: ['emails', 'name', 'photos'],
+      passReqToCallback: true
     });
   }
 
@@ -35,18 +36,33 @@ export class FacebookStrategy extends PassportStrategy(Strategy, 'facebook') {
     refreshToken: string,
     profile: Profile,
   ): Promise<any> {
+    console.log(profile)
     const facebookUser: IFaceBookUser = {
       provider: authTypeEnum.facebook,
-      firstName: profile?.name.givenName,
-      lastName: profile?.name.familyName,
-      email: profile?.emails[0].value,
-      photo: profile?.photos[0].value,
-      accessToken,
-      refreshToken,
+      firstName:
+        profile.name && profile.name.givenName ? profile.name.givenName : '',
+      lastName:
+        profile.name && profile.name.familyName ? profile.name.familyName : '',
+      email:
+        profile.emails &&
+        profile.emails.length > 0 &&
+        profile.emails[0].value !== undefined
+          ? profile.emails[0].value
+          : null,
+      photo:
+        profile.photos &&
+        profile.photos.length > 0 &&
+        profile.photos[0].value !== undefined
+          ? profile.photos[0].value
+          : null,
       providerId: '',
+      accessToken: accessToken,
+      refreshToken: refreshToken,
     };
+    console.log(profile.emails)
+    console.log(profile.name)
 
-    console.log(facebookUser.email);
+    console.log(facebookUser);
 
     const user = await this.authService.facebookUserValidate(facebookUser);
 

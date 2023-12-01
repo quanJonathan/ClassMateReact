@@ -7,6 +7,8 @@ import {
   Req,
   Res,
   UseGuards,
+  Query,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { GoogleOAuthGuard } from '../guards/google-oauth.guard';
 import { AuthService } from './auth.service';
@@ -23,15 +25,13 @@ import { AuthGuard } from '@nestjs/passport';
 
 import { EmailConfirmationService } from 'src/email/emailConfirmation.service';
 
-
 @Controller('auth')
 export class AuthController {
   constructor(
     private authService: AuthService,
     private userService: UserService,
-    private emailConfirmationService: EmailConfirmationService
+    private emailConfirmationService: EmailConfirmationService,
   ) {}
-
 
   @Get('google/:from')
   @UseGuards(GoogleOAuthGuard)
@@ -46,24 +46,25 @@ export class AuthController {
     console.log('accessToken of google ' + auth.accessToken);
     console.log('refreshToken ' + auth.refreshToken);
     res.redirect(
-      `https://classmatefetest.onrender.com/google-oauth-success-redirect/${auth.accessToken}/${auth.refreshToken}${req.params.from}`,
+      `http://localhost:5173/google-oauth-success-redirect/${auth.accessToken}/${auth.refreshToken}${req.params.from}`,
     );
   }
 
   @Get('facebook')
-  @UseGuards(AuthGuard('facebook'))
+  @UseGuards(FacebookOAuthGuard)
   async facebookAuth(@Req() req: Request) {}
 
   @Get('facebook-redirect')
-  @UseGuards(AuthGuard('facebook'))
+  @UseGuards(FacebookOAuthGuard)
   async facebookAuthRedirect(@Req() req: Request, @Res() res: Response) {
-    console.log(req.user);
+    // console.log(req.user);
+    console.log(req);
     const auth = await this.authService.login(req.user as User);
     console.log('from ' + req.params.from);
     console.log('accessToken of facebook ' + auth.accessToken);
     console.log('refreshToken ' + auth.refreshToken);
     res.redirect(
-      `https://classmatefe.onrender.com/facebook-oauth-success-redirect/${auth.accessToken}/${auth.refreshToken}${req.params.from}`,
+      `http://localhost:5173/facebook-oauth-success-redirect/${auth.accessToken}/${auth.refreshToken}${req.params.from}`,
     );
   }
 
@@ -103,6 +104,47 @@ export class AuthController {
   @UseGuards(LocalAuthGuard)
   async SignIn(@Req() req) {
     return this.authService.login(req.user);
+  }
+
+  @Post('forgot-password')
+  async ForgotPassword(@Res() response, @Body() body: { email: string }) {
+    const user = await this.authService.checkUserExist(body.email);
+
+    if (user) {
+      console.log(user);
+      const sendEmail =
+        await this.emailConfirmationService.sendResetPasswordLink(user);
+      if (sendEmail) {
+        return response.status(HttpStatus.ACCEPTED).json({
+          sendEmail,
+        });
+      }
+    }
+  }
+
+  @Post('reset-password')
+  async ResetPassword(
+    @Res() response,
+    @Body() body: { password: string; token: string },
+  ) {
+    if (body.token) {
+      const email = await this.emailConfirmationService.decodeConfirmationToken(
+        body.token,
+      );
+      const user = await this.authService.checkUserExist(email);
+      if (user) {
+        const result = await this.userService.updatePassword(
+          email,
+          body.password,
+        );
+        if (result){
+          return response.status(HttpStatus.ACCEPTED).json({
+            statusCode: "202",
+            message: "Reset Password Successfully!"
+          });
+        }
+      }
+    }
   }
 
   @Get('profile')

@@ -51,7 +51,7 @@ export const AuthProvider = ({ children }) => {
     const fetchData = async () => {
       console.log(token)
       try {
-        const { data } = await axios.get("https://classmatebetest.onrender.com/auth/profile", {
+        const { data } = await axios.get("http://localhost:3001/auth/profile", {
           headers: {
             Authorization: "Bearer " + token.refreshToken,
           },
@@ -111,6 +111,37 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const forgotPassword = async (form) => {
+    try {
+      const response = await axios.post(
+        "http://localhost:3001/auth/forgot-password",
+        form
+      );
+      const token = response.data;
+      console.log(response)
+      console.log(Object.values(token));
+      if (token) {
+        setToken(token);
+        localStorage.setItem("token", JSON.stringify(token));
+        if (user && user.status !== 'activated') {
+          toast.error("Please Check Verification Email!");
+          navigate("/confirm-email/send",  { replace: true });
+          console.log("unactivated")
+        }
+        else {
+          toast.success("Successfully Login");
+          navigate("/dashboard", { replace: true });
+        }
+      } else {
+        toast.error("Login Failed");
+      }
+    } catch (error) {
+      console.error("Login failed:", error);
+      toast.error("Login Failed");
+    }
+  };
+
+
   const readFromStorage = async () => {
     setUser(localStorage.getItem("user"));
   };
@@ -138,6 +169,7 @@ export const AuthProvider = ({ children }) => {
       setToken,
       user,
       login,
+      forgotPassword,
       logout,
       updateUser,
       isAuthenticated,

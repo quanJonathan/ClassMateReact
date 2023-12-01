@@ -11,6 +11,7 @@ import Typography from "@mui/material/Typography";
 import {
   Divider,
   FormControl,
+  FormHelperText,
   IconButton,
   InputAdornment,
   InputLabel,
@@ -18,31 +19,32 @@ import {
   Paper,
   styled
 } from "@mui/material";
-import { NavLink, useLocation } from "react-router-dom";
+import { NavLink, useLocation, useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useAuth } from "../hook/useAuth.jsx";
 import AppName from "../components/WebName.jsx";
+import { toast } from "react-toastify";
+import axios from "axios";
 
-function Copyright(props) {
-  return (
-    <Typography
-      variant="body2"
-      color="text.secondary"
-      align="center"
-      {...props}
-    >
-      {"Copyright © "}
-      <Link color="inherit" href="https://mui.com/">
-        Your Website
-      </Link>{" "}
-      {new Date().getFullYear()}
-      {"."}
-    </Typography>
-  );
-}
+export default function ResetPassword() {
+    const navigate = useNavigate();
+    let { token } = useParams();
+    console.log(token)
+   
+    // useEffect(() => {
+    //     if (!token) {
+    //       toast.error("Expired Token. Please try again")
+    //       navigate("/sign-in", { replace: true });
+    //       console.log("expired!")
+    //     }
+    //     else {
+    //         console.log(token)
+    //     }
+    // }, [token]);
 
-export default function SignIn() {
+   
+
 
   const CustomBox = styled(Box)(({ theme }) => ({
     display: "flex",
@@ -59,17 +61,55 @@ export default function SignIn() {
   const [errorMessage, setErrorMessage] = useState("");
   const location = useLocation();
   const from = (location.state?.from?.pathname === '/auth' ? '/' : location.state?.from?.pathname) || '/';
-  const { login } = useAuth();
-  const handleSubmit = async (event) => {
+  const handleReset = async (event) => {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
+    if (password === confirmPassword){
     const form = {
-      email: formData.get("email"),
       password: formData.get("password"),
-      save: formData.get("remember-me"),
+      token: token
     };
+    await axios
+    .post("http://localhost:3001/auth/reset-password", form, {
+      headers: {
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*",
+      },
+    })
+    .then(function (res) {
+      console.log(res);
+      toast.success("Reset Password Successfully");
+      navigate("/sign-in");
+    })
+    .catch(function (error) {
+      if (error.response) {
+        // The request was made and the server responded with a status code
+        // that falls out of the range of 2xx
+        console.log(error.response.data);
+        console.log(error.response.status);
+        console.log(error.response.headers);
+        toast.error('Reset Password Failed due to :' + error.response.data);
+      } else if (error.request) {
+        // The request was made but no response was received
+        // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+        // http.ClientRequest in node.js
+        console.log(error.request);
+        toast.error('Reset Password Failed');
+      } else {
+        // Something happened in setting up the request that triggered an Error
+        console.log("Error", error.message);
+        toast.error('Sign Up Failed');
 
-    login(form);
+      }
+      console.log(error.config);
+      navigate("/sign-in");
+    });
+    } 
+    
+    else {
+        toast.warning('Confirm Password Not Match!');
+    }
+    
 
     // console.log({
     //     email: data.get("email"),
@@ -77,6 +117,19 @@ export default function SignIn() {
     //     save: data.get("remember-me")
     // });
 
+  };
+
+  const [valid, setValid] = useState(true)
+  const [password, setPassword] = useState("")
+  const [confirmPassword, setConfirmPassword] = useState("")
+  const handlePassword = (e) => {
+    setPassword(e.target.value)
+  }
+
+
+  const handleValidation = (e) => {
+    setConfirmPassword(e.target.value);
+    setValid(e.target.value === password);
   };
 
   const loginWithGoogle = async() =>{
@@ -97,9 +150,9 @@ export default function SignIn() {
   }
 
   const [showPassword, setShowPassword] = useState(false);
-
+  const [showPassword2, setShowPassword2] = useState(false);
   const handleClickShowPassword = () => setShowPassword((show) => !show);
-
+  const handleClickShowPassword2 = () => setShowPassword2((show) => !show);
   const handleMouseDownPassword = (event) => {
     event.preventDefault();
   };
@@ -108,8 +161,8 @@ export default function SignIn() {
   return (
     <Box
       sx={{
-        paddingTop: "4%",
-        paddingBottom: "6%",
+        paddingTop: "8%",
+        paddingBottom: "7%",
         paddingX: "10%",
         backgroundImage: "url(/assets/log-in.png)",
         backgroundRepeat: "no-repeat",
@@ -186,44 +239,16 @@ export default function SignIn() {
                                 <LockOutlinedIcon />
                             </Avatar> */}
             <Typography component="h1" variant="h4">
-              Welcome Back
+              Reset Password
             </Typography>
             <Box
               component="form"
               noValidate
-              onSubmit={handleSubmit}
+              onSubmit={handleReset}
               sx={{ mt: 1, width: {xs: "80%", sm: "100%"} }}
             >
-              <Grid container spacing={1} sx={{justifyContent: "center"}}>
-                <Grid item xs={10} sx={{mx: 10}}>
-                  <TextField
-                    InputProps={{ sx: { borderRadius: 10, paddingLeft: "20px",
-                    paddingRight: "20px", } }}
-                    margin="normal"
-                    required
-                    fullWidth
-                    id="email"
-                    label="Email Address"
-                    name="email"
-                    autoComplete="email"
-                    autoFocus
-                    InputLabelProps={{
-                      style: { marginLeft: "5px", marginRight: "5px" },
-                    }}
-                  />
-                </Grid>
-                <Grid item xs={10} sx={{mx: 10}}>
-                  {/* <TextField
-                        InputProps={{ sx: { borderRadius: 10 } }}
-                        margin="normal"
-                        required
-                        fullWidth
-                        name="password"
-                        label="Password"
-                        type="password"
-                        id="password"
-                        autoComplete="current-password"
-                      /> */}
+              <Grid container spacing={1} sx={{justifyContent: "center", px: 4}}>
+                <Grid item xs={10} sx={{mx: 10, mb: 2}}>
                   <FormControl fullWidth required variant="outlined">
                     <InputLabel htmlFor="outlined-adornment-password" 
                     sx={{
@@ -240,6 +265,7 @@ export default function SignIn() {
                       }}
                       id="outlined-adornment-password"
                       type={showPassword ? "text" : "password"}
+                      onChange={handlePassword}
                       endAdornment={
                         <InputAdornment position="end">
                           <IconButton
@@ -256,25 +282,49 @@ export default function SignIn() {
                     />
                   </FormControl>
                 </Grid>
-              </Grid>
-              <Box sx={{display: "flex", justifyContent: "center"}}>
-              <Box sx={{ display: "flex", justifyContent: "space-between", width: "70%", my: 2, p: 1}}>
-                <FormControlLabel
-                  control={
-                    <Checkbox
-                      value="remember-me"
-                      id="remember-me"
-                      color="primary"
-                      name="remember-me"
+
+                <Grid item xs={10} sx={{mx: 10, mb: 4}}>
+                  <FormControl fullWidth required variant="outlined" >
+                    <InputLabel htmlFor="outlined-adornment-password" 
+                    sx={{
+                      marginLeft: "5px", marginRight: "5px"
+                    }}
+                    >
+                      Confirm Password
+                    </InputLabel>
+                    <OutlinedInput
+                      name="password"
+                      sx={{ borderRadius: 10,
+                        paddingLeft: "20px",
+                        paddingRight: "20px",
+                      }}
+                      id="outlined-adornment-password"
+                      type={showPassword ? "text" : "password"}
+                      error={!valid}
+                      onChange={(e) => handleValidation(e)}
+                      endAdornment={
+                        <InputAdornment position="end">
+                          <IconButton
+                            aria-label="toggle password visibility"
+                            onClick={handleClickShowPassword2}
+                            onMouseDown={handleMouseDownPassword}
+                            edge="end"
+                          >
+                            {showPassword2 ? <VisibilityOff /> : <Visibility />}
+                          </IconButton>
+                        </InputAdornment>
+                      }
+                      label="ConfirmPassword"
                     />
-                  }
-                  label="Remember me"
-                />
-                <NavLink to="/forgot-password" variant="body2" alignSelf="center" textAlign="right">
-                Forgot password?
-                  </NavLink>
-              </Box>
-              </Box>
+                    {!valid && (
+                            <FormHelperText error id="accountId-error">
+                            Not Matching
+                            </FormHelperText>
+                            )}
+                  </FormControl>
+                </Grid>
+              </Grid>
+            
               <Box sx={{ display: "flex", justifyContent: "center", p: {xs: 2, sm: 0}}}>
               <Button
                 type="submit"
@@ -284,7 +334,7 @@ export default function SignIn() {
                   width: "70%"
               }}
               >
-                Sign In
+                Reset
               </Button>
               </Box>
               {/* <Copyright sx={{ mt: 5 }} /> */}

@@ -68,6 +68,9 @@ export default function ConfirmEmail() {
   let {tempEmail, user} = useAuth();
   //let {token} = useParams();
   console.log(tempEmail);
+  //const email = user?.email;
+  //console.log(user.email);
+  //post(user.email);
 
   return (
     <Box

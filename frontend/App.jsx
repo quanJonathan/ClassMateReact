@@ -15,6 +15,10 @@ import GoogleOAuthSuccessRedirect from "./src/components/GoogleOAuthSuccessRedir
 import ConfirmEmail from "./src/routes/confirm-email";
 import ConfirmEmailRecieve from "./src/routes/confirm-email-recieve";
 
+import ForgotPassword from "./src/routes/forgot-password";
+import ResetPassword from "./src/routes/reset-password";
+import FacebookOAuthSuccessRedirect from "./src/components/FacebookOAuthSuccessRedirect";
+
 export const router = createBrowserRouter(
   createRoutesFromElements(
     <Route element={<AuthLayout />}>
@@ -22,11 +26,21 @@ export const router = createBrowserRouter(
         <Route path="" element={<Root />} />
         <Route path="sign-in" element={<SignIn />} />
         <Route path="sign-up" element={<SignUp />} />
+        <Route path="forgot-password" element={<ForgotPassword />} />
+       
       </Route>
       <Route path="/google-oauth-success-redirect" >
         <Route
           path=":accessToken/:refreshToken"
           element={<GoogleOAuthSuccessRedirect />}/>
+      </Route>
+      <Route path="/reset-password">
+        <Route path=":token"  element={<ResetPassword/>}/>
+      </Route>
+      <Route path="/facebook-oauth-success-redirect" >
+        <Route
+          path=":accessToken/:refreshToken"
+          element={<FacebookOAuthSuccessRedirect />}/>
       </Route>
       <Route element={<ProtectedLayout />}>
         <Route path="/dashboard" element={<Dashboard />} />
@@ -36,6 +50,8 @@ export const router = createBrowserRouter(
         <Route path="receive/:refreshToken" element={<ConfirmEmailRecieve/>} />
       </Route>
 
+     
+    
       <Route path="/user" element={<ProtectedLayout />}>
         <Route path="profile" element={<ProfilePage />} />
       </Route>
