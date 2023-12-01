@@ -14,6 +14,7 @@ import ProfilePage from "./src/routes/profile";
 import GoogleOAuthSuccessRedirect from "./src/components/GoogleOAuthSuccessRedirect";
 import ConfirmEmail from "./src/routes/confirm-email";
 import ConfirmEmailRecieve from "./src/routes/confirm-email-recieve";
+import FacebookOAuthSuccessRedirect from "./src/components/FacebookOAuthSuccessRedirect";
 
 export const router = createBrowserRouter(
   createRoutesFromElements(
@@ -27,6 +28,11 @@ export const router = createBrowserRouter(
         <Route
           path=":accessToken/:refreshToken"
           element={<GoogleOAuthSuccessRedirect />}/>
+      </Route>
+      <Route path="/facebook-oauth-success-redirect" >
+        <Route
+          path=":accessToken/:refreshToken"
+          element={<FacebookOAuthSuccessRedirect />}/>
       </Route>
       <Route element={<ProtectedLayout />}>
         <Route path="/dashboard" element={<Dashboard />} />

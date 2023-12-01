@@ -62,6 +62,7 @@ export class UserService {
     // Create new User
     const user = this.userModel.create({
       ...googleUser,
+      state: userStateEnum.activated,
       roles: defaultUserRoles
     });
 
@@ -83,6 +84,7 @@ export class UserService {
     // Create new User
     const user = this.userModel.create({
       ...facebookUser,
+      state: userStateEnum.activated,
       roles: defaultUserRoles
     });
 
