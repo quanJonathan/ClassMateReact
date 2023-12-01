@@ -47,6 +47,8 @@ export class UserService {
     return this.updateState(user[0], userStateEnum.activated); 
   }
 
+
+
   async createUserWithGoogle(googleUser: IGoogleUser): Promise<User> {
     // Check if user exists
     const [userExists] = await this.findByEmail(googleUser.email);
@@ -126,6 +128,8 @@ export class UserService {
     return find;
   }
 
+
+
   async findByToken(token: string): Promise<User[]> {
     const find = await this.userModel.find({refreshToken: token}).lean().exec();
     console.log(find);
@@ -180,6 +184,13 @@ export class UserService {
   async updateState(user: User, state: string) {
     return await this.userModel.findOneAndUpdate({email: user.email}, {$set: {
       state: state,
+    }})
+  }
+
+  async updatePassword(email: string, password: string) {
+    const newPassword = await hashData(password)
+    return await this.userModel.findOneAndUpdate({email}, {$set: {
+      password: newPassword,
     }})
   }
 
