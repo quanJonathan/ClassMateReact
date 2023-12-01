@@ -19,7 +19,7 @@ import {
   Paper,
   styled
 } from "@mui/material";
-import { NavLink, useLocation, useNavigate, useSearchParams } from "react-router-dom";
+import { NavLink, useLocation, useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { useEffect, useState } from "react";
 import { useAuth } from "../hook/useAuth.jsx";
@@ -29,19 +29,22 @@ import axios from "axios";
 
 export default function ResetPassword() {
     const navigate = useNavigate();
-    const [searchParams, setSearchParams] = useSearchParams();
-    searchParams.get("token")
+    let { token } = useParams();
+    console.log(token)
    
     useEffect(() => {
-        if (!searchParams) {
+        if (!token) {
           toast.error("Expired Token. Please try again")
           navigate("/sign-in", { replace: true });
           console.log("expired!")
         }
         else {
-            console.log(searchParams)
+            console.log(token)
         }
-    });
+    }, [token]);
+
+   
+
 
   const CustomBox = styled(Box)(({ theme }) => ({
     display: "flex",

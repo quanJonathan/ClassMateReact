@@ -25,12 +25,15 @@ export const router = createBrowserRouter(
         <Route path="sign-in" element={<SignIn />} />
         <Route path="sign-up" element={<SignUp />} />
         <Route path="forgot-password" element={<ForgotPassword />} />
-        <Route path="reset-password/:token"  element={<ResetPassword/>}/>
+       
       </Route>
       <Route path="/google-oauth-success-redirect" >
         <Route
           path=":accessToken/:refreshToken"
           element={<GoogleOAuthSuccessRedirect />}/>
+      </Route>
+      <Route path="/reset-password">
+        <Route path=":token"  element={<ResetPassword/>}/>
       </Route>
       <Route element={<ProtectedLayout />}>
         <Route path="/dashboard" element={<Dashboard />} />
