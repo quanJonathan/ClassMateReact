@@ -105,30 +105,42 @@ export class AuthController {
   }
 
   @Post('forgot-password')
-  async ForgotPassword(@Res() response, @Body() body: {email: string}){
+  async ForgotPassword(@Res() response, @Body() body: { email: string }) {
     const user = await this.authService.checkUserExist(body.email);
 
     if (user) {
       console.log(user);
-      const sendEmail = await this.emailConfirmationService.sendResetPasswordLink(user);
-      if (sendEmail){
+      const sendEmail =
+        await this.emailConfirmationService.sendResetPasswordLink(user);
+      if (sendEmail) {
         return response.status(HttpStatus.ACCEPTED).json({
-          sendEmail
+          sendEmail,
         });
-
-        
       }
-    } 
+    }
   }
 
   @Post('reset-password')
   async ResetPassword(
-    @Body() body: { password: string, token: string }) {
+    @Res() response,
+    @Body() body: { password: string; token: string },
+  ) {
     if (body.token) {
-      const email = await this.emailConfirmationService.decodeConfirmationToken(body.token);
+      const email = await this.emailConfirmationService.decodeConfirmationToken(
+        body.token,
+      );
       const user = await this.authService.checkUserExist(email);
-      if (user){
-      await this.userService.updatePassword(email, body.password);
+      if (user) {
+        const result = await this.userService.updatePassword(
+          email,
+          body.password,
+        );
+        if (result){
+          return response.status(HttpStatus.ACCEPTED).json({
+            statusCode: "202",
+            message: "Reset Password Successfully!"
+          });
+        }
       }
     }
   }

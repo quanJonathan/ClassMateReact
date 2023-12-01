@@ -91,9 +91,7 @@ export class EmailConfirmationService {
     console.log(token);
 
     //const u = await this.usersService.findByEmail(email);
-    const url = `${this.configService.get(
-      'RESET_PASSWORD_URL',
-    )}/${token}`;
+    const url = `${this.configService.get('RESET_PASSWORD_URL')}/${token}/`;
 
     const text = `Welcome to ClassMate website.\n To reset password, click here: \n${url}`;
     const emailTemplate = {

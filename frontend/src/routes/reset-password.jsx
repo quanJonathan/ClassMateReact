@@ -32,16 +32,16 @@ export default function ResetPassword() {
     let { token } = useParams();
     console.log(token)
    
-    useEffect(() => {
-        if (!token) {
-          toast.error("Expired Token. Please try again")
-          navigate("/sign-in", { replace: true });
-          console.log("expired!")
-        }
-        else {
-            console.log(token)
-        }
-    }, [token]);
+    // useEffect(() => {
+    //     if (!token) {
+    //       toast.error("Expired Token. Please try again")
+    //       navigate("/sign-in", { replace: true });
+    //       console.log("expired!")
+    //     }
+    //     else {
+    //         console.log(token)
+    //     }
+    // }, [token]);
 
    
 
@@ -67,12 +67,12 @@ export default function ResetPassword() {
     if (password === confirmPassword){
     const form = {
       password: formData.get("password"),
-      token: searchParams
+      token: token
     };
     await axios
     .post("http://localhost:3001/auth/reset-password", form, {
       headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
+        "Content-Type": "application/json",
         "Access-Control-Allow-Origin": "*",
       },
     })
@@ -102,7 +102,7 @@ export default function ResetPassword() {
 
       }
       console.log(error.config);
-      navigate("/sign-up");
+      navigate("/sign-in");
     });
     } 
     
