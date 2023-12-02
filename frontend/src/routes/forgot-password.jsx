@@ -4,7 +4,8 @@ import TextField from "@mui/material/TextField";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-
+import { toast } from "react-toastify";
+import axios from "axios";
 import {
   Divider,
   IconButton,
@@ -33,25 +34,52 @@ export default function ForgotPassword() {
   }));
 
   const [errorMessage, setErrorMessage] = useState("");
+  const [loading, setLoading] = useState(false);
   const location = useLocation();
   const from = (location.state?.from?.pathname === '/auth' ? '/' : location.state?.from?.pathname) || '/';
-  const { forgotPassword } = useAuth();
   const handleSubmit = async (event) => {
     event.preventDefault();
+    setLoading(true)
     const formData = new FormData(event.currentTarget);
     const form = {
       email: formData.get("email")
     };
 
-    forgotPassword(form);
-
-    // console.log({
-    //     email: data.get("email"),
-    //     password: data.get("password"),
-    //     save: data.get("remember-me")
-    // });
-
-  };
+    await axios
+    .post("http://localhost:3001/auth/forgot-password", form, {
+      headers: {
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*",
+      },
+    })
+    .then(function (res) {
+      console.log(res);
+      setLoading(false)
+      toast.success("We have sent an confirmation to your email. Please have a check.");
+     
+    })
+    .catch(function (error) {
+      if (error.response) {
+        // The request was made and the server responded with a status code
+        // that falls out of the range of 2xx
+        console.log(error.response.data);
+        console.log(error.response.status);
+        console.log(error.response.headers);
+        toast.error('Send Email Failed due to :' + error.response.data);
+      } else if (error.request) {
+        // The request was made but no response was received
+        // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+        // http.ClientRequest in node.js
+        console.log(error.request);
+        toast.error('Send Email Failed');
+      } 
+      console.log(error.config);
+      navigate("/sign-in");
+    });
+    } 
+    
+ 
+    
 
   const loginWithGoogle = async() =>{
     console.log('click')
@@ -172,7 +200,7 @@ export default function ForgotPassword() {
             >
               <Grid container spacing={1} sx={{justifyContent: "center", px: 2}}>
               <Grid item xs={10} sx={{mx: 12}}>
-                 Email the email address associated with your account.
+                 Enter the email address associated with your account.
                 </Grid>
                 <Grid item xs={10} sx={{mx: 10}}>
                   <TextField
@@ -181,6 +209,7 @@ export default function ForgotPassword() {
                     margin="normal"
                     required
                     fullWidth
+                    disabled={loading}
                     id="email"
                     label="Email Address"
                     name="email"

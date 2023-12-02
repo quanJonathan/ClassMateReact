@@ -58,11 +58,13 @@ export default function ResetPassword() {
     },
   }));
 
+  const [loading, setLoading] = useState(false)
   const [errorMessage, setErrorMessage] = useState("");
   const location = useLocation();
   const from = (location.state?.from?.pathname === '/auth' ? '/' : location.state?.from?.pathname) || '/';
   const handleReset = async (event) => {
     event.preventDefault();
+    setLoading(true)
     const formData = new FormData(event.currentTarget);
     if (password === confirmPassword){
     const form = {
@@ -78,6 +80,7 @@ export default function ResetPassword() {
     })
     .then(function (res) {
       console.log(res);
+      setLoading(false)
       toast.success("Reset Password Successfully");
       navigate("/sign-in");
     })
@@ -98,7 +101,7 @@ export default function ResetPassword() {
       } else {
         // Something happened in setting up the request that triggered an Error
         console.log("Error", error.message);
-        toast.error('Sign Up Failed');
+        toast.error('Reset Password Failed');
 
       }
       console.log(error.config);
@@ -266,6 +269,7 @@ export default function ResetPassword() {
                       id="outlined-adornment-password"
                       type={showPassword ? "text" : "password"}
                       onChange={handlePassword}
+                      disabled={loading}
                       endAdornment={
                         <InputAdornment position="end">
                           <IconButton
@@ -293,13 +297,14 @@ export default function ResetPassword() {
                       Confirm Password
                     </InputLabel>
                     <OutlinedInput
-                      name="password"
+                      name="confirm-password"
+                      disabled={loading}
                       sx={{ borderRadius: 10,
                         paddingLeft: "20px",
                         paddingRight: "20px",
                       }}
                       id="outlined-adornment-password"
-                      type={showPassword ? "text" : "password"}
+                      type={showPassword2 ? "text" : "password"}
                       error={!valid}
                       onChange={(e) => handleValidation(e)}
                       endAdornment={
