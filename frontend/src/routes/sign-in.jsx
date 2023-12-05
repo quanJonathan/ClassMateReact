@@ -271,7 +271,7 @@ export default function SignIn() {
                   label="Remember me"
                 />
                 <NavLink to="/forgot-password" variant="body2" alignSelf="center" textAlign="right">
-                Forgot password?
+                Forgot Password?
                   </NavLink>
               </Box>
               </Box>
