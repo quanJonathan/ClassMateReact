@@ -47,7 +47,7 @@ function Copyright(props) {
 async function post(email) {
   console.log(email);
   return await axios
-  .post("https://classmatebe-authentication/email-confirmation/resend-confirmation-link", {email: email}, {
+  .post("https://classmatebe-authentication.onrender.com/email-confirmation/resend-confirmation-link", {email: email}, {
     headers: {
       "Content-Type": "application/x-www-form-urlencoded",
       "Access-Control-Allow-Origin": "*",

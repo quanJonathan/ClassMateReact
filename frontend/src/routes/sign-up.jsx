@@ -74,7 +74,7 @@ export default function SignUp() {
     }
     else {
     await axios
-      .post("https://classmatebe-authentication/auth/signUp", form, {
+      .post("https://classmatebe-authentication.onrender.com/auth/signUp", form, {
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",
           "Access-Control-Allow-Origin": "*",
