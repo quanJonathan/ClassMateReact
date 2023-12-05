@@ -14,7 +14,7 @@ export class Homework {
   @Prop()
   deadline: Date;
   @Prop({ required: true, unique: true })
-  classId: { type: mongoose.ObjectId; ref: 'Class' };
+  classId: { type: mongoose.Types.ObjectId; ref: 'Class' };
 
   // Each homework can have multiple tasks, each task has a unique score
   // Each homework has a unique title 
@@ -22,7 +22,7 @@ export class Homework {
   @Prop()
   components: [{ title: string, content?: string, link?: string, scorePercentage: {type: number, min: 0, max: 100}}];
   @Prop()
-  doneMembers: [{_id: {type: mongoose.ObjectId, ref: 'User'}, totalScore?: {type: number, min: 0, max: 10}
+  doneMembers: [{_id: {type: mongoose.Types.ObjectId, ref: 'User'}, totalScore?: {type: number, min: 0, max: 10}
   , updatedScore?: {type: number, min: 0, max: 10}}];
 
   // active, non-active, overdue

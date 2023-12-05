@@ -51,7 +51,7 @@ export const AuthProvider = ({ children }) => {
     const fetchData = async () => {
       console.log(token)
       try {
-        const { data } = await axios.get("http://localhost:3001/auth/profile", {
+        const { data } = await axios.get("https://classmatebe-authentication.onrender.com/auth/profile", {
           headers: {
             Authorization: "Bearer " + token.refreshToken,
           },
@@ -84,7 +84,7 @@ export const AuthProvider = ({ children }) => {
   const login = async (form) => {
     try {
       const response = await axios.post(
-        "http://localhost:3001/auth/signIn",
+        "https://classmatebe-authentication.onrender.com/auth/signIn",
         form
       );
       const token = response.data;
