@@ -48,7 +48,7 @@ export default function ProfilePage() {
       else {
       setIsView(true);
       await axios
-        .post("http://localhost:3001/auth/profile/update", form, {
+        .post("https://classmatebe-authentication/auth/profile/update", form, {
           headers: {
             Authorization: "Bearer " + token.accessToken,
           },

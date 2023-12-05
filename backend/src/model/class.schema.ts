@@ -1,6 +1,9 @@
 /* eslint-disable prettier/prettier */
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import mongoose, { Document } from 'mongoose';
+import mongoose, { Document} from 'mongoose';
+import { User } from 'src/user/model/user.schema';
+import { Homework } from './homework.schema';
+import { GradeComposition } from './grade-composition.schema';
 export type ClassDocument = Class & Document;
 
 
@@ -12,14 +15,14 @@ export class Class {
  name: string
  @Prop({required: true, unique: true})
  classId: string
- @Prop()
- members: {type: [mongoose.ObjectId], ref: 'User'}
- @Prop()
- homeworks: {type: [mongoose.ObjectId], ref: 'Homework'}
+ @Prop({type: [{type: mongoose.Schema.Types.ObjectId, ref: 'User'}]})
+ members: User[]
+ @Prop({type: [{type: mongoose.Types.ObjectId, ref: 'Homework'}]})
+ homeworks: Homework[]
  @Prop({unique: true})
  accessLink?: string
- @Prop({required: true})
- compositions: {type: [mongoose.ObjectId], ref: 'GradeComposition'};
+ @Prop({required: true, type: [{type: mongoose.Types.ObjectId, ref: 'GradeComposition'}]})
+ compositions: GradeComposition[];
 }
 
 export const ClassSchema = SchemaFactory.createForClass(Class);

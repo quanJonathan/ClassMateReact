@@ -13,6 +13,8 @@ import EmailService from './email/email.service';
 import { EmailConfirmationService } from './email/emailConfirmation.service';
 import { EmailModule } from './email/email.module';
 import { JwtModule } from '@nestjs/jwt';
+import { ClassesModule } from './modules/class.module';
+import { ClassController } from './controllers/class.controller';
 
 @Module({
   imports: [
@@ -32,9 +34,10 @@ import { JwtModule } from '@nestjs/jwt';
     AuthModule,
     UsersModule,
     EmailModule,
+    ClassesModule,
     JwtModule.register({}),
   ],
-  controllers: [UserController, EmailConfirmationController],
+  controllers: [UserController, EmailConfirmationController, ClassController],
   providers: [AppService, EmailConfirmationService, EmailService],
 })
 export class AppModule {}

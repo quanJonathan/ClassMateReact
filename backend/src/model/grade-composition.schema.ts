@@ -10,7 +10,7 @@ export class GradeComposition {
 
   // the class _id field
   @Prop({required: true})
-  classId: {type: mongoose.ObjectId, ref: 'Class'};
+  classId: {type: mongoose.Types.ObjectId, ref: 'Class'};
 
   @Prop({required: true, unique: true})
   name: string;
@@ -19,7 +19,7 @@ export class GradeComposition {
   gradeScale: {type: number, min: 1, max: 100};
 
   @Prop()
-  homeworks: {type: [mongoose.ObjectId], ref: 'Homework'};
+  homeworks: [{type: mongoose.Types.ObjectId, ref: 'Homework'}];
 }
 
 export const GradeCompositionSchema = SchemaFactory.createForClass(GradeComposition);
