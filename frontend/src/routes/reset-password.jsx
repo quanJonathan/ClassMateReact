@@ -32,16 +32,16 @@ export default function ResetPassword() {
     let { token } = useParams();
     console.log(token)
    
-    // useEffect(() => {
-    //     if (!token) {
-    //       toast.error("Expired Token. Please try again")
-    //       navigate("/sign-in", { replace: true });
-    //       console.log("expired!")
-    //     }
-    //     else {
-    //         console.log(token)
-    //     }
-    // }, [token]);
+    useEffect(() => {
+        if (!token) {
+          toast.error("Expired Token. Please try again")
+          navigate("/sign-in", { replace: true });
+          console.log("expired!")
+        }
+        else {
+            console.log(token)
+        }
+    }, [token]);
 
    
 

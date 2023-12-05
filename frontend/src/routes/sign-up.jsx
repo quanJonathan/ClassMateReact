@@ -15,7 +15,7 @@ import {
   OutlinedInput,
   Paper,
 } from "@mui/material";
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink, useNavigate, useLocation } from "react-router-dom";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { useState } from "react";
 import axios from "axios";
@@ -45,6 +45,8 @@ export default function SignUp() {
   let navigate = useNavigate();
 
   const {setTempEmail} = useAuth();
+  const location = useLocation();
+  const from = (location.state?.from?.pathname === '/auth' ? '/' : location.state?.from?.pathname) || '/';
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -128,6 +130,23 @@ export default function SignUp() {
     setValid(regEmail.test(e.target.value));
     setEmail(e.target.value);
   };
+
+  const loginWithGoogle = async() =>{
+    console.log('click')
+    try{
+      window.open(`http://localhost:3001/auth/google/${from.replaceAll('/', '@')}`, "_self");
+    }catch(error) {
+      console.log(error)
+    }
+  }
+
+  const loginWithFaceBook = async() => {
+    try{
+      window.open(`http://localhost:3001/auth/facebook`, "_self");
+    }catch(error) {
+      console.log(error)
+    }
+  }
 
   return (
     <Box
@@ -367,10 +386,10 @@ export default function SignUp() {
                     display: "flex"
                   }}
                 >
-                  <IconButton sx={{ border: 1, width: "35px", height: "35px", p: 0, m: 1 }}>
+                  <IconButton onClick={loginWithGoogle} sx={{ border: 1, width: "35px", height: "35px", p: 0, m: 1 }}>
                     <img src="/assets/log-in-gg.svg" width="100%" />
                   </IconButton>
-                  <IconButton sx={{ border: 1, width: "35px", height: "35px", p: 0, m: 1 }}>
+                  <IconButton onClick={loginWithFaceBook} sx={{ border: 1, width: "35px", height: "35px", p: 0, m: 1 }}>
                     <img src="/assets/log-in-fb.svg" width="100%" />
                   </IconButton>
                 </Box>
