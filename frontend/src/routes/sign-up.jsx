@@ -134,7 +134,7 @@ export default function SignUp() {
   const loginWithGoogle = async() =>{
     console.log('click')
     try{
-      window.open(`http://localhost:3001/auth/google/${from.replaceAll('/', '@')}`, "_self");
+      window.open(`https://classmatebe-authentication.onrender.com/auth/google/${from.replaceAll('/', '@')}`, "_self");
     }catch(error) {
       console.log(error)
     }
@@ -142,7 +142,7 @@ export default function SignUp() {
 
   const loginWithFaceBook = async() => {
     try{
-      window.open(`http://localhost:3001/auth/facebook`, "_self");
+      window.open(`https://classmatebe-authentication.onrender.com/auth/facebook`, "_self");
     }catch(error) {
       console.log(error)
     }
