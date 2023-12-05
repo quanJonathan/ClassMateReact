@@ -33,7 +33,25 @@ export default function ResetPassword() {
     console.log(token)
    
     useEffect(() => {
+      const isTokenValid = (token) => {
+       
         if (!token) {
+          return false;
+        }
+        try {
+        
+          const decodeToken = JSON.parse(
+            atob(token.split(".")[1])
+          );
+  
+          return decodeToken.exp * 1000 > Date.now();
+        } catch (error) {
+          console.error("Error decoding token:", error);
+          return false;
+        }
+      };
+
+        if (!isTokenValid(token)) {
           toast.error("Expired Token. Please try again")
           navigate("/sign-in", { replace: true });
           console.log("expired!")
