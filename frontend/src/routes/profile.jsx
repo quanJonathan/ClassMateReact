@@ -18,7 +18,7 @@ export default function ProfilePage() {
   const [isView, setIsView] = useState(true);
   const { token, updateUser, user} = useAuth();
   const navigate = useNavigate();
-
+  
   const [firstName, setFirstName] = useState(user?.firstName || "")
   const [lastName, setLastName] = useState(user?.lastName || "")
   const [phoneNumber, setPhoneNumber] = useState(user?.phoneNumber || "")
@@ -50,7 +50,7 @@ export default function ProfilePage() {
       await axios
         .post("https://classmatebe-authentication.onrender.com/auth/profile/update", form, {
           headers: {
-            Authorization: "Bearer " + token.accessToken,
+            Authorization: "Bearer " + token.refreshToken,
           },
         })
         .then(function (res) {
