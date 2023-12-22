@@ -66,25 +66,25 @@ export const AuthProvider = ({ children }) => {
       }
     };
 
-    if (user) {
-      if (!isTokenValid(token)) {
-        setToken(null);
-        setUser(null);
-        navigate("/", {replace: true});
-      }
-    } else {
-      if (isTokenValid(token)) {
-        console.log("fetch data");
-        fetchData();
-      }
-    }
+    // if (user) {
+    //   if (!isTokenValid(token)) {
+    //     setToken(null);
+    //     setUser(null);
+    //     navigate("/", {replace: true});
+    //   }
+    // } else {
+    //   if (isTokenValid(token)) {
+    //     console.log("fetch data");
+    //     fetchData();
+    //   }
+    // }
   }, [navigate, setToken, setUser, token, user]);
 
 
   const login = async (form) => {
     try {
       const response = await axios.post(
-        "https://classmatebe-authentication.onrender.com/auth/signIn",
+        "http://localhost:3001/auth/signIn",
         form
       );
       const token = response.data;

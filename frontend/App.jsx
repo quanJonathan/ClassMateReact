@@ -23,7 +23,7 @@ export const router = createBrowserRouter(
   createRoutesFromElements(
     <Route element={<AuthLayout />}>
       <Route path="/" element={<HomeLayout />}>
-        <Route path="" element={<Root />} />
+        <Route path="" element={<ProfilePage />} />
         <Route path="sign-in" element={<SignIn />} />
         <Route path="sign-up" element={<SignUp />} />
         <Route path="forgot-password" element={<ForgotPassword />} />
@@ -49,12 +49,10 @@ export const router = createBrowserRouter(
         <Route path="send/" element={<ConfirmEmail/>} />
         <Route path="receive/:refreshToken" element={<ConfirmEmailRecieve/>} />
       </Route>
-
-     
     
-      <Route path="/user" element={<ProtectedLayout />}>
+      {/* <Route path="/user" element={<ProtectedLayout />}>
         <Route path="profile" element={<ProfilePage />} />
-      </Route>
+      </Route> */}
     </Route>
   )
 );

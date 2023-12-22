@@ -2,6 +2,7 @@
 import { ForbiddenException, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, ObjectId } from 'mongoose';
+import { generateString } from 'src/helpers/random-string';
 import { Class, ClassDocument } from 'src/model/class.schema';
 import { GradeComposition } from 'src/model/grade-composition.schema';
 import { ClassesModule } from 'src/modules/class.module';
@@ -12,8 +13,10 @@ export class ClassService {
     @InjectModel(Class.name) private classModel: Model<ClassDocument>,
   ) {}
 
-  async getAllClass(): Promise<Class[]>{
-    return await this.classModel.find();
+  async getAllClass(): Promise<Class[]> {
+    const classes = await this.classModel.find();
+    console.log(classes);
+    return classes;
   }
 
   async getByRealId(id: ObjectId): Promise<Class | any> {
@@ -21,11 +24,30 @@ export class ClassService {
   }
 
   async getById(id: string): Promise<Class | any> {
-    return await this.classModel.find({ classId: id }).exec();
+    const classObject = await this.classModel
+      .findOne({ classId: id })
+      .exec();
+    
+    return classObject;
+  }
+
+  async getMember(classId: string): Promise<User | any > {
+    const classObject = await this.classModel
+      .findOne({ classId: classId })
+      .populate({
+        path: 'members',
+        select: 'firstName lastName state',
+        populate : {path: 'classes.classId classes.role', select: 'classId className'}
+      })
+      .exec();
+
+    return classObject.members
   }
 
   async addClass(classObject: Class): Promise<Class | any> {
-    return await this.classModel.create(classObject);
+    const classId = generateString(7);
+    const newClass = { ...classObject, classId: classId };
+    return await this.classModel.create(newClass);
   }
 
   async generateAccessLink(id: ObjectId): Promise<string> {

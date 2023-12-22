@@ -2,6 +2,7 @@
 import {
   Body,
   Controller,
+  Get,
   HttpStatus,
   Post,
   Res,
@@ -17,5 +18,8 @@ export class UserController {
     private readonly userService: UserService,
   ) {}
   
-  
+  @Get('/all')
+  async getAll() {
+    return await this.userService.findAll();
+  }
 }

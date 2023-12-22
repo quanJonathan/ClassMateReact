@@ -3,6 +3,7 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose, { Document } from 'mongoose';
 import { gradingStateEnum } from 'src/enum/gradeState';
 import { homeworkStateEnum } from 'src/enum/homeworkState';
+import { User } from 'src/user/model/user.schema';
 export type HomeworkDocument = Homework & Document;
 
 // Note that the classId is for shown only
@@ -17,21 +18,38 @@ export class Homework {
   classId: { type: mongoose.Types.ObjectId; ref: 'Class' };
 
   // Each homework can have multiple tasks, each task has a unique score
-  // Each homework has a unique title 
+  // Each homework has a unique title
   // Each homework can have content or a link to the content.
-  @Prop()
-  components: [{ title: string, content?: string, link?: string, scorePercentage: {type: number, min: 0, max: 100}}];
-  @Prop()
-  doneMembers: [{_id: {type: mongoose.Types.ObjectId, ref: 'User'}, totalScore?: {type: number, min: 0, max: 10}
-  , updatedScore?: {type: number, min: 0, max: 10}}];
+  @Prop({
+    type: [
+      {
+        title: String,
+        content: String,
+        link: String,
+        scorePercentage: { type: Number, min: 0, max: 100 },
+      },
+    ],
+  })
+  components: {
+    title: string;
+    content: number;
+    link: string;
+    scorePercentage: number;
+  }[];
+  @Prop({
+    type: [
+      {
+        _id: { type: mongoose.Types.ObjectId, ref: 'User' },
+        score: { type: Number, min: 0, max: 10 },
+        state: { String, enum: Object.values(gradingStateEnum), default: gradingStateEnum.pending },
+      },
+    ],
+  })
+  doneMembers: {user: User | mongoose.Types.ObjectId, score: number, state: string}[];
 
   // active, non-active, overdue
-  @Prop({default: homeworkStateEnum.inactive, enum: homeworkStateEnum})
+  @Prop({ default: homeworkStateEnum.inactive, enum: homeworkStateEnum })
   homeworkState: string;
-
-  // final, pending
-  @Prop({default: gradingStateEnum.pending, enum: gradingStateEnum})
-  gradingState: string
 }
 
 export const HomeworkSchema = SchemaFactory.createForClass(Homework);

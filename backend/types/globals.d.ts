@@ -1,4 +1,5 @@
 /* eslint-disable prettier/prettier */
+import { ObjectId } from 'mongoose';
 import { authTypeEnum } from 'src/enum/authType.enum';
 import {User as UserEntity } from 'src/user/model/user.schema'
 /* eslint-disable prettier/prettier */
@@ -60,6 +61,13 @@ declare global {
     accessToken: string;
     refreshToken: string;
   }
+
+  interface Homework{
+    memberId: ObjectId;
+    score: number;
+    state: string;
+  }
+
 }
 
 export {};

@@ -1,8 +1,9 @@
 /* eslint-disable prettier/prettier */
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { authTypeEnum } from 'src/enum/authType.enum';
-import { Document } from 'mongoose';
+import mongoose, { Document, ObjectId } from 'mongoose';
 import { userStateEnum } from 'src/enum/userState.enum';
+import { Class } from 'src/model/class.schema';
 export type UserDocument = User & Document;
 
 @Schema()
@@ -37,6 +38,8 @@ export class User {
   photo: string;
   @Prop({default: userStateEnum.notActivated, enum: userStateEnum})
   state: string;
+  @Prop({type: [{'classId' : {type: mongoose.Schema.Types.ObjectId, ref: 'Class'}, 'role' : String}]})
+  classes: {'classId': ObjectId | Class, 'role': string}[]
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
