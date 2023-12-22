@@ -51,7 +51,7 @@ export const AuthProvider = ({ children }) => {
     const fetchData = async () => {
       console.log(token)
       try {
-        const { data } = await axios.get("https://classmatebe-authentication.onrender.com/auth/profile", {
+        const { data } = await axios.get("http://localhost:3001/auth/profile", {
           headers: {
             Authorization: "Bearer " + token.refreshToken,
           },
@@ -66,18 +66,22 @@ export const AuthProvider = ({ children }) => {
       }
     };
 
-    // if (user) {
-    //   if (!isTokenValid(token)) {
-    //     setToken(null);
-    //     setUser(null);
-    //     navigate("/", {replace: true});
-    //   }
-    // } else {
-    //   if (isTokenValid(token)) {
-    //     console.log("fetch data");
-    //     fetchData();
-    //   }
-    // }
+    if (user) {
+      if (!isTokenValid(token)) {
+        setToken(null);
+        setUser(null);
+        navigate("/", {replace: true});
+      }
+    } else {
+      if (isTokenValid(token)) {
+        console.log("fetch data");
+        fetchData();
+      }
+    }
+    // setUser(null)
+    // localStorage.setItem('user', null)
+    // setToken(null)
+    // localStorage.setItem('token', null)
   }, [navigate, setToken, setUser, token, user]);
 
 
@@ -93,6 +97,7 @@ export const AuthProvider = ({ children }) => {
       if (token) {
         setToken(token);
         localStorage.setItem("token", JSON.stringify(token));
+        console.log(user)
         if (user && user.status !== 'activated') {
           toast.error("Please Check Verification Email!");
           navigate("/confirm-email/send",  { replace: true });
@@ -119,8 +124,8 @@ export const AuthProvider = ({ children }) => {
   };
 
   const updateUser = async (data) => {
-    setUser(JSON.stringify(data));
-    localStorage.setItem("user", JSON.stringify(data));
+    setUser(JSON.stringify({...user, data}));
+    localStorage.setItem("user", JSON.stringify({...user, data}));
   };
 
   const logout = async () => {

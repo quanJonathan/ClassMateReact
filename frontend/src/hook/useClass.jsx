@@ -1,4 +1,5 @@
 import { useAuth } from "./useAuth";
+import {useSWR} from 'swr'
 
 export function useClass({id}){
 

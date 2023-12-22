@@ -137,8 +137,14 @@ export class UserService {
   }
 
   async findOneByEmailAndProvider(email: string, provider: authTypeEnum): Promise<User>{
-    const find = await this.userModel.findOne({email: email, provider: provider}).lean().exec();
-    // console.log(find);
+    const find = await this.userModel.findOne({email: email, provider: provider})
+    .populate({
+      path: 'classes.classId classes.role',
+      select: 'className _id classId'
+    })
+    .lean()
+    .exec();
+    console.log(find.classes);
     return find;
   }
 

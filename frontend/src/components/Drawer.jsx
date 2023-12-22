@@ -31,6 +31,7 @@ import AppName from "./WebName";
 import { useAuth } from "../hook/useAuth.jsx";
 import { useNavigate } from "react-router-dom";
 import SubMenu from "./Submenu.jsx";
+import { sideNavGenerator } from "../helpers/sideNavGenerator";
 
 const drawerWidth = 240;
 
@@ -67,6 +68,7 @@ const SidebarData = [
     ],
   },
 ];
+
 const openedMixin = (theme) => ({
   width: drawerWidth,
   transition: theme.transitions.create("width", {
@@ -146,6 +148,8 @@ export default function MiniDrawer({ children, page }) {
     setAnchorEl(event.currentTarget);
   };
 
+  //const SidebarData = sideNavGenerator(user.classes)
+
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
   const handleMenuClose = () => {
@@ -195,6 +199,9 @@ export default function MiniDrawer({ children, page }) {
       navigate(path);
     }
   };
+
+
+
   return (
     <>
       <CssBaseline />
