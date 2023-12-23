@@ -43,7 +43,7 @@ export class UserService {
     if (!user) {
       throw new NotFoundException('user not found');
     }
-    console.log(`user ${email} has activated`);
+    //console.log(`user ${email} has activated`);
     return this.updateState(user[0], userStateEnum.activated); 
   }
 
@@ -58,8 +58,8 @@ export class UserService {
 
     const defaultUserRoles = [UserRoles.student];
 
-    console.log(googleUser.firstName)
-    console.log(googleUser.lastName)
+    //console.log(googleUser.firstName)
+    //console.log(googleUser.lastName)
 
     // Create new User
     const user = this.userModel.create({
@@ -80,8 +80,8 @@ export class UserService {
 
     const defaultUserRoles = [UserRoles.student];
 
-    console.log(facebookUser.firstName)
-    console.log(facebookUser.lastName)
+    //console.log(facebookUser.firstName)
+    //console.log(facebookUser.lastName)
 
     // Create new User
     const user = this.userModel.create({
@@ -132,7 +132,7 @@ export class UserService {
 
   async findByToken(token: string): Promise<User[]> {
     const find = await this.userModel.find({refreshToken: token}).lean().exec();
-    console.log(find);
+    //console.log(find);
     return find;
   }
 
@@ -144,7 +144,7 @@ export class UserService {
     })
     .lean()
     .exec();
-    console.log(find.classes);
+   // console.log(find.classes);
     return find;
   }
 

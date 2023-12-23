@@ -1,7 +1,8 @@
-import { CssBaseline, IconButton, Typography } from '@mui/material';
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import styled from 'styled-components';
+/* eslint-disable react/prop-types */
+import { CssBaseline, Icon, IconButton, Typography, Box } from "@mui/material";
+import React, { useState } from "react";
+import { Link, useLocation } from "react-router-dom";
+import styled from "styled-components";
 
 const SidebarLink = styled(Link)`
   display: flex;
@@ -11,7 +12,7 @@ const SidebarLink = styled(Link)`
   height: 50px;
   text-decoration: none;
   font-size: 18px;
-
+  color: ${(props) => (props.selected ? "blue" : "black")};
 `;
 
 const DropdownLink = styled(Link)`
@@ -21,61 +22,89 @@ const DropdownLink = styled(Link)`
   align-items: center;
   text-decoration: none;
   font-size: 18px;
+  color: ${(props) => (props.selected ? "blue" : "black")};
 `;
 
 const SubMenu = ({ item, open }) => {
-  const [subnav, setSubnav] = useState(false);
+  const [subnav, setSubnav] = useState(true); // Dropdown is always open by default
+  const location = useLocation();
 
   const showSubnav = () => setSubnav(!subnav);
 
   return (
     <>
-    <CssBaseline/>
-      <SidebarLink
-      sx={{
-        justifyContent: open ? 'initial' : 'center',
-      }}
-      to={item.path} onClick={item.subNav && showSubnav}>
-        <IconButton
-        sx={{
-            minWidth: 0,
-            mr: open ? 3 : 'auto',
-            justifyContent: 'center',
+      <CssBaseline />
+      <Box onClick={showSubnav}>
+        <SidebarLink
+          to={item?.path}
+          sx={{
+            justifyContent: open ? "initial" : "center",
+            alignItems: "center",
           }}
         >
-          {item.icon}
-          </IconButton>
-          <Typography sx={{
-            opacity: open ? 1 : 0,
-            
-          }} >{item.title}</Typography>
-          
-        <div>
-          {item.subNav && subnav
-            ? item.iconOpened
-            : item.subNav
-            ? item.iconClosed
-            : null}
-        </div>
-      </SidebarLink>
-      {open && subnav &&
-        item.subNav.map((item, index) => {
+          <Icon
+            sx={{
+              minWidth: 0,
+              mr: open ? 2 : "auto",
+              justifyContent: "center",
+            }}
+          >
+            {item.icon}
+          </Icon>
+          <Typography
+            sx={{
+              opacity: open ? 1 : 0,
+              textOverflow: "ellipsis",
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+            }}
+          >
+            {item.title}
+          </Typography>
+
+          {item.subNav && (
+            <Icon onClick={showSubnav}>
+              {subnav ? item.iconOpened : item.iconClosed}
+            </Icon>
+          )}
+        </SidebarLink>
+      </Box>
+
+      {subnav &&
+        item.subNav?.map((item, index) => {
           return (
             <DropdownLink
-      to={item.path} onClick={item.subNav && showSubnav}>
-        <IconButton
-        sx={{
-            minWidth: 0,
-            mr: open ? 3 : 'auto',
-            justifyContent: 'center',
-          }}
-        >
-          {item.icon}
-          </IconButton>
-          <Typography sx={{
-            opacity: open ? 1 : 0
-          }} >{item.title}</Typography>
-              
+              to={item.path}
+              onClick={item.subNav && showSubnav}
+              selected={location.pathname === item.path}
+              sx={{
+                alignItems: "center",
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: subnav ? "initial" : "center" 
+              }}
+              key={item.subNav}
+            >
+              <IconButton
+                sx={{
+                  minWidth: 0,
+                  mr: open ? 0 : "auto",
+                  justifyContent: "center",
+                }}
+              >
+                {item.subNav?.icon}
+              </IconButton>
+              <Typography
+                variant="header1"
+                sx={{
+                  opacity: open ? 1 : 0,
+                  textOverflow: "ellipsis",
+                  whiteSpace: "nowrap",
+                  overflow: "hidden",
+                }}
+              >
+                {item.title}
+              </Typography>
             </DropdownLink>
           );
         })}

@@ -15,7 +15,7 @@ export class ClassService {
 
   async getAllClass(): Promise<Class[]> {
     const classes = await this.classModel.find();
-    console.log(classes);
+    //console.log(classes);
     return classes;
   }
 
@@ -25,9 +25,15 @@ export class ClassService {
 
   async getById(id: string): Promise<Class | any> {
     const classObject = await this.classModel
-      .findOne({ classId: id })
+      .findById(id)
+      .populate({
+        path: 'members',
+        select: 'firstName lastName state',
+        populate : {path: 'classes.classId classes.role', select: 'classId className'}
+      })
       .exec();
     
+    //console.log(classObject)
     return classObject;
   }
 

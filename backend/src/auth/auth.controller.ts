@@ -40,11 +40,11 @@ export class AuthController {
   @Get('google-redirect')
   @UseGuards(GoogleOAuthGuard)
   async googleAuthRedirect(@Req() req: Request, @Res() res: Response) {
-    console.log(req.user);
+   // console.log(req.user);
     const auth = await this.authService.login(req.user as User);
-    console.log('from ' + req.params.from);
-    console.log('accessToken of google ' + auth.accessToken);
-    console.log('refreshToken ' + auth.refreshToken);
+    //console.log('from ' + req.params.from);
+    //console.log('accessToken of google ' + auth.accessToken);
+    //console.log('refreshToken ' + auth.refreshToken);
     res.redirect(
       `https://classmatefe-authentication.onrender.com/google-oauth-success-redirect/${auth.accessToken}/${auth.refreshToken}${req.params.from}`,
     );
@@ -58,11 +58,11 @@ export class AuthController {
   @UseGuards(FacebookOAuthGuard)
   async facebookAuthRedirect(@Req() req: Request, @Res() res: Response) {
     // console.log(req.user);
-    console.log(req);
+    //console.log(req);
     const auth = await this.authService.login(req.user as User);
-    console.log('from ' + req.params.from);
-    console.log('accessToken of facebook ' + auth.accessToken);
-    console.log('refreshToken ' + auth.refreshToken);
+    //console.log('from ' + req.params.from);
+    //console.log('accessToken of facebook ' + auth.accessToken);
+    //console.log('refreshToken ' + auth.refreshToken);
     res.redirect(
       `https://classmatefe-authentication.onrender.com/facebook-oauth-success-redirect/${auth.accessToken}/${auth.refreshToken}${req.params.from}`,
     );
@@ -111,7 +111,7 @@ export class AuthController {
     const user = await this.authService.checkUserExist(body.email);
 
     if (user) {
-      console.log(user);
+      //console.log(user);
       const sendEmail =
         await this.emailConfirmationService.sendResetPasswordLink(user);
       if (sendEmail) {

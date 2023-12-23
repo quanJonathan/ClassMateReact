@@ -12,6 +12,8 @@ import {
   Menu as MenuComponent,
   MenuItem,
   Container,
+  Breadcrumbs,
+  Button,
 } from "@mui/material";
 import MuiDrawer from "@mui/material/Drawer";
 import MuiAppBar from "@mui/material/AppBar";
@@ -26,48 +28,18 @@ import {
   AccountCircle,
   KeyboardArrowDown,
   KeyboardArrowUp,
+  Add,
 } from "@mui/icons-material";
 import AppName from "./WebName";
 import { useAuth } from "../hook/useAuth.jsx";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import SubMenu from "./Submenu.jsx";
-import { sideNavGenerator } from "../helpers/sideNavGenerator";
+import { useSideNavGenerator } from "../helpers/sideNavGenerator";
+import { Stack } from "@mui/system";
+import MainPageCourse from "../routes/main-page-course.jsx";
+import CourseContent from "../components/CourseContent.jsx";
 
-const drawerWidth = 240;
-
-const SidebarData = [
-  {
-    title: "Home",
-    path: "/dashboard",
-    icon: <Home />,
-  },
-  {
-    title: "Courses",
-    path: "",
-    icon: <School />,
-    iconClosed: (
-      <KeyboardArrowDown
-        sx={{ display: "flex", alignItems: "center", ml: 2 }}
-      />
-    ),
-    iconOpened: (
-      <KeyboardArrowUp sx={{ display: "flex", alignItems: "center", ml: 2 }} />
-    ),
-
-    subNav: [
-      {
-        title: "Course 1",
-        path: "",
-        icon: <School />,
-      },
-      {
-        title: "Course 2",
-        path: "",
-        icon: <School />,
-      },
-    ],
-  },
-];
+const drawerWidth = 280;
 
 const openedMixin = (theme) => ({
   width: drawerWidth,
@@ -135,30 +107,25 @@ const Drawer = styled(MuiDrawer, {
 }));
 
 export default function MiniDrawer({ children, page }) {
-  const { logout, isAuthenticated, user } = useAuth();
+  const { logout, isAuthenticated } = useAuth();
   const theme = useTheme();
-  const [open, setOpen] = useState(false);
-  const [menuData, setMenuData] = useState("Home");
-  const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState(null);
+  const [open, setOpen] = useState(true);
   const [anchorEl, setAnchorEl] = useState(null);
-
-  // console.log(open + " " + menuData + " " + mobileMoreAnchorEl + " " + anchorEl);
 
   const handleProfileMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
   };
 
-  //const SidebarData = sideNavGenerator(user.classes)
-
-  const isMenuOpen = Boolean(anchorEl);
-  const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
-  const handleMenuClose = () => {
-    setAnchorEl(null);
-    handleMobileMenuClose();
+  const handleDrawerOpenClose = () => {
+    setOpen(!open);
   };
 
-  const handleMobileMenuClose = () => {
-    setMobileMoreAnchorEl(null);
+  const SidebarData = useSideNavGenerator();
+
+  const isMenuOpen = Boolean(anchorEl);
+
+  const handleMenuClose = () => {
+    setAnchorEl(null);
   };
 
   const menuId = "primary-search-account-menu";
@@ -193,14 +160,6 @@ export default function MiniDrawer({ children, page }) {
   );
 
   const navigate = useNavigate();
-  const handleCloseNavMenu = (path) => {
-    setAnchorEl(null);
-    if (path) {
-      navigate(path);
-    }
-  };
-
-
 
   return (
     <>
@@ -214,50 +173,67 @@ export default function MiniDrawer({ children, page }) {
           color: "#2f2f2f",
         }}
       >
-        <Container maxWidth="x1">
-          <Toolbar sx={{ height: { xs: "12vh", md: "10vh" } }}>
+        <Container maxWidth="xl">
+          <Toolbar
+            sx={{
+              height: { xs: "12vh", md: "10vh" },
+              justifyContent: "space-between",
+            }}
+          >
             <IconButton
               color="inherit"
               aria-label="open drawer"
-              onClick={() => setOpen(!open)}
+              onClick={handleDrawerOpenClose}
               edge="start"
             >
               <MenuIcon />
             </IconButton>
 
             <AppName />
-            <Box sx={{ flexGrow: 1 }}>
-              <Typography
-                color="#5f6368"
-                sx={{
-                  fontWeight: "medium",
-                  fontSize: "20px",
-                  display: {
-                    xs: "none",
-                    md: "block",
-                  },
-                }}
+
+            <Stack spacing={2} sx={{ flexGrow: 1 }}>
+              <Breadcrumbs
+                separator="›"
+                aria-label="breadcrumb"
+                sx={{ fontSize: "1.5rem" }}
               >
-                {page}
-              </Typography>
-            </Box>
+                <Link
+                  color="inherit"
+                  onClick={() => navigate(`/c/${children?.classId?._id}`)}
+                  sx={{ fontSize: "1.5rem" }}
+                >
+                  {children?.className}
+                </Link>
+              </Breadcrumbs>
+            </Stack>
 
             <Box
-              sx={{ display: { xs: "none", md: "flex", alignItems: "center" } }}
-              style={{ marginLeft: "100px" }}
+              sx={{
+                display: {
+                  xs: "none",
+                  ml: "auto",
+                  alignItems: "center",
+                  md: "flex",
+                },
+              }}
             >
               {isAuthenticated() && (
-                <IconButton
-                  size="large"
-                  edge="end"
-                  aria-label="account of current user"
-                  aria-controls={menuId}
-                  aria-haspopup="true"
-                  onClick={handleProfileMenuOpen}
-                  color="inherit"
-                >
-                  <AccountCircle sx={{ width: "40px", height: "40px" }} />
-                </IconButton>
+                <>
+                  <IconButton>
+                      <Add/>
+                  </IconButton>
+                  <IconButton
+                    size="large"
+                    edge="end"
+                    aria-label="account of current user"
+                    aria-controls={menuId}
+                    aria-haspopup="true"
+                    onClick={handleProfileMenuOpen}
+                    color="inherit"
+                  >
+                    <AccountCircle sx={{ width: "40px", height: "40px" }} />
+                  </IconButton>
+                </>
               )}
             </Box>
           </Toolbar>
@@ -265,34 +241,43 @@ export default function MiniDrawer({ children, page }) {
         {renderMenu}
       </AppBar>
       <Drawer variant="permanent" open={open}>
-        <DrawerHeader sx={{ marginTop: { xs: "120px", md: "100px" } }}>
+        <Toolbar />
+        <DrawerHeader>
           {isAuthenticated() && open && (
             <IconButton
               size="large"
-              edge="center"
+              edge="start"
               onClick={handleProfileMenuOpen}
               color="inherit"
             >
               <AccountCircle sx={{ width: "70px", height: "70px" }} />
             </IconButton>
           )}
-          <IconButton onClick={() => setOpen(!open)}>
+          <IconButton onClick={handleDrawerOpenClose}>
             {theme.direction === "rtl" ? <ChevronRight /> : <ChevronLeft />}
           </IconButton>
         </DrawerHeader>
         <Divider />
 
         <List>
-          {SidebarData.map((item, index) => {
-            return <SubMenu item={item} key={index} open={open} />;
-          })}
+          {SidebarData.map((item, index) => (
+            <SubMenu item={item} key={index} open={open} />
+          ))}
         </List>
 
         <Divider />
       </Drawer>
-      <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
-        {page == "Dashboard" && <HomeContent />}
-        {page == "Profile" && children}
+      <Box
+        component="main"
+        sx={{
+          flexGrow: 1,
+          p: 3,
+          transition: "margin-left 0.3s",
+        }}
+      >
+        {page === "Dashboard" && <HomeContent />}
+        {page === "Profile" && children}
+        {page === "Course" && <CourseContent />}
       </Box>
     </>
   );

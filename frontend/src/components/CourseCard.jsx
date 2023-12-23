@@ -1,5 +1,6 @@
-import { Box, styled, Typography, Chip } from "@mui/material";
-import { PlayCircle, Star } from "@mui/icons-material";
+import { Box, styled, Typography, Chip, IconButton } from "@mui/material";
+import { More, PlayCircle, Star } from "@mui/icons-material";
+import { Link } from "react-router-dom";
 function CourseCard({ item, courseWidth, courseHeight }) {
   const CourseBox = styled(Box)(({ theme }) => ({
     maxWidth:  courseWidth || 300,
@@ -35,7 +36,7 @@ function CourseCard({ item, courseWidth, courseHeight }) {
           alt={item.id}
           src={item.img}
         />
-        <Chip
+         <Chip
           sx={{
             position: "absolute",
             top: "8px",
@@ -48,6 +49,7 @@ function CourseCard({ item, courseWidth, courseHeight }) {
             </Box>
           }
         />
+        
       </Box>
 
       <Box
@@ -58,10 +60,10 @@ function CourseCard({ item, courseWidth, courseHeight }) {
           alignItems: "center",
         }}
       >
-        <Typography  sx={{ fontWeight: "700", color: "#0B036B" }}>
-          {item.title}
-        </Typography>
-        <Typography variant="body2" sx={{ my: 2, textAlign: "center",
+        <Link to={`/c/${item?.classId?._id}`} sx={{ fontWeight: "700", color: "#0B036B" }}>
+          {item?.classId?.className}
+        </Link>
+        {/* <Typography variant="body2" sx={{ my: 2, textAlign: "center",
           overflow: 'hidden',
           textOverflow: 'ellipsis',
           display: '-webkit-box',
@@ -69,7 +71,7 @@ function CourseCard({ item, courseWidth, courseHeight }) {
           WebkitBoxOrient: 'vertical',
     }}>
           {item.description}
-        </Typography>
+        </Typography> */}
 
         <Box
           sx={{

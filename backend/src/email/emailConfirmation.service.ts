@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
@@ -17,10 +18,10 @@ export class EmailConfirmationService {
   ) {}
 
   public async resendConfirmationLink(email: string) {
-    console.log(email);
+    //console.log(email);
     if (!email) return;
     const user = await this.usersService.findByEmail(email);
-    console.log(user);
+    //console.log(user);
     if (user[0].state === userStateEnum.activated) {
       throw new BadRequestException('Email already confirmed');
     }
@@ -63,7 +64,7 @@ export class EmailConfirmationService {
         'JWT_VERIFICATION_TOKEN_EXPIRATION_TIME',
       )}s`,
     });
-    console.log(token);
+    //console.log(token);
 
     //const u = await this.usersService.findByEmail(email);
     const url = `${this.configService.get(
@@ -76,7 +77,7 @@ export class EmailConfirmationService {
       subject: 'Email confirmation',
       text,
     };
-    console.log(emailTemplate);
+    //console.log(emailTemplate);
     return this.emailService.sendMail(emailTemplate);
   }
 
@@ -89,7 +90,7 @@ export class EmailConfirmationService {
         'JWT_VERIFICATION_TOKEN_EXPIRATION_TIME_RESET',
       )}s`,
     });
-    console.log(token);
+    //console.log(token);
 
     //const u = await this.usersService.findByEmail(email);
     const url = `${this.configService.get('RESET_PASSWORD_URL')}/${token}/`;
@@ -100,7 +101,7 @@ export class EmailConfirmationService {
       subject: 'Reset Password',
       text,
     };
-    console.log(emailTemplate);
+    //console.log(emailTemplate);
     return this.emailService.sendMail(emailTemplate);
   }
 }

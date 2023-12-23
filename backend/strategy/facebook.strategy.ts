@@ -36,7 +36,7 @@ export class FacebookStrategy extends PassportStrategy(Strategy, 'facebook') {
     refreshToken: string,
     profile: Profile,
   ): Promise<any> {
-    console.log(profile)
+    // console.log(profile)
     const facebookUser: IFaceBookUser = {
       provider: authTypeEnum.facebook,
       firstName:
@@ -59,10 +59,10 @@ export class FacebookStrategy extends PassportStrategy(Strategy, 'facebook') {
       accessToken: accessToken,
       refreshToken: refreshToken,
     };
-    console.log(profile.emails)
-    console.log(profile.name)
+    // console.log(profile.emails)
+    // console.log(profile.name)
 
-    console.log(facebookUser);
+    // console.log(facebookUser);
 
     const user = await this.authService.facebookUserValidate(facebookUser);
 

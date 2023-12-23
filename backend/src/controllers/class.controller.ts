@@ -20,10 +20,17 @@ export class ClassController {
     return this.classService.getByRealId(params.id);
   }
 
+  @Get('/getClass/:id')
+  async getById(@Param() params: any){
+    //console.log("get class")
+    return this.classService.getById(params.id)
+  }
+
+
   @Get('/getClassMember/:classId')
   async getMember(@Param() params: any) {
     const data = await this.classService.getMember(params.classId);
-    console.log(data)
+    //console.log(data)
     return data;
   }
 
