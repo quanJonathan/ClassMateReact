@@ -14,6 +14,7 @@ import {
   Container,
   Breadcrumbs,
   Button,
+  Avatar
 } from "@mui/material";
 import MuiDrawer from "@mui/material/Drawer";
 import MuiAppBar from "@mui/material/AppBar";
@@ -38,6 +39,36 @@ import { useSideNavGenerator } from "../helpers/sideNavGenerator";
 import { Stack } from "@mui/system";
 import MainPageCourse from "../routes/main-page-course.jsx";
 import CourseContent from "../components/CourseContent.jsx";
+
+function stringToColor(string) {
+  let hash = 0;
+  let i;
+
+  /* eslint-disable no-bitwise */
+  for (i = 0; i < string.length; i += 1) {
+    hash = string.charCodeAt(i) + ((hash << 5) - hash);
+  }
+
+  let color = '#';
+
+  for (i = 0; i < 3; i += 1) {
+    const value = (hash >> (i * 8)) & 0xff;
+    color += `00${value.toString(16)}`.slice(-2);
+  }
+  /* eslint-enable no-bitwise */
+
+  return color;
+}
+
+function stringAvatar(name) {
+  name = name.toUpperCase()
+  return {
+    sx: {
+      bgcolor: stringToColor(name),
+    },
+    children: `${name.split(' ')[0][0]}${name.split(' ')[1][0]}`,
+  };
+}
 
 const drawerWidth = 280;
 
@@ -107,7 +138,8 @@ const Drawer = styled(MuiDrawer, {
 }));
 
 export default function MiniDrawer({ children, page }) {
-  const { logout, isAuthenticated } = useAuth();
+  const { logout, isAuthenticated, user } = useAuth();
+  console.log(user)
   const theme = useTheme();
   const [open, setOpen] = useState(true);
   const [anchorEl, setAnchorEl] = useState(null);
@@ -222,7 +254,7 @@ export default function MiniDrawer({ children, page }) {
                   <IconButton>
                       <Add/>
                   </IconButton>
-                  <IconButton
+                  <Avatar {...stringAvatar(user ? `${user.lastName} ${user.firstName}` : 'Default')}
                     size="large"
                     edge="end"
                     aria-label="account of current user"
@@ -231,8 +263,8 @@ export default function MiniDrawer({ children, page }) {
                     onClick={handleProfileMenuOpen}
                     color="inherit"
                   >
-                    <AccountCircle sx={{ width: "40px", height: "40px" }} />
-                  </IconButton>
+                    {/* <AccountCircle sx={{ width: "40px", height: "40px" }} /> */}
+                  </Avatar>
                 </>
               )}
             </Box>
