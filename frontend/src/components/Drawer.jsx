@@ -6,73 +6,39 @@ import {
   Toolbar,
   List,
   CssBaseline,
-  Typography,
   Divider,
   IconButton,
   Menu as MenuComponent,
   MenuItem,
   Container,
   Breadcrumbs,
-  Button,
-  Avatar
+  Avatar,
+  ListItemText,
+  Menu,
+  ListItemIcon,
 } from "@mui/material";
 import MuiDrawer from "@mui/material/Drawer";
 import MuiAppBar from "@mui/material/AppBar";
 import HomeContent from "./HomeContent";
 
 import {
-  Home,
   Menu as MenuIcon,
-  School,
   ChevronLeft,
   ChevronRight,
   AccountCircle,
-  KeyboardArrowDown,
-  KeyboardArrowUp,
   Add,
 } from "@mui/icons-material";
 import AppName from "./WebName";
 import { useAuth } from "../hook/useAuth.jsx";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import SubMenu from "./Submenu.jsx";
 import { useSideNavGenerator } from "../helpers/sideNavGenerator";
 import { Stack } from "@mui/system";
-import MainPageCourse from "../routes/main-page-course.jsx";
 import CourseContent from "../components/CourseContent.jsx";
-
-function stringToColor(string) {
-  let hash = 0;
-  let i;
-
-  /* eslint-disable no-bitwise */
-  for (i = 0; i < string.length; i += 1) {
-    hash = string.charCodeAt(i) + ((hash << 5) - hash);
-  }
-
-  let color = '#';
-
-  for (i = 0; i < 3; i += 1) {
-    const value = (hash >> (i * 8)) & 0xff;
-    color += `00${value.toString(16)}`.slice(-2);
-  }
-  /* eslint-enable no-bitwise */
-
-  return color;
-}
-
-function stringAvatar(name) {
-  console.log(name);
-  if (!name) return;
-  name = name.toUpperCase();
-  let firstName = name.split(' ')[0][0];
-  let lastName = name.split(' ')[1][0];
-  return {
-    sx: {
-      bgcolor: stringToColor(name),
-    },
-    children: `${lastName}${firstName}`,
-  };
-}
+import OptionMenu from "./OptionMenu.jsx";
+import FullScreenDialog from "./FullScreenDialog.jsx";
+import { stringAvatar } from "../helpers/stringAvator.js";
+import axios from "axios";
 
 const drawerWidth = 280;
 
@@ -143,10 +109,15 @@ const Drawer = styled(MuiDrawer, {
 
 export default function MiniDrawer({ children, page }) {
   const { logout, isAuthenticated, user } = useAuth();
-  console.log(user)
+  // console.log(user);
   const theme = useTheme();
   const [open, setOpen] = useState(true);
   const [anchorEl, setAnchorEl] = useState(null);
+  const [isDialogAddOpen, setDialogAddOpen] = useState(false);
+  const [isDialogJoinOpen, setDialogJoinOpen] = useState(false);
+
+  const location = useLocation();
+  // console.log(location)
 
   const handleProfileMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
@@ -155,6 +126,27 @@ export default function MiniDrawer({ children, page }) {
   const handleDrawerOpenClose = () => {
     setOpen(!open);
   };
+
+  const options = [
+    {
+      label: "Join class",
+      action: () => handleJoinClassModal(),
+    },
+    {
+      label: "Create class",
+      action: () => handleOpenAddModal(),
+    },
+  ];
+
+  const handleOpenAddModal = () => {
+    setDialogAddOpen(true);
+  };
+
+  const handleJoinClassModal = () => {
+    setDialogJoinOpen(true);
+  };
+
+
 
   const SidebarData = useSideNavGenerator();
 
@@ -200,6 +192,10 @@ export default function MiniDrawer({ children, page }) {
   return (
     <>
       <CssBaseline />
+      <FullScreenDialog
+        open={isDialogJoinOpen}
+        handleClose={() => setDialogJoinOpen(false)}
+      />
       <AppBar
         position="fixed"
         elevation={4}
@@ -255,10 +251,15 @@ export default function MiniDrawer({ children, page }) {
             >
               {isAuthenticated() && (
                 <>
-                  <IconButton>
-                      <Add/>
-                  </IconButton>
-                  <Avatar {...stringAvatar(user ? `${user.lastName} ${user.firstName}` : 'Default Name')}
+                  {location.pathname === "/dashboard" && (
+                    <OptionMenu options={options} actionIcon={<Add />} />
+                  )}
+                  <Avatar
+                    {...stringAvatar(
+                      user
+                        ? `${user.lastName} ${user.firstName}`
+                        : "Default Name"
+                    )}
                     size="large"
                     edge="end"
                     aria-label="account of current user"

@@ -6,11 +6,12 @@ import { generateString } from 'src/helpers/random-string';
 import { Class, ClassDocument } from 'src/model/class.schema';
 import { GradeComposition } from 'src/model/grade-composition.schema';
 import { ClassesModule } from 'src/modules/class.module';
-import { User } from 'src/user/model/user.schema';
+import { User, UserDocument } from 'src/user/model/user.schema';
 
 export class ClassService {
   constructor(
     @InjectModel(Class.name) private classModel: Model<ClassDocument>,
+    @InjectModel(User.name) private userModel: Model<UserDocument>
   ) {}
 
   async getAllClass(): Promise<Class[]> {
@@ -75,19 +76,32 @@ export class ClassService {
     }
   }
 
-  async addStudent(classId: ObjectId, studentID: ObjectId) {
-    const foundClass = await this.classModel.findById(classId);
+  async addStudent(classId: string, studentId: ObjectId) {
+    console.log(classId)
+    const foundClass = await this.classModel.findOne({classId: classId});
+    console.log(foundClass)
     if (!foundClass) {
       throw new NotFoundException('Class not existed');
     } else {
-      // await foundClass.populate('members');
-      // const members = foundClass.members;
-      // if (members.includes(studentID)) {
-      //   console.log('User existed');
-      // } else {
-      //   foundClass.members.push(studentID);
-      //   await foundClass.save();
-      // }
+      await foundClass.populate('members');
+      const user = await this.userModel.findById(studentId).
+      populate({
+          path: "classes.classId",  
+          match: {
+            classId: classId
+          }
+      })
+      //console.log(user)
+      //console.log(foundClass)
+      
+      if (user.classes.length > 0) {
+        throw new ForbiddenException("User already in the class")
+      } else {
+        foundClass.members.push(user);
+        user.classes.push({classId: foundClass._id, role: '1000'})
+        await user.save();
+        await foundClass.save();
+      }
     }
   }
 

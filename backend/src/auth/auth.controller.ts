@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import {
   Body,
   Controller,
@@ -46,7 +47,7 @@ export class AuthController {
     //console.log('accessToken of google ' + auth.accessToken);
     //console.log('refreshToken ' + auth.refreshToken);
     res.redirect(
-      `https://classmatefe-authentication.onrender.com/google-oauth-success-redirect/${auth.accessToken}/${auth.refreshToken}${req.params.from}`,
+      `http://localhost:5173/google-oauth-success-redirect/${auth.accessToken}/${auth.refreshToken}${req.params.from}`,
     );
   }
 
@@ -64,7 +65,7 @@ export class AuthController {
     //console.log('accessToken of facebook ' + auth.accessToken);
     //console.log('refreshToken ' + auth.refreshToken);
     res.redirect(
-      `https://classmatefe-authentication.onrender.com/facebook-oauth-success-redirect/${auth.accessToken}/${auth.refreshToken}${req.params.from}`,
+      `http://localhost:5173/facebook-oauth-success-redirect/${auth.accessToken}/${auth.refreshToken}${req.params.from}`,
     );
   }
 
