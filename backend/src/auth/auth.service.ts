@@ -130,6 +130,20 @@ export class AuthService {
     return tokens;
   }
 
+  async adminSignUp(user: User) {
+    const newUser = await this.userService.createUserByAdmin(user);
+    const tokens = await this.getTokens(
+      newUser.email,
+      authTypeEnum[newUser.provider],
+    );
+    await this.updateRefreshToken(
+      newUser.email,
+      authTypeEnum[newUser.provider],
+      tokens.refreshToken,
+    );
+    return tokens;
+  }
+
   async login(user: User): Promise<IJWTTokensPair> {
     // console.log(Object.values(user));
     const tokens = await this.getTokens(

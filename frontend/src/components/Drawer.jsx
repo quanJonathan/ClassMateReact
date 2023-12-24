@@ -61,12 +61,16 @@ function stringToColor(string) {
 }
 
 function stringAvatar(name) {
-  name = name.toUpperCase()
+  console.log(name);
+  if (!name) return;
+  name = name.toUpperCase();
+  let firstName = name.split(' ')[0][0];
+  let lastName = name.split(' ')[1][0];
   return {
     sx: {
       bgcolor: stringToColor(name),
     },
-    children: `${name.split(' ')[0][0]}${name.split(' ')[1][0]}`,
+    children: `${lastName}${firstName}`,
   };
 }
 
@@ -254,7 +258,7 @@ export default function MiniDrawer({ children, page }) {
                   <IconButton>
                       <Add/>
                   </IconButton>
-                  <Avatar {...stringAvatar(user ? `${user.lastName} ${user.firstName}` : 'Default')}
+                  <Avatar {...stringAvatar(user ? `${user.lastName} ${user.firstName}` : 'Default Name')}
                     size="large"
                     edge="end"
                     aria-label="account of current user"

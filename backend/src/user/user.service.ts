@@ -203,4 +203,30 @@ export class UserService {
   async getOne(email: string): Promise<User> {
     return await this.userModel.findOne({email: email}, {password: 0}).exec()
   }
+
+  async createUserByAdmin(user: User): Promise<User> {
+
+    const userExists = await this.userModel.findOne({email: user.email}).exec();
+
+    if(userExists){
+      throw new BadRequestException('User already exists')
+    }
+    
+    const defaultUserRoles = [UserRoles.student]
+    const password = await hashData(user.password)
+    
+    const newUser = new this.userModel({
+      firstName: user.firstName,
+      lastName: user.lastName,
+      email: user.email,
+      password: password,
+      roles: defaultUserRoles,
+      provider: authTypeEnum.local,
+      address: user.address,
+      phoneNumber: user.phoneNumber,
+      photo: user.photo,
+      state: userStateEnum.activated
+    })
+    return await newUser.save();
+  }
 }
