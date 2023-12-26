@@ -12,14 +12,16 @@ import { UserService } from './user.service';
 import { User } from './model/user.schema';
 import { AccessTokenGuard } from 'src/guards/access-token.guard';
 import { AuthService } from 'src/auth/auth.service';
+import { userStateEnum } from 'src/enum/userState.enum';
+import { BadRequestException, NotFoundException } from '@nestjs/common';
 
 @Controller('user')
 export class UserController {
   constructor(
     private readonly userService: UserService,
     private authService: AuthService,
-  ) {}
-  
+  ) { }
+
   @Get('/all')
   async getAll() {
     return await this.userService.findAll();
@@ -27,10 +29,58 @@ export class UserController {
 
   @Post('addAccount')
   async Signup(@Res() response, @Body() user: User) {
-    const newUSer = this.authService.adminSignUp(user);
-    return response.status(HttpStatus.CREATED).json({
-      token: newUSer,
-      email: user.email
+    await this.authService.adminSignUp(user).then((newUSer) => {
+      console.log(newUSer[0])
+      if (newUSer === 'error') {
+        console.log('FAIL TO CREATE' + user.email)
+        return response.status(HttpStatus.BAD_REQUEST).json({
+          token: newUSer,
+          email: user.email
+        });
+      }
+      return response.status(HttpStatus.CREATED).json({
+        token: newUSer,
+        email: user.email
+      });
     });
+  }
+
+  @Post('ban')
+  async BanAccount(@Res() response, @Body() user: User) {
+    console.log(user.email)
+    const newUSer = await this.userService.findByEmail(user.email);
+    if (newUSer.length > 0) {
+      let user = newUSer[0];
+      console.log(user)
+      if (user.state && user.state !== userStateEnum.banned)
+        this.userService.updateState(user, userStateEnum.banned);
+      else
+        this.userService.updateState(user, userStateEnum.activated);
+      return response.status(HttpStatus.OK).json({
+
+      });
+    }
+    return response.status(HttpStatus.BAD_REQUEST).json({
+
+    });
+  }
+
+  @Post('remove')
+  async RemoveAccount(@Res() response, @Body() id) {
+    console.log('removing' + id)
+    const newUSer = await this.userService.remove(id.id);
+    return response.status(HttpStatus.OK).json({
+
+    });
+  }
+
+  @Post('update')
+  async updateData(@Res() response, @Body() user) {
+    const result = await this.userService.adminUpdate(user);
+    console.log(result);
+    if(result)
+      {return response.status(HttpStatus.OK).json(result);
+      }
+    return response.status(HttpStatus.BAD_REQUEST).json();
   }
 }

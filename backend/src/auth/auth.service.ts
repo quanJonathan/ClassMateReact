@@ -131,6 +131,7 @@ export class AuthService {
   }
 
   async adminSignUp(user: User) {
+    try {
     const newUser = await this.userService.createUserByAdmin(user);
     const tokens = await this.getTokens(
       newUser.email,
@@ -142,6 +143,10 @@ export class AuthService {
       tokens.refreshToken,
     );
     return tokens;
+    } catch(BadRequestException) {
+      console.log('error created')
+      return 'error';
+    }
   }
 
   async login(user: User): Promise<IJWTTokensPair> {
