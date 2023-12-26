@@ -17,11 +17,11 @@ export class Class {
  classId: string;
  @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }] })
  members: User[];
- @Prop({type: [{type: mongoose.Types.ObjectId, ref: 'Homework'}]})
+ @Prop({type: [{type: mongoose.Schema.Types.ObjectId, ref: 'Homework'}]})
  homeworks: Homework[];
  @Prop({unique: true})
  accessLink?: string;
- @Prop({required: true, type: [{type: mongoose.Types.ObjectId, ref: 'GradeComposition'}]})
+ @Prop({type: [{type: mongoose.Types.ObjectId, ref: 'GradeComposition'}]})
  compositions: GradeComposition[];
 }
 

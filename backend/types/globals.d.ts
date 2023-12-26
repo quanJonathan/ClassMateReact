@@ -1,6 +1,7 @@
 /* eslint-disable prettier/prettier */
 import { ObjectId } from 'mongoose';
 import { authTypeEnum } from 'src/enum/authType.enum';
+import { gradingStateEnum } from 'src/enum/gradeState';
 import {User as UserEntity } from 'src/user/model/user.schema'
 /* eslint-disable prettier/prettier */
 declare global {
@@ -66,6 +67,13 @@ declare global {
     memberId: ObjectId;
     score: number;
     state: string;
+  }
+
+  interface UpdateHomework{
+    homeworkId: ObjectId,
+    memberId: ObjectId,
+    score: number,
+    state: gradingStateEnum
   }
 
 }

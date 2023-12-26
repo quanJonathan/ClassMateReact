@@ -52,7 +52,6 @@ export default function SignIn() {
     [theme.breakpoints.down("md")]: {
       flexDirection: "column",
       alignItems: "center",
-      textAlign: "center",
     },
   }));
 
@@ -270,7 +269,7 @@ export default function SignIn() {
                   }
                   label="Remember me"
                 />
-                <NavLink to="/forgot-password" variant="body2" alignSelf="center" textAlign="right">
+                <NavLink to="/forgot-password" variant="body2" >
                 Forgot Password?
                   </NavLink>
               </Box>

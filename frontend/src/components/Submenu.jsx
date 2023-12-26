@@ -1,5 +1,13 @@
 /* eslint-disable react/prop-types */
-import { CssBaseline, Icon, IconButton, Typography, Box } from "@mui/material";
+import {
+  CssBaseline,
+  Icon,
+  IconButton,
+  Typography,
+  Box,
+  ListItemButton,
+  Divider,
+} from "@mui/material";
 import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import styled from "styled-components";
@@ -34,12 +42,22 @@ const SubMenu = ({ item, open }) => {
   return (
     <>
       <CssBaseline />
-      <Box onClick={showSubnav}>
+      <ListItemButton
+        key={item?._path}
+        sx={{
+          borderTopRightRadius: "32px",
+          borderBottomRightRadius: "32px",
+          minHeight: "60px",
+        }}
+        onClick={showSubnav}
+      >
         <SidebarLink
+          key={item?.path}
           to={item?.path}
           sx={{
             justifyContent: open ? "initial" : "center",
             alignItems: "center",
+            minHeight: "inherit",
           }}
         >
           <Icon
@@ -61,15 +79,14 @@ const SubMenu = ({ item, open }) => {
           >
             {item.title}
           </Typography>
-
           {item.subNav && (
             <Icon onClick={showSubnav}>
               {subnav ? item.iconOpened : item.iconClosed}
             </Icon>
           )}
         </SidebarLink>
-      </Box>
-
+      </ListItemButton>
+      
       {subnav &&
         item.subNav?.map((item, index) => {
           return (
@@ -81,7 +98,7 @@ const SubMenu = ({ item, open }) => {
                 alignItems: "center",
                 display: "flex",
                 flexDirection: "column",
-                justifyContent: subnav ? "initial" : "center" 
+                justifyContent: subnav ? "initial" : "center",
               }}
               key={item.subNav}
             >
