@@ -11,6 +11,9 @@ import {
   Container,
   Card,
   Divider,
+  Avatar,
+  ListItemButton,
+  ListItemAvatar,
 } from "@mui/material";
 import {
   AccountCircleOutlined,
@@ -19,6 +22,12 @@ import {
 } from "@mui/icons-material";
 import PersonAddAlt1OutlinedIcon from "@mui/icons-material/PersonAddAlt1Outlined";
 import { useAuth } from "../hook/useAuth";
+import { stringAvatar } from "../helpers/stringAvator";
+import OptionMenu from "./OptionMenu";
+import { useParams } from "react-router-dom";
+import FullScreenDialog from "./FullScreenDialog";
+import FormDialog from "./FormDialog";
+import SendMailDialog from "./SendMailDialog";
 
 export const ClassPeople = (props) => {
   const { students, teachers } = props;
@@ -28,29 +37,61 @@ export const ClassPeople = (props) => {
     setSelectAll(!selectAll);
   };
 
+  const [open, setOpen] = useState(false);
+  const [title, setTitle] = useState("");
+
+  const studentOptions = [
+    {
+      label: "Delete",
+    },
+  ];
+
+  const openSendMailModal = ({ title }) => {
+    setOpen(true);
+    setTitle(title);
+  };
+
+  const sendMailForTeacher = () => {
+    openSendMailModal("Invite teacher");
+  };
+
+  const sendMailForStudent = () => {
+    openSendMailModal("Invite student");
+  };
+
   return (
-    <Card>
-      <Container style={{ marginTop: 20 }}>
-        <Section
-          title="Teachers"
-          data={teachers}
-          icon={<PersonAddAlt1OutlinedIcon />}
-          selectAll={selectAll}
-        />
-        <Section
-          title="Students"
-          data={students}
-          icon={<PersonAddAlt1OutlinedIcon />}
-          selectAll={selectAll}
-        />
-      </Container>
-    </Card>
+    <>
+      <SendMailDialog
+        isOpen={open}
+        title={title}
+        handleClose={() => setOpen(false)}
+      />
+      <Card>
+        <Container style={{ marginTop: 20, justifyContent: "center" }}>
+          <Section
+            title="Teachers"
+            data={teachers}
+            icon={<PersonAddAlt1OutlinedIcon />}
+            selectAll={selectAll}
+            sendMailAction={() => sendMailForTeacher()}
+          />
+          <Section
+            title="Students"
+            data={students}
+            icon={<PersonAddAlt1OutlinedIcon />}
+            selectAll={selectAll}
+            options={studentOptions}
+            sendMailAction={() => sendMailForStudent()}
+          />
+        </Container>
+      </Card>
+    </>
   );
 };
 
-const Section = ({ title, data, icon, selectAll }) => {
+const Section = ({ title, data, icon, selectAll, options, sendMailAction }) => {
   const [selectedItems, setSelectedItems] = useState([]);
-  const { user } = useAuth();
+  const { id } = useParams();
 
   const handleToggle = (item) => {
     const currentIndex = selectedItems.indexOf(item);
@@ -65,6 +106,15 @@ const Section = ({ title, data, icon, selectAll }) => {
     setSelectedItems(newSelectedItems);
   };
 
+  const { user } = useAuth();
+
+  const currentClass = user?.classes.filter(
+    (classObject) => classObject.classId._id == id
+  );
+  const currentRole = currentClass[0].role;
+
+  console.log(currentClass);
+
   const handleSelectAll = () => {
     if (selectAll) {
       setSelectedItems([]);
@@ -74,12 +124,21 @@ const Section = ({ title, data, icon, selectAll }) => {
   };
 
   return (
-    <div>
-      <Box display="flex" justifyContent="space-evenly">
+    <Box sx={{ mb: 4 }}>
+      <Box display="flex" justifyContent="space-between">
         <Typography variant="h5" component="div" sx={{ flexGrow: 1 }}>
           {title}
         </Typography>
-        <IconButton>{icon} </IconButton>
+        {currentRole == "3000" && (
+          <>
+            {/* {data?.length > 0 && (
+              <Typography variant="body2" fontWeight="bold">
+                {data?.length} student {data?.length > 1 && "s"}
+              </Typography>
+            )} */}
+            <IconButton onClick={sendMailAction}>{icon}</IconButton>
+          </>
+        )}
       </Box>
       <Divider
         sx={{
@@ -88,32 +147,61 @@ const Section = ({ title, data, icon, selectAll }) => {
       />
       <List>
         {data?.map((item) => (
-          <ListItem key={item._id} onClick={() => handleToggle(item)}>
-            {user?._id === item._id && (
-              <ListItemIcon>
-                && ({" "}
-                <Checkbox
-                  checked={selectedItems.indexOf(item) !== -1}
-                  tabIndex={-1}
-                  disableRipple
+          <ListItem
+            disablePadding
+            key={item._id}
+            onClick={() => handleToggle(item)}
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+            }}
+            secondaryAction={
+              user?._id !== item._id &&
+              currentRole == "3000" && (
+                <OptionMenu
+                  options={options}
+                  actionIcon={<MoreVert />}
+                  key={item._id}
                 />
-                )
-              </ListItemIcon>
-            )}
-            <AccountCircleOutlined />
+              )
+            }
+          >
+            <ListItemButton onClick={() => handleToggle(item)} dense>
+              {user?._id !== item._id && currentRole == "3000" && (
+                <>
+                  <ListItemIcon>
+                    <Checkbox
+                      edge="start"
+                      checked={selectedItems.indexOf(item) !== -1}
+                      tabIndex={-1}
+                      disableRipple
+                      inputProps={{
+                        "aria-labelledby": `checkbox-list-label-${item._id}`,
+                      }}
+                    />
+                  </ListItemIcon>
+                </>
+              )}
+              <Avatar
+                {...stringAvatar(
+                  user ? `${user.lastName} ${user.firstName}` : "Default Name"
+                )}
+                size="medium"
+                edge="end"
+                aria-label="account of current user"
+                color="inherit"
+                sx={{ mr: 2 }}
+              />
 
-            <ListItemText
-              primary={item.firstName + " " + item.lastName}
-              sx={{ flexGrow: 1 }}
-            />
-            <ListItemIcon>
-              <IconButton>
-                <MoreVert />
-              </IconButton>
-            </ListItemIcon>
+              <ListItemText
+                primary={item.firstName + " " + item.lastName}
+                sx={{ flexGrow: 1, fontWeight: "bold" }}
+              />
+            </ListItemButton>
           </ListItem>
         ))}
       </List>
-    </div>
+    </Box>
   );
 };

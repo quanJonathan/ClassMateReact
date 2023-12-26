@@ -1,9 +1,10 @@
 /* eslint-disable prettier/prettier */
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import mongoose, { Document } from 'mongoose';
+import mongoose, { Document, ObjectId } from 'mongoose';
 import { gradingStateEnum } from 'src/enum/gradeState';
 import { homeworkStateEnum } from 'src/enum/homeworkState';
 import { User } from 'src/user/model/user.schema';
+import { Class } from './class.schema';
 export type HomeworkDocument = Homework & Document;
 
 // Note that the classId is for shown only
@@ -14,8 +15,11 @@ export class Homework {
   name: string;
   @Prop()
   deadline: Date;
-  @Prop({ required: true, unique: true })
-  classId: { type: mongoose.Types.ObjectId; ref: 'Class' };
+  @Prop({type: { type: mongoose.Schema.Types.ObjectId, ref: 'Class' }})
+  courseId: Class;
+
+  @Prop()
+  maxScore: number;
 
   // Each homework can have multiple tasks, each task has a unique score
   // Each homework has a unique title
@@ -32,20 +36,21 @@ export class Homework {
   })
   components: {
     title: string;
-    content: number;
+    content: string;
     link: string;
     scorePercentage: number;
   }[];
+
   @Prop({
     type: [
       {
-        _id: { type: mongoose.Types.ObjectId, ref: 'User' },
+        memberId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
         score: { type: Number, min: 0, max: 10 },
-        state: { String, enum: Object.values(gradingStateEnum), default: gradingStateEnum.pending },
+        state: { type: String, enum: Object.values(gradingStateEnum), default: gradingStateEnum.pending },
       },
     ],
   })
-  doneMembers: {user: User | mongoose.Types.ObjectId, score: number, state: string}[];
+  doneMembers: { user: User, score: number, state: string }[];
 
   // active, non-active, overdue
   @Prop({ default: homeworkStateEnum.inactive, enum: homeworkStateEnum })

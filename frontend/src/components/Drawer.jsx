@@ -81,7 +81,6 @@ const AppBar = styled(MuiAppBar, {
     duration: theme.transitions.duration.leavingScreen,
   }),
   ...(open && {
-    marginLeft: drawerWidth,
     width: `calc(100% - ${drawerWidth}px)`,
     transition: theme.transitions.create(["width", "margin"], {
       easing: theme.transitions.easing.sharp,
@@ -197,7 +196,7 @@ export default function MiniDrawer({ children, page }) {
         handleClose={() => setDialogJoinOpen(false)}
       />
       <AppBar
-        position="fixed"
+        position="absolute"
         elevation={4}
         open={open}
         sx={{
@@ -244,7 +243,7 @@ export default function MiniDrawer({ children, page }) {
                 display: {
                   xs: "none",
                   ml: "auto",
-                  alignItems: "center",
+                  alignItems: "start",
                   md: "flex",
                 },
               }}
@@ -267,6 +266,7 @@ export default function MiniDrawer({ children, page }) {
                     aria-haspopup="true"
                     onClick={handleProfileMenuOpen}
                     color="inherit"
+                    sx={{ml: 2}}
                   >
                     {/* <AccountCircle sx={{ width: "40px", height: "40px" }} /> */}
                   </Avatar>

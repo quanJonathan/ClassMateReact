@@ -100,7 +100,7 @@ const CourseContent = () => {
       </TabPanel>
       {currentRole === '3000' && (
         <TabPanel value={value} index={3}>
-          <ClassGrade />
+          <ClassGrade members={students} homeworks={course?.homeworks}/>
         </TabPanel>
       )}
     </Box>

@@ -3,23 +3,25 @@ import { useRef, useState } from "react";
 
 const ITEM_HEIGHT = 60;
 
-export default function OptionMenu({ options, actionIcon }) {
+export default function OptionMenu({ options = [], actionIcon }) {
   
     const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);
     const handleClick = (event) => {
       setAnchorEl(event.currentTarget);
+      event.stopPropagation()
     };
     const handleClose = (option) => {
       setAnchorEl(null);
       option?.action()
     };
   
-    const maxMenuWidth = Math.max(...options.map((label) => label.length));
+    const maxMenuWidth = Math.max(...options?.map((label) => label.length));
   
     return (
       <div>
         <IconButton
+          edge="end"
           aria-label="more"
           id="long-button"
           aria-controls={open ? "option-menu" : undefined}
