@@ -2,6 +2,7 @@ import { Box, Button, Divider, Typography, styled } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import CourseCard from "./CourseCard";
 import { useAuth } from "../hook/useAuth";
+import ClassCard from "./ClassCard";
 
 export default function HomeContent() {
   const { user, readFromStorage } = useAuth();
@@ -122,11 +123,10 @@ export default function HomeContent() {
 
           <CourseBoxes>
             {user?.classes?.map((course) => (
-              <CourseCard
+              <ClassCard
                 key={course?.classId?._id}
                 item={course}
-                courseWidth={200}
-                courseHeight={300}
+                user={user}
               />
             ))}
           </CourseBoxes>

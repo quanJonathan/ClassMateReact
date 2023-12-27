@@ -24,7 +24,7 @@ function TabPanel(props) {
     >
       {value === index && (
         <Box sx={{ p: 3 }}>
-          <Paper elevation={3}>{children}</Paper>
+          <Paper elevation={0}>{children}</Paper>
         </Box>
       )}
     </div>
@@ -65,7 +65,7 @@ const CourseContent = () => {
 
   // console.log(course);
   return (
-    <Box sx={{ borderBottom: 1, borderColor: "divider", mt: 6 }}>
+    <Box sx={{ borderBottom: 1, borderColor: "divider", mt: 6, boxShadow: 'none' }} elevation={0}>
       {isLoading ? (
         <Spinner />
       ) : (
@@ -89,8 +89,8 @@ const CourseContent = () => {
         variant="middle"
         sx={{ borderBottomWidth: "2px", borderColor: "rgba(0, 0, 0, 0.12)" }}
       />
-      <TabPanel value={value} index={0}>
-        <ClassGeneral course={course} />
+      <TabPanel value={value} index={0}  >
+        <ClassGeneral course={course} user={user}  />
       </TabPanel>
       <TabPanel value={value} index={1}>
         <ClassHomeWork />

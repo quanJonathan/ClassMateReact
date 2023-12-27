@@ -60,10 +60,10 @@ function CourseCard({ item, courseWidth, courseHeight }) {
           alignItems: "center",
         }}
       >
-        <Link to={`/c/${item?.classId?._id}`} sx={{ fontWeight: "700", color: "#0B036B" }}>
-          {item?.classId?.className}
-        </Link>
-        {/* <Typography variant="body2" sx={{ my: 2, textAlign: "center",
+       <Typography  sx={{ fontWeight: "700", color: "#0B036B" }}>
+          {item.title}
+        </Typography>
+        <Typography variant="body2" sx={{ my: 2, textAlign: "center",
           overflow: 'hidden',
           textOverflow: 'ellipsis',
           display: '-webkit-box',
@@ -71,7 +71,7 @@ function CourseCard({ item, courseWidth, courseHeight }) {
           WebkitBoxOrient: 'vertical',
     }}>
           {item.description}
-        </Typography> */}
+        </Typography>
 
         <Box
           sx={{

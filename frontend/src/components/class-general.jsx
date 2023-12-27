@@ -4,8 +4,10 @@ import {
   InsertLink,
   MoreVert,
   Refresh,
+  SendOutlined,
 } from "@mui/icons-material";
 import {
+  Avatar,
   Card,
   CardActions,
   CardContent,
@@ -24,8 +26,9 @@ import axios from "axios";
 import OptionMenu from "./OptionMenu";
 import { useRef } from "react";
 
-export const ClassGeneral = ({ course }) => {
-  console.log(course);
+
+export const ClassGeneral = ({ course, user }) => {
+ 
 
   const textareaRef = useRef(null)
   const options = [
@@ -45,6 +48,36 @@ export const ClassGeneral = ({ course }) => {
       action: () => resetCodeAction(),
     },
   ];
+
+  function stringToColor(string) {
+    let hash = 0;
+    let i;
+  
+    /* eslint-disable no-bitwise */
+    for (i = 0; i < string.length; i += 1) {
+      hash = string.charCodeAt(i) + ((hash << 5) - hash);
+    }
+  
+    let color = '#';
+  
+    for (i = 0; i < 3; i += 1) {
+      const value = (hash >> (i * 8)) & 0xff;
+      color += `00${value.toString(16)}`.slice(-2);
+    }
+    /* eslint-enable no-bitwise */
+  
+    return color;
+  }
+  
+  function stringAvatar(name) {
+    name = name.toUpperCase()
+    return {
+      sx: {
+        bgcolor: stringToColor(name),
+      },
+      children: `${name.split(' ')[0][0]}${name.split(' ')[1][0]}`,
+    };
+  }
 
   const copyTextAction = (text) => {
     if (textareaRef.current) {
@@ -68,41 +101,52 @@ export const ClassGeneral = ({ course }) => {
 
   const isSmallScreen = useMediaQuery("(max-width:600px)");
   return (
-    <Box variant="main" sx={{ backgroundColor: "rgba(255, 255, 255, 1)" }}>
-      <textarea ref={textareaRef} style={{ position: 'absolute', left: '-9999px' }} readOnly />
+    <div style={{ paddingBottom: "50px" }}>
+    
       <Card
         sx={{
           width: "100%",
-          height: 200,
           overflow: "hidden",
           padding: 2,
           boxSizing: "border-box",
           "@media (max-width:600px)": {
             height: 150,
           },
-          backgroundColor: "rgba(144, 206, 203, 0.2)",
           position: "relative",
+          backgroundColor: "#0a9689",
+          color: "white",
+          height: "350px",
+          marginTop: "30px",
+          
+  
         }}
       >
-        <CardActions sx={{ position: "relative" }}>
-          <Box sx={{ position: "absolute", top: 0, left: 0, padding: 2 }}>
-            <Typography variant="h3" component="div" gutterBottom>
+        <CardActions sx={{ position: "relative",  }}>
+          <Box sx={{ position: "absolute", top: 0, left: 0, padding: 2,
+         
+        
+        }}>
+            <Typography variant="h3" component="div" gutterBottom sx={{fontWeight: 600}}>
               {course?.className}
             </Typography>
           </Box>
         </CardActions>
       </Card>
       {!isSmallScreen && (
-        <Paper
+        <Box
+        elevation={0}
           sx={{
             width: "100%",
-            maxWidth: 200,
             height: 100,
             marginTop: 2,
-            padding: 2,
-            boxSizing: "border-box",
+            py: 2,
+            display: "flex",
+            flexDirection: "row",
+            alignItems: "flex-start",
+            justifyContent: "space-between"
           }}
         >
+          <div style={{  width: "20%",    boxShadow: "0px 1px 6px -2px black", margin: "10px",  padding: "20px",  borderRadius: "15px"}}  >
           <Box
             component="div"
             sx={{
@@ -125,8 +169,45 @@ export const ClassGeneral = ({ course }) => {
               <CropFree />
             </IconButton>
           </Box>
-        </Paper>
+          </div>
+          <Box sx={{  width: "80%"}}>
+          <div style={{
+            display: "flex",
+            alignItems: "center",
+            margin: "10px",
+            padding: "20px",
+            boxShadow: "0px 1px 6px -2px black",
+            justifyContent: "space-between",
+            borderRadius: "15px"
+          }}>
+          <Avatar
+                    {...stringAvatar(
+                      user
+                        ? `${user.lastName} ${user.firstName}`
+                        : "Default Name"
+                    )}
+                  
+                  >
+                  </Avatar>
+        <input
+          type="text"
+          placeholder="Announce something to your class"
+          style={{
+            border: "none",
+            padding: "15px 20px",
+            width: "100%",
+            mx: "20px",
+            fontSize: "17px",
+            outline: "none"
+          }}
+        />
+        <IconButton>
+          <SendOutlined />
+        </IconButton>
+      </div>
+          </Box>
+        </Box>
       )}
-    </Box>
+    </div>
   );
 };
