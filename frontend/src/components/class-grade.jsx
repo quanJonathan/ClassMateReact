@@ -77,8 +77,8 @@ const ExcelLikeTable = ({ headers, rows }) => {
 };
 
 const CustomTableHeader = ({ data, options }) => {
-  // console.log("data in header");
-  // console.log(data);
+  console.log("data in header");
+  console.log(data);
 
   const [selectedValue, setSelectedValue] = useState("first"); // Set the initial value
 
@@ -118,36 +118,41 @@ const CustomTableHeader = ({ data, options }) => {
               key={`header-${row?.id}`}
               sx={{
                 border: "1px solid #ddd",
-                width: "150px",
-                minWidth: "150px",
-                display: "flex",
+                minWidth: 0,
+                width: 40,
+                wordBreak: "break-word",
               }}
+              align={row?.align}
             >
               <Box
                 sx={{
                   display: "flex",
-                  flexWrap: "wrap",
-                  flexDirection: "column",
                 }}
               >
-                <Typography variant="body2" color="text.secondary" sx={{maxLines: 1, overflow: "hidden"}}>
-                  {format(row?.deadline, "yyyy-MM-dd HH:mm")}
-                </Typography>
-                <Link>{row?.label}</Link>
-                <Divider />
-                <Typography
-                  variant="body2"
-                  color="text.secondary"
-                  sx={{
-                    textOverflow: "ellipsis",
-                    whiteSpace: "nowrap",
-                    overflow: "hidden",
-                  }}
-                >
-                  in total of {row?.totalScore}
-                </Typography>
+                <Stack direction="column">
+                  <Typography
+                    variant="body2"
+                    color="text.secondary"
+                    sx={{ maxLines: 1, overflow: "hidden" }}
+                  >
+                    {format(row?.deadline, "yyyy-MM-dd HH:mm")}
+                  </Typography>
+                  <Link>{row?.label}</Link>
+                  <Divider />
+                  <Typography
+                    variant="body2"
+                    color="text.secondary"
+                    sx={{
+                      textOverflow: "ellipsis",
+                      whiteSpace: "nowrap",
+                      overflow: "hidden",
+                    }}
+                  >
+                    in total of {row?.totalScore}
+                  </Typography>
+                </Stack>
+                <OptionMenu actionIcon={<MoreVertIcon />} options={options} />
               </Box>
-              <OptionMenu actionIcon={<MoreVertIcon />} options={options} />
             </TableCell>
           )
         )}
@@ -213,29 +218,25 @@ const CustomTableBody = ({ data, options }) => {
   return (
     <TableBody>
       {data?.map((row, rowIndex) => (
-        <TableRow key={`row-${row?._id}`} sx={{ minWidth: 0 }}>
-          <TableCell
-            align={row?.align}
-            sx={{
-              minWidth: 0,
-              display: "inline-flex",
-            }}
-          >
-            <Avatar
-              {...stringAvatar(
-                row?.user
-                  ? `${row?.user.lastName} ${row?.user.firstName}`
-                  : "Default Name"
-              )}
-              size="large"
-              edge="start"
-              aria-label="account of user"
-              color="inherit"
-              sx={{ mr: 2 }}
-            />
-            <Typography alignContent="center" sx={{ mt: 1 }}>
-              {row?.user.firstName + " " + row?.user.lastName}
-            </Typography>
+        <TableRow key={`row-${row?._id}-${rowIndex}`}>
+          <TableCell align={row?.align}>
+            <Stack direction='row'>
+              <Avatar
+                {...stringAvatar(
+                  row?.user
+                    ? `${row?.user.lastName} ${row?.user.firstName}`
+                    : "Default Name"
+                )}
+                size="large"
+                edge="start"
+                aria-label="account of user"
+                color="inherit"
+                sx={{ mr: 2 }}
+              />
+              <Typography alignContent="center" sx={{ mt: 1 }}>
+                {row?.user.firstName + " " + row?.user.lastName}
+              </Typography>
+            </Stack>
           </TableCell>
           {row?.homeworks?.map((col, colIndex) => (
             <TableCell
@@ -243,8 +244,7 @@ const CustomTableBody = ({ data, options }) => {
               sx={{
                 border: "1px solid #ddd",
                 position: "relative",
-                width: "100px",
-                minWidth: "100px",
+                minWidth: 0,
               }}
               onMouseEnter={() =>
                 setHoveredCell({ rowIndex: rowIndex, colIndex: colIndex })
@@ -256,17 +256,16 @@ const CustomTableBody = ({ data, options }) => {
                 direction="row"
                 justifyContent="start"
                 spacing={2}
-                sx={{ minWidth: 0 }}
               >
                 <TextField
                   value={col?.score}
-                  inputMode="decimal"
+                  inputMode="numeric"
                   variant="standard"
                   onChange={(e) =>
                     handleCellEdit(rowIndex, colIndex, e.target.value)
                   }
                   maxRows={1}
-                  sx={{ minWidth: 52, width: 52 }}
+                  sx={{ minWidth: 0 }}
                   onKeyDown={(e) => handleKeyDown(e, rowIndex, colIndex)}
                   onBlur={(e) => handleSaving(rowIndex, colIndex)}
                   type="number"

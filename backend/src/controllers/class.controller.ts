@@ -39,6 +39,7 @@ export class ClassController {
   @UseGuards()
   async addClass(@Body() body) {
     const classObject = body;
+    // console.log(body)
     return this.classService.addClass(classObject);
   }
 

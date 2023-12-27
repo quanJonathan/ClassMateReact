@@ -64,8 +64,9 @@ export class ClassService {
   }
 
   async addClass(classObject: Class): Promise<Class | any> {
-    const classId = generateString(7);
+    const classId = generateString(6);
     const newClass = { ...classObject, classId: classId };
+    console.log(newClass)
     return await this.classModel.create(newClass);
   }
 

@@ -63,7 +63,7 @@ const CourseContent = () => {
 
   const maxTabWidth = Math.max(...tabLabels.map((label) => label.length));
 
-  // console.log(course);
+  console.log(course);
   return (
     <Box sx={{ borderBottom: 1, borderColor: "divider", mt: 6 }}>
       {isLoading ? (
