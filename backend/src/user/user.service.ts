@@ -7,6 +7,7 @@ import { UserRoles } from '../enum/userRole.enum';
 import { authTypeEnum } from '../enum/authType.enum';
 import { hashData } from '../helpers/hash-data';
 import { userStateEnum } from 'src/enum/userState.enum';
+import { validateHashedData } from 'src/helpers/validate-hash-data';
 
 @Injectable()
 export class UserService {
@@ -137,7 +138,7 @@ export class UserService {
   }
 
   async findAll(): Promise<User[]> {
-    const allUsers: User[] = await this.userModel.find({});
+    const allUsers: User[] = await this.userModel.find({}).sort({createdDate: -1});
     return allUsers;
   }
 
@@ -155,6 +156,44 @@ export class UserService {
       lastName: user.lastName,
       address: user.address,
       phoneNumber: user.phoneNumber
+    }})
+  }
+  async adminUpdate(user) {
+    const u = await this.findByEmail(user.email);
+    if (u.length <= 0)       
+    {
+      console.log('User not found')
+      return;
+      throw new BadRequestException('user not found');
+    }
+    let pass= null;
+    
+    if (user.oldPassword) {
+      const passwordValidation = true;
+      if (!passwordValidation) {
+        console.log('Password Incorrect')
+        return await this.userModel.findOneAndUpdate({email: user.email}, {$set: {
+          firstName: user.firstName,
+          lastName: user.lastName,
+          address: user.address,
+          phoneNumber: user.phoneNumber,
+        }})
+      }
+      pass = await hashData(user.newPassword);
+      console.log(pass)
+      return await this.userModel.findOneAndUpdate({email: user.email}, {$set: {
+        firstName: user.firstName,
+        lastName: user.lastName,
+        address: user.address,
+        phoneNumber: user.phoneNumber,
+        password: pass
+      }})
+    }
+    return await this.userModel.findOneAndUpdate({email: user.email}, {$set: {
+      firstName: user.firstName,
+      lastName: user.lastName,
+      address: user.address,
+      phoneNumber: user.phoneNumber,
     }})
   }
 
