@@ -28,6 +28,7 @@ import { useParams } from "react-router-dom";
 import FullScreenDialog from "./FullScreenDialog";
 import FormDialog from "./FormDialog";
 import SendMailDialog from "./SendMailDialog";
+import AddPeopleDialog from "./AddPeopleDialog";
 
 export const ClassPeople = (props) => {
   const { students, teachers } = props;
@@ -61,7 +62,7 @@ export const ClassPeople = (props) => {
 
   return (
     <>
-      <SendMailDialog
+      <AddPeopleDialog
         isOpen={open}
         title={title}
         handleClose={() => setOpen(false)}
