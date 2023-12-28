@@ -104,4 +104,18 @@ export class EmailConfirmationService {
     //console.log(emailTemplate);
     return this.emailService.sendMail(emailTemplate);
   }
+
+  public async sendReturnHomeworkLink(user: Partial<User>, homework: Homework) {
+    const email = user.email;
+
+    const emailTemplate = {
+      to: email,
+      subject: `Graded: "${homework.name}"
+      `,
+      text: 'random things'
+    };
+    //console.log(emailTemplate);
+    return this.emailService.sendMail(emailTemplate);
+  }
+  
 }

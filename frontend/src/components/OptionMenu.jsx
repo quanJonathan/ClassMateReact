@@ -34,6 +34,9 @@ export default function OptionMenu({ options = [], actionIcon }) {
         aria-expanded={open ? "true" : undefined}
         aria-haspopup="true"
         onClick={handleClick}
+        disableRipple
+        disableTouchRipple
+        sx={{p: 0}}
       >
         {actionIcon}
       </IconButton>

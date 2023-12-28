@@ -2,7 +2,6 @@ import React, { useRef, useState } from "react";
 import {
   Table,
   TableBody,
-  TableCell,
   TableContainer,
   TableHead,
   TableRow,
@@ -19,6 +18,7 @@ import {
   Select,
   MenuItem,
   Stack,
+  styled,
 } from "@mui/material";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { useHomeworks } from "../hook/useHomeworks";
@@ -29,6 +29,19 @@ import { stringAvatar } from "../helpers/stringAvator";
 import { format } from "date-fns";
 import axios from "axios";
 import { useAuth } from "../hook/useAuth";
+import { toast } from "react-toastify";
+
+import MuiTableCell from "@mui/material/TableCell";
+
+const TableCell = styled(MuiTableCell)`
+  :last-of-type{
+      width: 100,
+      maxWidth: 90,
+      overflow: 'hidden',
+      textOverflow: 'ellipsis',
+      borderStyle: 'border-box'
+  }
+`;
 
 export const ClassGrade = ({ members, homeworks }) => {
   const { headers, rows } = useHomeworks(members, homeworks);
@@ -68,7 +81,7 @@ const ExcelLikeTable = ({ headers, rows }) => {
 
   return (
     <TableContainer component={Paper}>
-      <Table sx={{ minWidth: 650 }} aria-label="scoring-table">
+      <Table aria-label="scoring-table" sx={{ width: "auto" }}>
         <CustomTableHeader data={headers} options={headerOptions} />
         <CustomTableBody data={rows} options={bodyOptions} />
       </Table>
@@ -87,7 +100,7 @@ const CustomTableHeader = ({ data, options }) => {
   };
 
   return (
-    <TableHead sx={{ minWidth: 650 }}>
+    <TableHead>
       <TableRow>
         {data?.map((row, rowIndex) =>
           row?.sortingField ? (
@@ -118,15 +131,15 @@ const CustomTableHeader = ({ data, options }) => {
               key={`header-${row?.id}`}
               sx={{
                 border: "1px solid #ddd",
-                minWidth: 0,
-                width: 40,
                 wordBreak: "break-word",
+                width: 120,
               }}
               align={row?.align}
             >
               <Box
                 sx={{
                   display: "flex",
+                  justifyContent: "space-between",
                 }}
               >
                 <Stack direction="column">
@@ -177,34 +190,46 @@ const CustomTableBody = ({ data, options }) => {
 
   const handleCellEdit = (rowIndex, cellIndex, value) => {
     const updatedData = [...editedData];
+    //console.log(updatedData[rowIndex].homeworks[cellIndex])
     updatedData[rowIndex].homeworks[cellIndex].score = value;
     setEditedData(updatedData);
   };
 
   const handleSaving = async (rowIndex, cellIndex) => {
     //console.log(editedData)
-    const updateData = {
-      _id: editedData[rowIndex].homeworks[cellIndex]._id,
-      memberId: editedData[rowIndex].user._id,
-      score: editedData[rowIndex].homeworks[cellIndex].score,
-      state: "pending",
-    };
 
-    try {
-      const response = await axios.post(
-        `http://localhost:3001/class/updateHomework/${id}`,
-        updateData,
-        {
-          headers: {
-            Authorization: "Bearer " + token?.refreshToken,
-          },
+    const newValue = editedData[rowIndex].homeworks[cellIndex].score;
+    const maxScore = editedData[rowIndex].homeworks[cellIndex].maxScore;
+
+    if (!newValue) return;
+
+    if (isNaN(newValue)) toast.error("Must be a number");
+    else if (newValue > maxScore || newValue < 0) {
+      toast.error(`Must in range 0-${maxScore}`);
+    } else {
+      const updateData = {
+        _id: editedData[rowIndex].homeworks[cellIndex]._id,
+        memberId: editedData[rowIndex].user._id,
+        score: editedData[rowIndex].homeworks[cellIndex].score,
+        state: "pending",
+      };
+
+      try {
+        const response = await axios.post(
+          `http://localhost:3001/class/updateHomework/${id}`,
+          updateData,
+          {
+            headers: {
+              Authorization: "Bearer " + token?.refreshToken,
+            },
+          }
+        );
+        if (response) {
+          console.log(response);
         }
-      );
-      if (response) {
-        console.log(response);
+      } catch (e) {
+        console.log(e);
       }
-    } catch (e) {
-      console.log(e);
     }
   };
 
@@ -215,12 +240,14 @@ const CustomTableBody = ({ data, options }) => {
     }
   };
 
+  const handleBlur = () => {};
+
   return (
     <TableBody>
       {data?.map((row, rowIndex) => (
         <TableRow key={`row-${row?._id}-${rowIndex}`}>
           <TableCell align={row?.align}>
-            <Stack direction='row'>
+            <Stack direction="row">
               <Avatar
                 {...stringAvatar(
                   row?.user
@@ -230,8 +257,6 @@ const CustomTableBody = ({ data, options }) => {
                 size="large"
                 edge="start"
                 aria-label="account of user"
-                color="inherit"
-                sx={{ mr: 2 }}
               />
               <Typography alignContent="center" sx={{ mt: 1 }}>
                 {row?.user.firstName + " " + row?.user.lastName}
@@ -254,24 +279,47 @@ const CustomTableBody = ({ data, options }) => {
               <Stack
                 alignContent="center"
                 direction="row"
-                justifyContent="start"
-                spacing={2}
+                justifyContent="space-between"
+                spacing={1}
               >
                 <TextField
+                  id={`score-${colIndex}-${rowIndex}`}
                   value={col?.score}
-                  inputMode="numeric"
+                  //inputMode="numeric"
                   variant="standard"
                   onChange={(e) =>
                     handleCellEdit(rowIndex, colIndex, e.target.value)
                   }
                   maxRows={1}
-                  sx={{ minWidth: 0 }}
+                  sx={{
+                    minWidth: 0,
+                    maxWidth: "50%",
+                    textAlign: 'center',
+                    input: {
+                      m: 0,
+                      color: col?.state !== "final" ? "green" : "black",
+                      fontWeight: col?.state !== "final" ? "600" : "normal",
+                    },
+                  }}
                   onKeyDown={(e) => handleKeyDown(e, rowIndex, colIndex)}
-                  onBlur={(e) => handleSaving(rowIndex, colIndex)}
-                  type="number"
+                  //onBlur={(e) => handleSaving(rowIndex, colIndex)}
+                  type="text"
                   InputProps={{
                     endAdornment: (
-                      <InputAdornment position="end">
+                      <InputAdornment
+                        position="end"
+                        sx={{
+                          m: 0,
+                          color:
+                            col?.state !== "final" && col?.score
+                              ? "green"
+                              : "black",
+                          fontWeight:
+                            col?.state !== "final" && col?.score
+                              ? "600"
+                              : "normal",
+                        }}
+                      >
                         /{col?.maxScore}
                       </InputAdornment>
                     ),
@@ -285,6 +333,9 @@ const CustomTableBody = ({ data, options }) => {
                     />
                   )}
               </Stack>
+              {col?.state === "pending" && col?.score && (
+                <Typography variant="body2">Draft</Typography>
+              )}
             </TableCell>
           ))}
         </TableRow>
