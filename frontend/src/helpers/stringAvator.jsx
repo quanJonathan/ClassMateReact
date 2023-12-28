@@ -29,6 +29,6 @@ export function stringAvatar(name) {
       bgcolor: stringToColor(name),
       mr: 2
     },
-    children: `${lastName}${firstName}`,
+    children: `${firstName}${lastName}`,
   };
 }

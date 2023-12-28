@@ -226,14 +226,14 @@ export default function MiniDrawer({ children, page }) {
               <Breadcrumbs
                 separator="›"
                 aria-label="breadcrumb"
-                sx={{ fontSize: "1.5rem" }}
+                sx={{ fontSize: "15px" }}
               >
                 <Link
                   color="inherit"
                   onClick={() => navigate(`/c/${children?.classId?._id}`)}
-                  sx={{ fontSize: "1.5rem" }}
+                  sx={{ fontSize: "15px" }}
                 >
-                  {children?.className}
+                  > {children?.className}
                 </Link>
               </Breadcrumbs>
             </Stack>
@@ -256,7 +256,7 @@ export default function MiniDrawer({ children, page }) {
                   <Avatar
                     {...stringAvatar(
                       user
-                        ? `${user.lastName} ${user.firstName}`
+                        ? `${user.firstName} ${user.lastName}`
                         : "Default Name"
                     )}
                     size="large"
