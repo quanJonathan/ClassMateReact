@@ -7,6 +7,7 @@ import EmailService from '../email/email.service';
 import { UserService } from '../user/user.service';
 import { userStateEnum } from 'src/enum/userState.enum';
 import { User } from 'src/user/model/user.schema';
+import { ClassService } from 'src/services/class.service';
 
 @Injectable()
 export class EmailConfirmationService {
@@ -15,6 +16,7 @@ export class EmailConfirmationService {
     private readonly configService: ConfigService,
     private readonly emailService: EmailService,
     private readonly usersService: UserService,
+    private readonly classService: ClassService
   ) {}
 
   public async resendConfirmationLink(email: string) {
@@ -118,4 +120,19 @@ export class EmailConfirmationService {
     return this.emailService.sendMail(emailTemplate);
   }
   
+  public async sendJoinClassLink(user: Partial<User>, url: string, classId: string) {
+    const email = user.email;
+    const course = this.classService.getById(classId);
+    console.log(course)
+  
+    const text = `Welcome to ClassMate website.\n To join ${course}, click here: \n${url}`;
+    const emailTemplate = {
+      to: email,
+      subject: 'Join Classroom',
+      text,
+    };
+    //console.log(emailTemplate);
+    return this.emailService.sendMail(emailTemplate);
+  }
 }
+

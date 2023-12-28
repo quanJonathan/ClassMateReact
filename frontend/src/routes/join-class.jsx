@@ -19,7 +19,7 @@ import { useAuth } from "../hook/useAuth.jsx";
 async function getClass(classId) {
     try {
   const response =  await axios
-  .get(`http://localhost:3001/class/${classId}`, {
+  .get(`http://localhost:3001/class/getClass/${classId}`, {
     headers: {
       "Content-Type": "application/x-www-form-urlencoded",
       "Access-Control-Allow-Origin": "*",

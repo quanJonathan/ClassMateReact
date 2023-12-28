@@ -9,6 +9,7 @@ import {
   Res,
   UseGuards,
   Query,
+  Param,
   UnauthorizedException,
 } from '@nestjs/common';
 import { GoogleOAuthGuard } from '../guards/google-oauth.guard';
@@ -122,6 +123,23 @@ export class AuthController {
       }
     }
   }
+
+  @Post('/joinClassByEmail/:classId')
+  async JoinClassByEmail(@Res() response, @Body() body: { email: string,url: string }, @Param() params: any) {
+    const user = await this.authService.checkUserExist(body.email);
+
+    if (user) {
+      //console.log(user);
+      const sendEmail =
+        await this.emailConfirmationService.sendJoinClassLink(user, body.url,params.classId);
+      if (sendEmail) {
+        return response.status(HttpStatus.ACCEPTED).json({
+          sendEmail,
+        });
+      }
+    }
+  }
+
 
   @Post('reset-password')
   async ResetPassword(
