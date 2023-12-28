@@ -5,8 +5,10 @@ import {
   } from "@mui/material";
   import axios from "axios";
 import SearchIcon from "@mui/icons-material/Search";
+import { useAuth } from "../hook/useAuth";
 
 export const SearchBar = ({setResults}) => {
+  
     const [input,setInput] = useState("");
     const filterData = (query) => {
         if (!query) {
@@ -17,8 +19,8 @@ export const SearchBar = ({setResults}) => {
             axios.get(url)
               .then((response) => response.data) 
               .then((json) => {
-                const result = json.filter((user) => {
-                    return query && user && user.email && user.email.toLowerCase().includes(query)
+                const result = json.filter((d) => {
+                    return query && d && d.email &&  d.email.toLowerCase().includes(query) 
                 })
                 console.log(result);
                 console.log("done");

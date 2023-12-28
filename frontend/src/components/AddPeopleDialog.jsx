@@ -7,6 +7,7 @@ import {
   } from "@mui/material";
   import { useState } from "react";
 import { SearchBar } from "./SearchBar";
+import { useAuth } from "../hook/useAuth";
 
 
   export default function AddPeopleDialog({ isOpen, handleClose }) {
@@ -14,7 +15,7 @@ import { SearchBar } from "./SearchBar";
     // const [chips, setChips] = useState([]);
    
     const [results,setResults] = useState([]);
-   
+    const {user} = useAuth();
    
     return (
       <div>
@@ -37,24 +38,26 @@ import { SearchBar } from "./SearchBar";
 
    <SearchBar setResults={setResults} />
       <div style={{ padding: 3 }}>
-        {results.map((result,id) => (
-          <div
-            className="text"
-            style={{
-              padding: 5,
-              justifyContent: "normal",
-              fontSize: 20,
-              color: "blue",
-              margin: 1,
-              width: "250px",
-              BorderColor: "green",
-              borderWidth: "10px"
-            }}
-            key={id}
-          >
-            {result.email}
-          </div>
-        ))}
+        {results.map((result, id) => (
+    result.email !== "admin2@gmail.com" && result.email !== "classmate.admin@gmail.com" && result.email !== user.email && (
+        <div
+        className="text"
+        style={{
+            padding: 5,
+            justifyContent: "normal",
+            fontSize: 20,
+            color: "blue",
+            margin: 1,
+            width: "250px",
+            borderColor: "green",  // Fixed typo: BorderColor should be borderColor
+            borderWidth: "10px"
+        }}
+        key={id}
+        >
+        {result.email}
+        </div>
+    )
+    ))}
       </div>
           </DialogContent>
           <DialogActions>
