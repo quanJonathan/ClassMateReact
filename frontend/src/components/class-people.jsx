@@ -31,7 +31,7 @@ import SendMailDialog from "./SendMailDialog";
 import AddPeopleDialog from "./AddPeopleDialog";
 
 export const ClassPeople = (props) => {
-  const { students, teachers } = props;
+  const { students, teachers, course } = props;
   const [selectAll, setSelectAll] = useState(false);
 
   const handleSelectAll = () => {
@@ -66,6 +66,8 @@ export const ClassPeople = (props) => {
         isOpen={open}
         title={title}
         handleClose={() => setOpen(false)}
+
+        course={course}
       />
       <Card>
         <Container style={{ marginTop: 20, justifyContent: "center" }}>
@@ -186,7 +188,7 @@ const Section = ({ title, data, icon, selectAll, options, sendMailAction }) => {
               )}
               <Avatar
                 {...stringAvatar(
-                  user ? `${user.lastName} ${user.firstName}` : "Default Name"
+                  user ? `${user.firstName} ${user.lastName}` : "Default Name"
                 )}
                 size="medium"
                 edge="end"

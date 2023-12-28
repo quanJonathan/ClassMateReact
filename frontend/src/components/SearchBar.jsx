@@ -39,10 +39,11 @@ export const SearchBar = ({setResults}) => {
 
     return(
         <form style={{
-            padding: "2px",
+            padding: "2px 20px",
             border: "1px solid black",
             borderRadius: "5px",
-            display: "flex"
+            display: "flex",
+            justifyContent: "space-between"
         }}>
           <TextField
             id="search-bar"

@@ -102,7 +102,7 @@ export const ClassGeneral = ({ course, user }) => {
   const isSmallScreen = useMediaQuery("(max-width:600px)");
   return (
     <div style={{ paddingBottom: "50px" }}>
-    
+        <textarea ref={textareaRef} style={{ position: 'absolute', left: '-9999px' }} readOnly />
       <Card
         sx={{
           width: "100%",
@@ -183,7 +183,7 @@ export const ClassGeneral = ({ course, user }) => {
           <Avatar
                     {...stringAvatar(
                       user
-                        ? `${user.lastName} ${user.firstName}`
+                        ? `${user.firstName} ${user.lastName}`
                         : "Default Name"
                     )}
                   

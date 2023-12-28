@@ -224,7 +224,7 @@ const CustomTableBody = ({ data, options }) => {
             <Avatar
               {...stringAvatar(
                 row?.user
-                  ? `${row?.user.lastName} ${row?.user.firstName}`
+                  ? `${row?.user.firstName} ${row?.user.lastName}`
                   : "Default Name"
               )}
               size="large"

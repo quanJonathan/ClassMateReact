@@ -134,7 +134,7 @@ export default function FullScreenDialog({ open, handleClose }) {
             >
               <Avatar
                 {...stringAvatar(
-                  user ? `${user.lastName} ${user.firstName}` : "Default Name"
+                  user ? `${user.firstName} ${user.lastName}` : "Default Name"
                 )}
                 size="large"
                 edge="end"

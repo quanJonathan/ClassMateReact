@@ -78,7 +78,7 @@ function ClassCard({ item, user }) {
                 <Avatar
                     {...stringAvatar(
                       user
-                        ? `${user.lastName} ${user.firstName}`
+                        ? `${user.firstName} ${user.lastName}`
                         : "Default Name"
                     )}
                   

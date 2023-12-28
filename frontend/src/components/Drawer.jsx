@@ -256,7 +256,7 @@ export default function MiniDrawer({ children, page }) {
                   <Avatar
                     {...stringAvatar(
                       user
-                        ? `${user.lastName} ${user.firstName}`
+                        ? `${user.firstName} ${user.lastName}`
                         : "Default Name"
                     )}
                     size="large"

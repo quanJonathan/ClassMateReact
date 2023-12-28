@@ -96,7 +96,7 @@ const CourseContent = () => {
         <ClassHomeWork />
       </TabPanel>
       <TabPanel value={value} index={2}>
-        <ClassPeople teachers={teachers} students={students} />
+        <ClassPeople teachers={teachers} students={students} course={course} />
       </TabPanel>
       {currentRole === '3000' && (
         <TabPanel value={value} index={3}>
