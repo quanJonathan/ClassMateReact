@@ -37,9 +37,7 @@ async function getClass(classId) {
 
 export default function JoinClass() {
 const { classId } = useParams();
-const { user, setJoining, setCurrentJoiningLink, token } = useAuth();
 const navigate = useNavigate();
-const location = useLocation();
   const [result, setResult] = useState(null);
 
   useEffect(() => {
@@ -99,6 +97,7 @@ const location = useLocation();
                     "textTransform": "none",
                     "color": "white"
                 }}
+                onClick={()=> navigate(`/c/join/verify/${result?.classId}`)}
                 >
                 Continue
                 </Button>
