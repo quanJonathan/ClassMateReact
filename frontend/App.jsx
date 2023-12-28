@@ -20,6 +20,7 @@ import ResetPassword from "./src/routes/reset-password";
 import FacebookOAuthSuccessRedirect from "./src/components/FacebookOAuthSuccessRedirect";
 import MainPageCourse from "./src/routes/main-page-course";
 import JoinClassVerify from "./src/routes/join-class-verify";
+import JoinClass from "./src/routes/join-class";
 
 export const router = createBrowserRouter(
   createRoutesFromElements(
@@ -27,6 +28,7 @@ export const router = createBrowserRouter(
       <Route path="/" element={<HomeLayout />}>
         <Route path="" element={<Root />} />
         <Route path="sign-in" element={<SignIn />} />
+     
         <Route path="sign-up" element={<SignUp />} />
         <Route path="forgot-password" element={<ForgotPassword />} />
       </Route>
@@ -57,7 +59,7 @@ export const router = createBrowserRouter(
       </Route>
 
       <Route path="/c">
-        <Route path="join/:classId" element={<JoinClassVerify />} />
+        <Route path="join/:classId" element={<JoinClass />} />
       </Route>
       <Route path="/confirm-email">
         <Route path="send/" element={<ConfirmEmail />} />

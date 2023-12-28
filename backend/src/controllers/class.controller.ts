@@ -54,6 +54,7 @@ export class ClassController {
     console.log("joining class")
     const user = req.user;
     const classId = params.classId
+    console.log(classId)
     return this.classService.addStudent(classId, user._id);
   }
 

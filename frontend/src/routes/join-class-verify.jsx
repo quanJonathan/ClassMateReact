@@ -5,7 +5,7 @@ import { useEffect } from "react";
 
 const JoinClassVerify = () => {
   const { user, setJoining, setCurrentJoiningLink, token } = useAuth();
-  const { id, classId } = useParams();
+  const { classId } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
   // console.log(location.pathname);
@@ -18,7 +18,7 @@ const JoinClassVerify = () => {
     } else {
       setJoining(false);
       setCurrentJoiningLink(null);
-      axios.post(`http://localhost:3001/class/joinClass/${id}`, user, {
+      axios.post(`http://localhost:3001/class/joinClass/${classId}`, user, {
         headers: {
           Authorization: "Bearer " + token?.refreshToken,
         },

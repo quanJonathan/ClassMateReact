@@ -89,7 +89,7 @@ export class ClassService {
   }
 
   async addStudent(classId: string, studentId: ObjectId) {
-    //console.log(classId)
+    console.log(classId)
     const foundClass = await this.classModel.findOne({ classId: classId });
     //console.log(foundClass)
     if (!foundClass) {
@@ -185,7 +185,7 @@ export class ClassService {
   }
 
   async returnHomework(homework: UpdateHomework, id: ObjectId) {
-    const foundHomework = await this.homeworkModel.findById(newData._id);
+    const foundHomework = await this.homeworkModel.findById(homework._id);
     if (foundHomework === null) {
       throw new NotFoundException(
         'The homework is either deleted or not found',

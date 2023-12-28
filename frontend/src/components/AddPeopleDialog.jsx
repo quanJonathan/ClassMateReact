@@ -19,25 +19,26 @@ import { stringAvatar } from "../helpers/stringAvator";
 import { useParams } from "react-router-dom";
 
   export default function AddPeopleDialog({ isOpen, handleClose, course, title }) {
-    const textareaRef = useRef(null)
+    // const textareaRef = useRef(null)
     const {id} = useParams();
         // const [chips, setChips] = useState([]);
    
     const [results,setResults] = useState([]);
     const {user} = useAuth();
     const copyTextAction = (text) => {
-        if (textareaRef.current) {
-          textareaRef.current.value = text;
-          textareaRef.current.select();
+        // if (textareaRef.current) {
+        //   textareaRef.current.value = text;
+          
+       
     
           try {
             // Copy the text to the clipboard
-            document.execCommand('copy');
+            navigator.clipboard.writeText(text)
             console.log('Text copied to clipboard:', text);
           } catch (err) {
             console.error('Unable to copy to clipboard:', err);
           }
-        }
+        // }
       };
     return (
       <div>
@@ -135,10 +136,10 @@ import { useParams } from "react-router-dom";
             width: "100%"
         }}>
           <TextField
-            ref={textareaRef}
+            // ref={textareaRef}
             id="invitation-link"
             className="text"
-            value={`http://localhost:5173/c/join/${course?.classId}`}
+            value={`http://localhost:5173/c/join/${course?._id}`}
             variant="outlined"
             size="small"
             InputProps={{
@@ -165,7 +166,7 @@ import { useParams } from "react-router-dom";
         <Button variant="contained" color="primary" elevation={0} sx={{
                 "textTransform": "none"
             }}
-            onClick={()=>copyTextAction(`http://localhost:5173/c/join/${course?.classId}`)}
+            onClick={()=>copyTextAction(`http://localhost:5173/c/join/${course?._id}`)}
             >
            Copy
           </Button>

@@ -233,7 +233,7 @@ export default function MiniDrawer({ children, page }) {
                   onClick={() => navigate(`/c/${children?.classId?._id}`)}
                   sx={{ fontSize: "15px" }}
                 >
-                  > {children?.className}
+                  {children?.className}
                 </Link>
               </Breadcrumbs>
             </Stack>
