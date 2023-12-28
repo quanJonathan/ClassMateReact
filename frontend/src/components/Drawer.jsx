@@ -37,7 +37,7 @@ import { Stack } from "@mui/system";
 import CourseContent from "../components/CourseContent.jsx";
 import OptionMenu from "./OptionMenu.jsx";
 import FullScreenDialog from "./FullScreenDialog.jsx";
-import { stringAvatar } from "../helpers/stringAvator.js";
+import { stringAvatar } from "../helpers/stringAvator";
 import axios from "axios";
 
 const drawerWidth = 280;
@@ -265,8 +265,6 @@ export default function MiniDrawer({ children, page }) {
                     aria-controls={menuId}
                     aria-haspopup="true"
                     onClick={handleProfileMenuOpen}
-                    color="inherit"
-                    sx={{ml: 2}}
                   >
                     {/* <AccountCircle sx={{ width: "40px", height: "40px" }} /> */}
                   </Avatar>

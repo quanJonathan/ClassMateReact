@@ -50,7 +50,7 @@ export class Homework {
       },
     ],
   })
-  doneMembers: { user: User, score: number, state: string }[];
+  doneMembers: { memberId: User | ObjectId, score: number, state: string }[];
 
   // active, non-active, overdue
   @Prop({ default: homeworkStateEnum.inactive, enum: homeworkStateEnum })

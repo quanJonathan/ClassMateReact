@@ -27,6 +27,7 @@ export function stringAvatar(name) {
   return {
     sx: {
       bgcolor: stringToColor(name),
+      mr: 2
     },
     children: `${lastName}${firstName}`,
   };

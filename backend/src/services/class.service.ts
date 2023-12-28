@@ -10,7 +10,6 @@ import { ClassesModule } from 'src/modules/class.module';
 import { User, UserDocument } from 'src/user/model/user.schema';
 
 export class ClassService {
-  
   constructor(
     @InjectModel(Class.name) private classModel: Model<ClassDocument>,
     @InjectModel(User.name) private userModel: Model<UserDocument>,
@@ -39,7 +38,7 @@ export class ClassService {
         },
       })
       .populate({
-        path: 'homeworks'
+        path: 'homeworks',
       })
       .exec();
 
@@ -66,7 +65,7 @@ export class ClassService {
   async addClass(classObject: Class): Promise<Class | any> {
     const classId = generateString(6);
     const newClass = { ...classObject, classId: classId };
-    console.log(newClass)
+    console.log(newClass);
     return await this.classModel.create(newClass);
   }
 
@@ -156,7 +155,9 @@ export class ClassService {
   }
 
   async getHomeworks(classId: ObjectId): Promise<Homework | any> {
-    const homeworks = await this.homeworkModel.find({courseId: classId}).exec()
+    const homeworks = await this.homeworkModel
+      .find({ courseId: classId })
+      .exec();
     console.log(homeworks);
     return homeworks;
   }
@@ -166,7 +167,7 @@ export class ClassService {
 
     const objectId = new mongoose.Types.ObjectId(id);
     console.log('adding homework');
-   
+
     const newHomework = new this.homeworkModel({
       doneMembers: homework.doneMembers,
       homeworkState: homework.homeworkState,
@@ -183,21 +184,61 @@ export class ClassService {
     return await newHomework.save();
   }
 
-  async updateHomework(newData: UpdateHomework, id: ObjectId) {
-    const foundHomework = await this.homeworkModel.findById(newData.homeworkId)
-    if(foundHomework === null){
-      throw new NotFoundException("The homework is either deleted or not found");
+  async returnHomework(homework: UpdateHomework, id: ObjectId) {
+    const foundHomework = await this.homeworkModel.findById(newData._id);
+    if (foundHomework === null) {
+      throw new NotFoundException(
+        'The homework is either deleted or not found',
+      );
     }
 
-    const foundUser = await this.userModel.findById(id).exec();
+    const foundUser = await this.userModel.findById(homework.memberId).exec();
+    console.log(foundUser);
 
-    (await foundHomework).populate({path: 'doneMembers.user', select: '_id'});
-    const updateUser = (await foundHomework).doneMembers
-    .find((member) => member.user.email === foundUser.email)
+    const updateUser = foundHomework.doneMembers.find((member) => {
+      console.log(member.memberId);
+      return (
+        (member.memberId as ObjectId).toString() == foundUser._id.toString()
+      );
+    });
+    console.log(foundHomework);
+    console.log(updateUser);
+
+    updateUser.state = 'final'
+    foundHomework.save()
     
-    updateUser.score = newData.score
-    updateUser.state = newData.state
+  }
 
-    return foundHomework.save()
+  async updateHomework(newData: UpdateHomework, id: ObjectId) {
+    const foundHomework = await this.homeworkModel.findById(newData._id);
+    if (foundHomework === null) {
+      throw new NotFoundException(
+        'The homework is either deleted or not found',
+      );
+    }
+
+    const foundUser = await this.userModel.findById(newData.memberId).exec();
+    console.log(foundUser);
+
+    const updateUser = foundHomework.doneMembers.find((member) => {
+      console.log(member.memberId);
+      return (
+        (member.memberId as ObjectId).toString() == foundUser._id.toString()
+      );
+    });
+    console.log(foundHomework);
+    console.log(updateUser);
+
+    if (updateUser) {
+      updateUser.score = newData.score;
+      updateUser.state = newData.state;
+    } else {
+      foundHomework.doneMembers.push({
+        memberId: newData.memberId,
+        score: newData.score,
+        state: 'pending',
+      });
+    }
+    return foundHomework.save();
   }
 }

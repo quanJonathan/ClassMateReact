@@ -62,8 +62,14 @@ export function useHomeworks(members, homeworks) {
           });
         } else {
 
-          acc.notDoneHomework.push({
-            score: 0,
+          // acc.notDoneHomework.push({
+          //   score: 0,
+          //   state: "pending",
+          //   maxScore: homework.maxScore,
+          //   _id: homework._id,
+          // });
+          acc.doneHomework.push({
+            score: '',
             state: "pending",
             maxScore: homework.maxScore,
             _id: homework._id,
@@ -75,14 +81,15 @@ export function useHomeworks(members, homeworks) {
       { doneHomework: [], notDoneHomework: [] }
     );
 
-    const allHomeworks = [...doneHomework, ...notDoneHomework]
-      .slice()
-      .sort((a, b) => {
-        homeworks.findIndex((h) => h._id === a._id) -
-          homeworks.findIndex((h) => h._id === b._id);
-      });
+    // const allHomeworks = [...doneHomework, ...notDoneHomework]
+    //   .slice()
+    //   .sort((a, b) => {
+    //     homeworks.findIndex((h) => h._id === a._id) -
+    //       homeworks.findIndex((h) => h._id === b._id);
+    //   });
+      const allHomeworks = [...doneHomework];
 
-    return { user: member, align: "left", homeworks: allHomeworks };
+    return { user: member, align: "center", homeworks: allHomeworks };
   });
 
   // rows.forEach((row) =>{

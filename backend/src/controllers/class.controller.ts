@@ -83,11 +83,21 @@ export class ClassController {
   }
 
   @Post('/updateHomework/:id')
-  async updateHomework(@Req() request, @Param() params: any){
-    const newData = request.updateData
+  async updateHomework(@Body() body, @Param() params: any){
+    const newData = body
     const id = params.id
+    console.log(id)
+    console.log(newData)
 
     return this.classService.updateHomework(newData, id)
+  }
+
+  @Post('returnHomework/:id')
+  async returnHomework(@Body() body, @Param() params: any){
+    const _id= params.id
+    const homework = body
+
+    return this.classService.returnHomework(_id, homework)
   }
 
   @Get('/getHomeworks/:id')

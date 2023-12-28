@@ -64,13 +64,13 @@ declare global {
   }
 
   interface Homework{
-    memberId: ObjectId;
+    name: string,
     score: number;
     state: string;
   }
 
   interface UpdateHomework{
-    homeworkId: ObjectId,
+    _id: ObjectId,
     memberId: ObjectId,
     score: number,
     state: gradingStateEnum
