@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import useSWR from "swr";
 import { useAuth } from "./useAuth";
 
-export function useHomeworks( members, homeworks) {
+export function useHomeworks(members, homeworks) {
   // const { token } = useAuth();
   // const fetcher = (url) =>
   //   axios
@@ -22,11 +22,12 @@ export function useHomeworks( members, homeworks) {
   //   console.log(useParams())
   // console.log(data);
 
-  console.log(homeworks)
+  console.log(homeworks);
 
   let headers = [
     {
       sortingField: true,
+      align: "",
     },
   ];
 
@@ -39,33 +40,51 @@ export function useHomeworks( members, homeworks) {
       deadline: homework.deadline,
       totalScore: homework.maxScore,
       minWidth: 170,
-      align: "center",
+      align: "left",
     };
     headers.push(header);
   });
 
   rows = members?.map((member) => {
-    const memberHomework = homeworks
-      .filter((homework) =>
-        homework.doneMembers.some((doneMember) => doneMember.memberId === member._id)
-      )
-      ?.map((homework) => ({
-        score:
-          homework.doneMembers.find(
-            (doneMember) => doneMember.memberId === member._id
-          )?.score || 0,
-        state:
-          homework.doneMembers.find(
-            (doneMember) => doneMember.memberId === member._id
-          )?.state || "pending",
-        maxScore:
-            homework.maxScore,
-        _id: homework._id
-      }));
+    const { doneHomework, notDoneHomework } = homeworks.reduce(
+      (acc, homework) => {
+        const doneMember = homework.doneMembers.find(
+          (doneMember) => doneMember.memberId === member._id
+        );
 
-    return { user: member, align: 'left', homeworks: memberHomework };
+        if (doneMember) {
+          
+          acc.doneHomework.push({
+            score: doneMember.score || 0,
+            state: doneMember.state || "pending",
+            maxScore: homework.maxScore,
+            _id: homework._id,
+          });
+        } else {
+
+          acc.notDoneHomework.push({
+            score: 0,
+            state: "pending",
+            maxScore: homework.maxScore,
+            _id: homework._id,
+          });
+        }
+
+        return acc;
+      },
+      { doneHomework: [], notDoneHomework: [] }
+    );
+
+    const allHomeworks = [...doneHomework, ...notDoneHomework]
+      .slice()
+      .sort((a, b) => {
+        homeworks.findIndex((h) => h._id === a._id) -
+          homeworks.findIndex((h) => h._id === b._id);
+      });
+
+    return { user: member, align: "left", homeworks: allHomeworks };
   });
-  
+
   // rows.forEach((row) =>{
   //     console.log(row.homework)
   // })
