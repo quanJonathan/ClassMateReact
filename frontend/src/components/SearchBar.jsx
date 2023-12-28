@@ -22,8 +22,6 @@ export const SearchBar = ({setResults}) => {
                 const result = json.filter((d) => {
                     return query && d && d.email &&  d.email.toLowerCase().includes(query) 
                 })
-                console.log(result);
-                console.log("done");
                 setResults(result);
               })
               .catch((error) => {

@@ -29,25 +29,52 @@ import FullScreenDialog from "./FullScreenDialog";
 import FormDialog from "./FormDialog";
 import SendMailDialog from "./SendMailDialog";
 import AddPeopleDialog from "./AddPeopleDialog";
+import axios from "axios";
+import { toast } from "react-toastify";
 
 export const ClassPeople = (props) => {
   const { students, teachers, course } = props;
   const [selectAll, setSelectAll] = useState(false);
-
+  const { token } = useAuth();
   const handleSelectAll = () => {
     setSelectAll(!selectAll);
   };
 
   const [open, setOpen] = useState(false);
-  const [title, setTitle] = useState("");
+  const [title, setTitle] = useState("Invite student");
 
-  const studentOptions = [
+  const studentOptions = (studentId) => [
     {
       label: "Delete",
+      action: () => handleDelete(studentId),
     },
   ];
 
-  const openSendMailModal = ({ title }) => {
+
+  const  handleDelete = async (studentId) =>{
+    try {
+      console.log(studentId + "check");
+      await axios.post(
+        `http://localhost:3001/class/removeStudent/${studentId}`,
+        {
+          class: {
+            id: course?._id
+          }
+        },
+        {
+          headers: {
+            Authorization: "Bearer " + token.refreshToken,
+          }
+        }
+      );
+      
+    } catch (error) {
+      console.error("Remove student failed:", error);
+      toast.error("Remove student failed");
+    }
+  }
+
+  const openSendMailModal = (title) => {
     setOpen(true);
     setTitle(title);
   };
@@ -116,7 +143,7 @@ const Section = ({ title, data, icon, selectAll, options, sendMailAction }) => {
   );
   const currentRole = currentClass[0].role;
 
-  console.log(currentClass);
+  // console.log(currentClass);
 
   const handleSelectAll = () => {
     if (selectAll) {
@@ -163,7 +190,7 @@ const Section = ({ title, data, icon, selectAll, options, sendMailAction }) => {
               user?._id !== item._id &&
               currentRole == "3000" && (
                 <OptionMenu
-                  options={options}
+                  options={options(item._id)}
                   actionIcon={<MoreVert />}
                   key={item._id}
                 />
@@ -188,7 +215,7 @@ const Section = ({ title, data, icon, selectAll, options, sendMailAction }) => {
               )}
               <Avatar
                 {...stringAvatar(
-                  user ? `${user.firstName} ${user.lastName}` : "Default Name"
+                  item ? `${item.firstName} ${item.lastName}` : "Default Name"
                 )}
                 size="medium"
                 edge="end"

@@ -2,7 +2,7 @@ import { Box, styled, Typography, Avatar } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
 function ClassCard({ item, user }) {
-    console.log(item)
+
   const navigate = useNavigate();
 
   const goToClass = () => {

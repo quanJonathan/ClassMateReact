@@ -16,10 +16,12 @@ import {
 import { SearchBar } from "./SearchBar";
 import { useAuth } from "../hook/useAuth";
 import { stringAvatar } from "../helpers/stringAvator";
+import { useParams } from "react-router-dom";
 
-  export default function AddPeopleDialog({ isOpen, handleClose, course }) {
+  export default function AddPeopleDialog({ isOpen, handleClose, course, title }) {
     const textareaRef = useRef(null)
-    // const [chips, setChips] = useState([]);
+    const {id} = useParams();
+        // const [chips, setChips] = useState([]);
    
     const [results,setResults] = useState([]);
     const {user} = useAuth();
@@ -40,7 +42,7 @@ import { stringAvatar } from "../helpers/stringAvator";
     return (
       <div>
         <Dialog open={isOpen} onClose={handleClose}>
-          <DialogTitle>Invite people to our classroom</DialogTitle>
+          <DialogTitle>{`${title} to our classroom`}</DialogTitle>
           <DialogContent>
             {/* <Autocomplete
               clearIcon={false}
@@ -114,7 +116,7 @@ import { stringAvatar } from "../helpers/stringAvator";
 
             <Button variant="contained" color="primary" elevation={0} sx={{
                 "textTransform": "none"
-            }}>
+            }} disabled={item.classes.some(classObj => classObj.classId === id)}>
            Invite
           </Button>
           </ListItem>

@@ -63,7 +63,6 @@ const CourseContent = () => {
 
   const maxTabWidth = Math.max(...tabLabels.map((label) => label.length));
 
-  console.log(course);
   return (
     <Box sx={{ borderBottom: 1, borderColor: "divider", mt: 6, boxShadow: 'none' }} elevation={0}>
       {isLoading ? (

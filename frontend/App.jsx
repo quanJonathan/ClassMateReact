@@ -57,7 +57,7 @@ export const router = createBrowserRouter(
       </Route>
 
       <Route path="/c">
-        <Route path=":id/:classId" element={<JoinClassVerify />} />
+        <Route path="join/:classId" element={<JoinClassVerify />} />
       </Route>
       <Route path="/confirm-email">
         <Route path="send/" element={<ConfirmEmail />} />
