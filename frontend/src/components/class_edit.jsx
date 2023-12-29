@@ -5,11 +5,11 @@ import { ClassHomeWork } from "../sections/classes/class-homework";
 import { ClassPeople } from "../sections/classes/class-people";
 import { ClassGrade } from "../sections/classes/class-grade";
 import PropTypes from "prop-types";
-import useSWR from "swr";
-import { useLocation, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import Spinner from "../components/spinner";
-import axios from "axios";
 import { useClassMember } from "../hooks/useClassMember";
+import ExcelUploadButton from "./UploadExcelButton";
+import DownloadExcelButton from "./DownloadExcelButton";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -40,7 +40,7 @@ TabPanel.propTypes = {
 const ClassEdit = () => {
   const [value, setValue] = React.useState(0);
   const { classId } = useParams();
-  const { students, teachers, isLoading, isError } = useClassMember()
+  const { students, teachers, isLoading, isError } = useClassMember();
 
   //if (isError) return <div>{isError}</div>
 
@@ -61,12 +61,16 @@ const ClassEdit = () => {
           <Tabs
             value={value}
             onChange={handleChange}
-            sx={{ ml: 5 }}
+            sx={{ ml: 5, flexGrow: 1 }}
             variant="scrollable"
             scrollButtons="auto"
           >
             {tabLabels.map((label, index) => (
-              <Tab key={index} label={label} style={{ minWidth: `${maxTabWidth}ch` }} />
+              <Tab
+                key={index}
+                label={label}
+                style={{ minWidth: `${maxTabWidth}ch` }}
+              />
             ))}
           </Tabs>
         )}

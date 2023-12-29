@@ -89,6 +89,7 @@ export function useHomeworks(members, homeworks) {
     //   });
       const allHomeworks = [...doneHomework];
 
+      console.log(member)
     return { user: member, align: "center", homeworks: allHomeworks };
   });
 

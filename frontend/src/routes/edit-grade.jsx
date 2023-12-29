@@ -27,13 +27,13 @@ const EditableDataGrid = () => {
   ];
 
   const handleEdit = (params) => {
-    console.log("Edit clicked for cell:", params);
+    // console.log("Edit clicked for cell:", params);
     // Implement your edit logic here
     handleClose();
   };
 
   const handleDelete = (params) => {
-    console.log("Delete clicked for cell:", params);
+    // console.log("Delete clicked for cell:", params);
     // Implement your delete logic here
     handleClose();
   };
@@ -62,7 +62,7 @@ const EditableDataGrid = () => {
     const sheetData = [];
     // Extract column names from the first row
     const columnNames = sheet.getRow(1).values;
-    console.log(columnNames)
+    // console.log(columnNames)
 
     sheet.eachRow((row, rowIndex) => {
       if (rowIndex !== 1) {
@@ -74,7 +74,7 @@ const EditableDataGrid = () => {
       }
     });
 
-    console.log(sheetData);
+    // console.log(sheetData);
 
     setData(sheetData);
   };

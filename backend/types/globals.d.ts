@@ -69,6 +69,11 @@ declare global {
     state: string;
   }
 
+  interface Student{
+    studentId: string,
+    fullName: string
+  }
+
   interface UpdateHomework{
     _id: ObjectId,
     memberId: ObjectId,

@@ -32,6 +32,7 @@ import { useAuth } from "../hook/useAuth";
 import { toast } from "react-toastify";
 
 import MuiTableCell from "@mui/material/TableCell";
+import { handleDownload } from "./DownloadExcelButton";
 
 const TableCell = styled(MuiTableCell)`
   :last-of-type{
@@ -63,10 +64,50 @@ const ExcelLikeTable = ({ headers, rows }) => {
   //   console.log("headers")
   //   console.log(headers)
 
+  const [currentName, setCurrentName] = useState("");
+
+  const sampleGradingData = [
+    ["studentId", "Score"],
+    ["20127600", 10],
+    ["20127004", 10],
+    ["20127128", 10],
+  ];
+
+  const handleUploadAndUpdate = (data) => {
+    const members = [];
+    data.forEach((row, rowIndex) => {
+      if (row != null && rowIndex > 1) {
+        members.push({
+          studentId: row[1],
+          fullName: row[2],
+          state: "pending",
+        });
+      }
+    });
+  };
+
   const headerOptions = [
+    {
+      label: "Download template",
+      action: () =>
+        handleDownload(sampleGradingData, `sampleGrading_${currentName}.xlsx`),
+    },
+    {
+      label: "Upload grade",
+      action: handleUploadAndUpdate,
+    },
     { label: "Edit" },
     { label: "Delete" },
     { label: "Return all" },
+  ];
+
+  const openModal = () => {};
+
+  const rowHeaderOptions = [
+    {
+      label: "Map account",
+      action: () => openModal(),
+    },
   ];
 
   const handleClose = () => {
@@ -83,15 +124,19 @@ const ExcelLikeTable = ({ headers, rows }) => {
     <TableContainer component={Paper}>
       <Table aria-label="scoring-table" sx={{ width: "auto" }}>
         <CustomTableHeader data={headers} options={headerOptions} />
-        <CustomTableBody data={rows} options={bodyOptions} />
+        <CustomTableBody
+          data={rows}
+          options={bodyOptions}
+          rowHeaderOptions={rowHeaderOptions}
+        />
       </Table>
     </TableContainer>
   );
 };
 
 const CustomTableHeader = ({ data, options }) => {
-  console.log("data in header");
-  console.log(data);
+  // console.log("data in header");
+  // console.log(data);
 
   const [selectedValue, setSelectedValue] = useState("first"); // Set the initial value
 
@@ -164,7 +209,12 @@ const CustomTableHeader = ({ data, options }) => {
                     in total of {row?.totalScore}
                   </Typography>
                 </Stack>
-                <OptionMenu actionIcon={<MoreVertIcon />} options={options} />
+                <OptionMenu
+                  actionIcon={
+                    <MoreVertIcon onClick={(e) => setCurrentName(row?.name)} />
+                  }
+                  options={options}
+                />
               </Box>
             </TableCell>
           )
@@ -174,10 +224,10 @@ const CustomTableHeader = ({ data, options }) => {
   );
 };
 
-const CustomTableBody = ({ data, options }) => {
+const CustomTableBody = ({ data, options, rowHeaderOptions }) => {
   console.log("data in body");
   console.log(data);
-  if (data == null) return <div>No data</div>;
+  const originalTable = [...data];
   const [editedData, setEditedData] = useState(data);
   const [hoveredCell, setHoveredCell] = useState({
     rowIndex: -1,
@@ -192,6 +242,13 @@ const CustomTableBody = ({ data, options }) => {
     const updatedData = [...editedData];
     //console.log(updatedData[rowIndex].homeworks[cellIndex])
     updatedData[rowIndex].homeworks[cellIndex].score = value;
+    setEditedData(updatedData);
+  };
+
+  const handleIdEdit = (rowIndex, value) => {
+    const updatedData = [...editedData];
+    //console.log(updatedData[rowIndex].homeworks[cellIndex])
+    updatedData[rowIndex].user.studentId = value;
     setEditedData(updatedData);
   };
 
@@ -240,6 +297,13 @@ const CustomTableBody = ({ data, options }) => {
     }
   };
 
+  const handleIdKeyDown = (event, rowIndex) => {
+    if (event.key === "Enter") {
+      // console.log("Data saved:", editedData[rowIndex].data[cellIndex]);
+      handleIdSaving(rowIndex, 0);
+    }
+  };
+
   const handleBlur = () => {};
 
   return (
@@ -247,21 +311,63 @@ const CustomTableBody = ({ data, options }) => {
       {data?.map((row, rowIndex) => (
         <TableRow key={`row-${row?._id}-${rowIndex}`}>
           <TableCell align={row?.align}>
-            <Stack direction="row">
-              <Avatar
-                {...stringAvatar(
-                  row?.user
-                    ? `${row?.user.lastName} ${row?.user.firstName}`
-                    : "Default Name"
-                )}
-                size="large"
-                edge="start"
-                aria-label="account of user"
+            <Stack direction="row" justifyContent="space-between">
+              {row?.user.state == 'activated' ? (
+                <Avatar
+                  {...stringAvatar(
+                    row?.user
+                      ? `${row?.user.lastName} ${row?.user.firstName}`
+                      : "Default Name"
+                  )}
+                  size="large"
+                  edge="start"
+                  aria-label="account of user"
+                />
+              ) : (
+                <Avatar
+                  size="large"
+                  edge="start"
+                  aria-label="account of user"
+                />
+              )}
+              {/* <Typography alignContent="center" sx={{ mt: 1, ml: 2 }}>
+                {row?.user.studentId}
+              </Typography> */}
+              <TextField
+                  id={`name-${rowIndex}`}
+                  value={row?.user.studentId}
+                  //inputMode="numeric"
+                  variant="standard"
+                  onChange={(e) =>
+                    handleIdEdit(rowIndex, e.target.value)
+                  }
+                  maxRows={1}
+                  sx={{
+                    minWidth: 0,
+                    maxWidth: "50%",
+                    textAlign: "center",
+                    mt: 1,
+                    input: {
+                      m: 0,
+                    },
+                  }}
+                  placeholder="MSSV"
+                  InputProps={{ disableUnderline: true, 
+                    readOnly: originalTable[rowIndex]?.user.studentId                 
+                  }}
+                  onKeyDown={(e) => handleIdKeyDown(e, rowIndex)}
+                  //onBlur={(e) => handleSaving(rowIndex, colIndex)}
+                  type="text"
+                  
+                />
+              <OptionMenu
+                actionIcon={<MoreVertIcon />}
+                options={rowHeaderOptions}
               />
-              <Typography alignContent="center" sx={{ mt: 1 }}>
-                {row?.user.firstName + " " + row?.user.lastName}
-              </Typography>
             </Stack>
+            <Typography variant="body2">
+              {row?.user.firstName + " " + row?.user.lastName}
+            </Typography>
           </TableCell>
           {row?.homeworks?.map((col, colIndex) => (
             <TableCell
@@ -294,7 +400,7 @@ const CustomTableBody = ({ data, options }) => {
                   sx={{
                     minWidth: 0,
                     maxWidth: "50%",
-                    textAlign: 'center',
+                    textAlign: "center",
                     input: {
                       m: 0,
                       color: col?.state !== "final" ? "green" : "black",
@@ -305,6 +411,7 @@ const CustomTableBody = ({ data, options }) => {
                   //onBlur={(e) => handleSaving(rowIndex, colIndex)}
                   type="text"
                   InputProps={{
+                    disableUnderline: false,
                     endAdornment: (
                       <InputAdornment
                         position="end"
@@ -334,7 +441,9 @@ const CustomTableBody = ({ data, options }) => {
                   )}
               </Stack>
               {col?.state === "pending" && col?.score && (
-                <Typography variant="body2">Draft</Typography>
+                <Typography variant="body2" sx={{ fontStyle: "italic" }}>
+                  Draft
+                </Typography>
               )}
             </TableCell>
           ))}

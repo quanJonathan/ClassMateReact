@@ -12,7 +12,7 @@ export class User {
   firstName: string;
   @Prop({required: true})
   lastName: string;
-  @Prop({ required: true, unique: true, lowercase: true })
+  @Prop({ lowercase: true })
   email: string;
   @Prop()
   password: string;
@@ -40,6 +40,9 @@ export class User {
   state: string;
   @Prop({type: [{'classId' : {type: mongoose.Schema.Types.ObjectId, ref: 'Class'}, 'role' : String}]})
   classes: {'classId': ObjectId | Class, 'role': string}[]
+
+  @Prop({unique: true})
+  studentId: string;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

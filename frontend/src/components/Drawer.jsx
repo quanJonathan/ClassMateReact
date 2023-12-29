@@ -145,8 +145,6 @@ export default function MiniDrawer({ children, page }) {
     setDialogJoinOpen(true);
   };
 
-
-
   const SidebarData = useSideNavGenerator();
 
   const isMenuOpen = Boolean(anchorEl);
@@ -243,7 +241,8 @@ export default function MiniDrawer({ children, page }) {
                 display: {
                   xs: "none",
                   ml: "auto",
-                  alignItems: "start",
+                  alignItems: "center",
+                  justifyContent: "space-evenly",
                   md: "flex",
                 },
               }}
@@ -257,7 +256,10 @@ export default function MiniDrawer({ children, page }) {
                     {...stringAvatar(
                       user
                         ? `${user.firstName} ${user.lastName}`
-                        : "Default Name"
+                        : "Default Name",
+                      {
+                        ml: 2,
+                      }
                     )}
                     size="large"
                     edge="end"

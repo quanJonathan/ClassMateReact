@@ -18,8 +18,8 @@ function stringToColor(string) {
   return color;
 }
 
-export function stringAvatar(name) {
-  console.log(name);
+export function stringAvatar(name, custom) {
+  // console.log(name);
   if (!name) return;
   name = name.toUpperCase();
   let firstName = name.split(" ")[0][0];
@@ -27,7 +27,7 @@ export function stringAvatar(name) {
   return {
     sx: {
       bgcolor: stringToColor(name),
-      mr: 2
+      ...custom
     },
     children: `${firstName}${lastName}`,
   };

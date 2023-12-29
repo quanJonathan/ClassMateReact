@@ -116,6 +116,7 @@ const Section = ({ title, data, icon, selectAll, options, sendMailAction }) => {
   );
   const currentRole = currentClass[0].role;
 
+  console.log("currentClass")
   console.log(currentClass);
 
   const handleSelectAll = () => {
@@ -189,12 +190,11 @@ const Section = ({ title, data, icon, selectAll, options, sendMailAction }) => {
               <Avatar
                 {...stringAvatar(
                   user ? `${user.firstName} ${user.lastName}` : "Default Name"
-                )}
+                , { mr: 2 })}
                 size="medium"
                 edge="end"
                 aria-label="account of current user"
                 color="inherit"
-                sx={{ mr: 2 }}
               />
 
               <ListItemText

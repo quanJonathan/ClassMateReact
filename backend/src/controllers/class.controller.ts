@@ -49,10 +49,10 @@ export class ClassController {
   }
 
   @Post('/joinClass/:classId')
-  @UseGuards(RefreshTokenGuard)
-  async joinClass(@Req() req, @Param() params : any){
+  // @UseGuards(RefreshTokenGuard)
+  async joinClass(@Body() body, @Param() params : any){
     console.log("joining class")
-    const user = req.user;
+    const user = body;
     const classId = params.classId
     return this.classService.addStudent(classId, user._id);
   }
@@ -64,6 +64,16 @@ export class ClassController {
     const user = req.user;
     const classId = params.id
     return this.classService.addStudent(classId, user._id);
+  }
+
+  @Post('/addStudents/:classId')
+  // @UseGuards(RefreshTokenGuard)
+  async addStudentsToClass(@Body() body, @Param() params: any) {
+    console.log("adding multiple user")
+    const students = body
+    console.log(students)
+    const classId = params.id
+    return this.classService.addStudentViaDocument(classId, students);
   }
 
   @Post('/removeStudent/:studentId')
