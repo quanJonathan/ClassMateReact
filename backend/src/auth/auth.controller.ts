@@ -125,6 +125,7 @@ export class AuthController {
   }
 
   @Post('/joinClassByEmail/:classId')
+  @UseGuards(RefreshTokenGuard)
   async JoinClassByEmail(@Res() response, @Body() body: { email: string,url: string }, @Param() params: any) {
     try {
       const user = await this.authService.checkUserExist(body.email);

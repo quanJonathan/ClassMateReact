@@ -17,13 +17,16 @@ import { SearchBar } from "./SearchBar";
 import { useAuth } from "../hook/useAuth";
 import { stringAvatar } from "../helpers/stringAvator";
 import { useParams } from "react-router-dom";
+import { toast } from "react-toastify";
+import axios from "axios";
 
   export default function AddPeopleDialog({ isOpen, handleClose, course, title }) {
     // const textareaRef = useRef(null)
     const {id} = useParams();
         // const [chips, setChips] = useState([]);
-   
+    const {token} = useAuth();
     const [results,setResults] = useState([]);
+    const [loading,setLoading] = useState(false);
     const {user} = useAuth();
     const copyTextAction = (text) => {
         // if (textareaRef.current) {
@@ -40,6 +43,51 @@ import { useParams } from "react-router-dom";
           }
         // }
       };
+
+      const handleSendJoiningEmail = async (email) => {
+        setLoading(true)
+       
+        const body = {
+          email: email,
+          url: `http://localhost:5173/c/join/${course?._id}`
+        };
+       
+        await axios
+        .post(`http://localhost:3001/auth/joinClassByEmail/${id}`, body, {
+          headers: {
+            Authorization: "Bearer " + token?.refreshToken,
+          },
+        })
+        .then(function (res) {
+          console.log(res);
+          setLoading(false)
+          toast.success("Send Invitation Link Successfully!");
+        })
+        .catch(function (error) {
+          if (error.response) {
+            console.log(error.response.data);
+            console.log(error.response.status);
+            console.log(error.response.headers);
+            toast.error('Send Invitation Link Failed due to :' + error.response.data);
+          } else if (error.request) {
+            // The request was made but no response was received
+            // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+            // http.ClientRequest in node.js
+            console.log(error.request);
+            toast.error('Send Invitation Link Failed');
+          } else {
+            // Something happened in setting up the request that triggered an Error
+            console.log("Error", error.message);
+            toast.error('Send Invitation Link Failed');
+    
+          }
+          console.log(error.config);
+        });
+        } 
+        
+  
+    
+    
     return (
       <div>
         <Dialog open={isOpen} onClose={handleClose}>
@@ -115,9 +163,9 @@ import { useParams } from "react-router-dom";
               />
             </ListItemButton>
 
-            <Button variant="contained" color="primary" elevation={0} sx={{
+            <Button onClick={()=>handleSendJoiningEmail(item.email)} variant="contained" color="primary" elevation={0} sx={{
                 "textTransform": "none"
-            }} disabled={item.classes.some(classObj => classObj.classId === id)}>
+            }} disabled={item.classes.some(classObj => classObj.classId === id) || loading}>
            Invite
           </Button>
           </ListItem>
