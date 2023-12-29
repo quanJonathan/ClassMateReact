@@ -27,6 +27,9 @@ import axios from "axios";
     const {token} = useAuth();
     const [results,setResults] = useState([]);
     const [loading,setLoading] = useState(false);
+
+    const role = title.slice(7);
+    console.log(role);
     const {user} = useAuth();
     const copyTextAction = (text) => {
         // if (textareaRef.current) {
@@ -49,7 +52,7 @@ import axios from "axios";
        
         const body = {
           email: email,
-          url: `http://localhost:5173/c/join/${course?._id}`
+          url: role === 'teacher' ? `http://localhost:5173/c/t/join/${course?._id}` : `http://localhost:5173/c/join/${course?._id}`
         };
        
         await axios
@@ -187,7 +190,7 @@ import axios from "axios";
             // ref={textareaRef}
             id="invitation-link"
             className="text"
-            value={`http://localhost:5173/c/join/${course?._id}`}
+            value={role === 'teacher' ? `http://localhost:5173/c/t/join/${course?._id}` : `http://localhost:5173/c/join/${course?._id}`}
             variant="outlined"
             size="small"
             InputProps={{
@@ -214,7 +217,7 @@ import axios from "axios";
         <Button variant="contained" color="primary" elevation={0} sx={{
                 "textTransform": "none"
             }}
-            onClick={()=>copyTextAction(`http://localhost:5173/c/join/${course?._id}`)}
+            onClick={()=>copyTextAction(role === 'teacher' ? `http://localhost:5173/c/t/join/${course?._id}` : `http://localhost:5173/c/join/${course?._id}`)}
             >
            Copy
           </Button>

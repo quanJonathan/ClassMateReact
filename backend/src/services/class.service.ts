@@ -116,6 +116,35 @@ export class ClassService {
     }
   }
 
+
+  async addTeacher(classId: string, studentId: ObjectId) {
+    console.log(classId)
+    const foundClass = await this.classModel.findOne({ classId: classId });
+    //console.log(foundClass)
+    if (!foundClass) {
+      throw new NotFoundException('Class not existed');
+    } else {
+      await foundClass.populate('members');
+      const user = await this.userModel.findById(studentId).populate({
+        path: 'classes.classId',
+        match: {
+          classId: classId,
+        },
+      });
+      console.log(user);
+      //console.log(foundClass)
+
+      if (user.classes.length > 0) {
+        throw new ForbiddenException('User already in the class');
+      } else {
+        foundClass.members.push(user);
+        user.classes.push({ classId: foundClass._id, role: '3000' });
+        await user.save();
+        await foundClass.save();
+      }
+    }
+  }
+
   async removeStudent(classId: string, studentId: ObjectId) {
     const foundClass = await this.classModel.findById(classId);
     if (!foundClass) {

@@ -37,6 +37,9 @@ async function getClass(classId) {
 
 export default function JoinClass() {
 const { classId } = useParams();
+const  url  = useLocation();
+
+const role = url.pathname.split('/')[2] === 't' ? 'teacher' : 'student'
 const navigate = useNavigate();
   const [result, setResult] = useState(null);
 
@@ -97,7 +100,7 @@ const navigate = useNavigate();
                     "textTransform": "none",
                     "color": "white"
                 }}
-                onClick={()=> navigate(`/c/join/verify/${result?.classId}`)}
+                onClick={()=> navigate(role ==='teacher' ? `/c/t/join/verify/${result?.classId}` :`/c/join/verify/${result?.classId}`)}
                 >
                 Continue
                 </Button>
