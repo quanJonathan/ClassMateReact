@@ -39,6 +39,6 @@ import { ClassService } from './services/class.service';
     JwtModule.register({}),
   ],
   controllers: [UserController, EmailConfirmationController, ClassController],
-  providers: [AppService, EmailConfirmationService, EmailService, ClassService],
+  providers: [AppService, EmailConfirmationService, EmailService],
 })
 export class AppModule {}
