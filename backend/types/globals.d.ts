@@ -71,7 +71,8 @@ declare global {
 
   interface Student{
     studentId: string,
-    fullName: string
+    fullName: string,
+    _id: ObjectId
   }
 
   interface UpdateHomework{

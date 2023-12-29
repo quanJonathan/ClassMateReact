@@ -28,35 +28,17 @@ import { useRef, useState } from "react";
 import ExcelUploadButton from "./UploadExcelButton";
 import DownloadExcelButton from "./DownloadExcelButton";
 import { stringAvatar } from "../helpers/stringAvator";
-import {useParams} from 'react-router-dom'
-import {useAuth} from '../hook/useAuth'
+import { useParams } from "react-router-dom";
+import { useAuth } from "../hook/useAuth";
 
 export const ClassGeneral = ({ course, user }) => {
-
-  const [excelData, setExcelData] = useState(null)
-  const {id} = useParams()
-  const {token} = useAuth()
+  const [excelData, setExcelData] = useState(null);
+  const { id } = useParams();
+  const { token } = useAuth();
   const textareaRef = useRef(null);
-  const options = [
-    {
-      icon: <InsertLink />,
-      label: "Sao chép đường liên kết mã lớp",
-      action: () =>
-        copyTextAction(`http://localhost:5173/c/join/${course?.classId}`),
-    },
-    {
-      icon: <ContentCopy />,
-      label: "Sao chép mã lớp",
-      action: () => copyTextAction(course?.classId),
-    },
-    {
-      icon: <Refresh />,
-      label: "Đặt lại mã lớp",
-      action: () => resetCodeAction(),
-    },
-  ];
 
   const copyTextAction = (text) => {
+    console.log("copying...");
     if (textareaRef.current) {
       textareaRef.current.value = text;
       textareaRef.current.select();
@@ -73,34 +55,61 @@ export const ClassGeneral = ({ course, user }) => {
 
   const resetCodeAction = () => {
     console.log("Resetting code...");
-    axios.post("http://localhost:3001/class/resetClassId");
+    //axios.post("http://localhost:3001/class/resetClassId");
   };
 
+  const options = [
+    {
+      icon: <InsertLink />,
+      label: "Sao chép đường liên kết mã lớp",
+      action: () => {
+        copyTextAction(`http://localhost:5173/c/join/${course?.classId}`);
+      },
+    },
+    {
+      icon: <ContentCopy />,
+      label: "Sao chép mã lớp",
+      action: () => {
+        copyTextAction(course?.classId);
+      },
+    },
+    {
+      icon: <Refresh />,
+      label: "Đặt lại mã lớp",
+      action: () => {
+        resetCodeAction();
+      },
+    },
+  ];
 
   const handleUpload = async (data) => {
     // Handle the uploaded data as needed
-    setExcelData(data)
-    console.log('Uploaded Excel Data:', data);
-    
-    const students = []
+    setExcelData(data);
+    console.log("Uploaded Excel Data:", data);
+
+    const students = [];
     data.forEach((row, rowIndex) => {
-      if(row != null && rowIndex > 1){
-          students.push({
-              studentId: row[1],
-              fullName: row[2] 
-          })
-      } 
+      if (row != null && rowIndex > 1) {
+        students.push({
+          studentId: row[1],
+          fullName: row[2],
+        });
+      }
     });
 
-    console.log("adding")
-    console.log(students)
+    console.log("adding");
+    console.log(students);
 
-    await axios.post(`http://localhost:3001/class/addStudents/${id}`, students, {
-      headers: {
-        Authorization: "Bearer: " + token?.refreshToken
+    await axios.post(
+      `http://localhost:3001/class/addStudents/${id}`,
+      students,
+      {
+        headers: {
+          Authorization: "Bearer: " + token?.refreshToken,
+        },
       }
-    })
-    console.log(students)
+    );
+    console.log(students);
   };
 
   const isSmallScreen = useMediaQuery("(max-width:600px)");
@@ -108,7 +117,7 @@ export const ClassGeneral = ({ course, user }) => {
     <div style={{ paddingBottom: "50px" }}>
       <textarea
         ref={textareaRef}
-        style={{ position: "absolute", left: "-9999px" }}
+        style={{ display: 'none' }}
         readOnly
       />
       <Card
@@ -138,7 +147,7 @@ export const ClassGeneral = ({ course, user }) => {
               {course?.className}
             </Typography>
           </Box>
-          <ExcelUploadButton onUpload={handleUpload}/>
+          <ExcelUploadButton onUpload={handleUpload} />
           <DownloadExcelButton />
         </CardActions>
       </Card>

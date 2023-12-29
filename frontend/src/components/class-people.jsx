@@ -116,8 +116,7 @@ const Section = ({ title, data, icon, selectAll, options, sendMailAction }) => {
   );
   const currentRole = currentClass[0].role;
 
-  console.log("currentClass")
-  console.log(currentClass);
+  // console.log("currentClass")
 
   const handleSelectAll = () => {
     if (selectAll) {

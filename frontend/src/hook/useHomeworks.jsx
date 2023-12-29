@@ -22,7 +22,7 @@ export function useHomeworks(members, homeworks) {
   //   console.log(useParams())
   // console.log(data);
 
-  console.log(homeworks);
+  // console.log(homeworks);
 
   let headers = [
     {
@@ -89,7 +89,7 @@ export function useHomeworks(members, homeworks) {
     //   });
       const allHomeworks = [...doneHomework];
 
-      console.log(member)
+      //console.log(member)
     return { user: member, align: "center", homeworks: allHomeworks };
   });
 

@@ -11,6 +11,7 @@ import { validateHashedData } from 'src/helpers/validate-hash-data';
 
 @Injectable()
 export class UserService {
+  
   constructor(@InjectModel(User.name) private userModel: Model<UserDocument>) {}
 
   async createNewLocalUser(user: User): Promise<User> {
@@ -158,6 +159,17 @@ export class UserService {
       phoneNumber: user.phoneNumber
     }})
   }
+
+  async setUserStudentId(student: Student) {
+    const acc = await this.userModel.findById(student._id)
+    if(!acc){
+      throw new NotFoundException("User not found")
+    }
+
+    acc.studentId = student.studentId
+    return await acc.save()
+  }
+
   async adminUpdate(user) {
     const u = await this.findByEmail(user.email);
     if (u.length <= 0)       
