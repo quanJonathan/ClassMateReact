@@ -16,6 +16,7 @@ import {
   ListItemText,
   Menu,
   ListItemIcon,
+  useMediaQuery
 } from "@mui/material";
 import MuiDrawer from "@mui/material/Drawer";
 import MuiAppBar from "@mui/material/AppBar";
@@ -41,7 +42,6 @@ import { stringAvatar } from "../helpers/stringAvator";
 import axios from "axios";
 
 const drawerWidth = 280;
-
 const openedMixin = (theme) => ({
   width: drawerWidth,
   transition: theme.transitions.create("width", {
@@ -59,39 +59,15 @@ const closedMixin = (theme) => ({
   overflowX: "hidden",
   width: `calc(${theme.spacing(7)} + 1px)`,
   [theme.breakpoints.up("sm")]: {
-    width: `calc(${theme.spacing(8)} + 1px)`,
+    width: `calc(${theme.spacing(8)} + 20px)`,
   },
 });
 
-const DrawerHeader = styled("div")(({ theme }) => ({
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "space-between",
-  padding: theme.spacing(0, 1),
-  // necessary for content to be below app bar
-  ...theme.mixins.toolbar,
-}));
-
-const AppBar = styled(MuiAppBar, {
-  shouldForwardProp: (prop) => prop !== "open",
-})(({ theme, open }) => ({
-  zIndex: theme.zIndex.drawer + 1,
-  transition: theme.transitions.create(["width", "margin"], {
-    easing: theme.transitions.easing.sharp,
-    duration: theme.transitions.duration.leavingScreen,
-  }),
-  ...(open && {
-    width: `calc(100% - ${drawerWidth}px)`,
-    transition: theme.transitions.create(["width", "margin"], {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.enteringScreen,
-    }),
-  }),
-}));
-
-const Drawer = styled(MuiDrawer, {
-  shouldForwardProp: (prop) => prop !== "open",
-})(({ theme, open }) => ({
+const Drawer = styled(MuiDrawer, 
+//   {
+//   shouldForwardProp: (prop) => prop !== "open",
+// }
+)(({ theme, open }) => ({
   width: drawerWidth,
   flexShrink: 0,
   whiteSpace: "nowrap",
@@ -106,11 +82,42 @@ const Drawer = styled(MuiDrawer, {
   }),
 }));
 
+
+const AppBar = styled(MuiAppBar, {
+  shouldForwardProp: (prop) => prop !== "open",
+})(({ theme, open }) => ({
+  zIndex: theme.zIndex.drawer + (true ? 1 : 0),
+  transition: theme.transitions.create(["width", "margin"], {
+    easing: theme.transitions.easing.sharp,
+    duration: theme.transitions.duration.leavingScreen,
+  }),
+  // ...(open && {
+  //   width: `calc(100% - ${drawerWidth}px)`,
+  //   transition: theme.transitions.create(["width", "margin"], {
+  //     easing: theme.transitions.easing.sharp,
+  //     duration: theme.transitions.duration.enteringScreen,
+  //   }),
+  // }),
+}));
+
+const DrawerHeader = styled("div")(({ theme }) => ({
+display: "flex",
+alignItems: "center",
+justifyContent: "space-between",
+padding: theme.spacing(0, 1),
+// necessary for content to be below app bar
+...theme.mixins.toolbar,
+}));
+
+
+
 export default function MiniDrawer({ children, page }) {
+  const lgUp = useMediaQuery((theme) => theme.breakpoints.up('lg'));
+
   const { logout, isAuthenticated, user } = useAuth();
   // console.log(user);
   const theme = useTheme();
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
   const [isDialogAddOpen, setDialogAddOpen] = useState(false);
   const [isDialogJoinOpen, setDialogJoinOpen] = useState(false);
@@ -119,7 +126,8 @@ export default function MiniDrawer({ children, page }) {
   // console.log(location)
 
   const handleProfileMenuOpen = (event) => {
-    setAnchorEl(event.currentTarget);
+    setAnchorEl(event.target);
+    console.log(event.target);
   };
 
   const handleDrawerOpenClose = () => {
@@ -154,7 +162,7 @@ export default function MiniDrawer({ children, page }) {
   };
 
   const menuId = "primary-search-account-menu";
-  const renderMenu = (
+  const renderMenu =(anchorEl) => (
     <MenuComponent
       anchorEl={anchorEl}
       anchorOrigin={{
@@ -194,10 +202,11 @@ export default function MiniDrawer({ children, page }) {
         handleClose={() => setDialogJoinOpen(false)}
       />
       <AppBar
-        position="absolute"
-        elevation={4}
+        position={true ? "fixed" : "absolute"}
+        elevation={1}
         open={open}
         sx={{
+          height: "70px",
           bgcolor: "#FFF",
           color: "#2f2f2f",
         }}
@@ -231,7 +240,7 @@ export default function MiniDrawer({ children, page }) {
                   onClick={() => navigate(`/c/${children?.classId?._id}`)}
                   sx={{ fontSize: "15px" }}
                 >
-                  > {children?.className}
+                  {`> ${children?.className}`}
                 </Link>
               </Breadcrumbs>
             </Stack>
@@ -275,11 +284,11 @@ export default function MiniDrawer({ children, page }) {
             </Box>
           </Toolbar>
         </Container>
-        {renderMenu}
+        {renderMenu(anchorEl)}
       </AppBar>
-      <Drawer variant="permanent" open={open}>
+      <Drawer variant={lgUp ? "permanent" : "temporary"} open={open} onClose={handleDrawerOpenClose}>
         <Toolbar />
-        <DrawerHeader>
+        <DrawerHeader sx={{paddingTop: '10%'}}>
           {isAuthenticated() && open && (
             <IconButton
               size="large"
@@ -291,7 +300,7 @@ export default function MiniDrawer({ children, page }) {
             </IconButton>
           )}
           <IconButton onClick={handleDrawerOpenClose}>
-            {theme.direction === "rtl" ? <ChevronRight /> : <ChevronLeft />}
+            {!open ? <ChevronRight /> : <ChevronLeft />}
           </IconButton>
         </DrawerHeader>
         <Divider />

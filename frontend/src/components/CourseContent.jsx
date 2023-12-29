@@ -1,5 +1,5 @@
 import { useClass } from "../hook/useClass";
-import { Divider, Paper, Tab, Tabs } from "@mui/material";
+import { Divider, Paper, Tab, Tabs, useMediaQuery } from "@mui/material";
 import { ClassGeneral } from "../components/class-general";
 import { ClassGrade } from "../components/class-grade";
 import { ClassPeople } from "../components/class-people";
@@ -10,6 +10,7 @@ import { useState } from "react";
 import { Box } from "@mui/system";
 import { useActionData } from "react-router-dom";
 import { useAuth } from "../hook/useAuth";
+import { alpha } from '@mui/material/styles';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -64,15 +65,30 @@ const CourseContent = () => {
   const maxTabWidth = Math.max(...tabLabels.map((label) => label.length));
 
   console.log(course);
+  const lgUp = useMediaQuery((theme) => theme.breakpoints.up('lg'));
+
   return (
-    <Box sx={{ borderBottom: 1, borderColor: "divider", mt: 6, boxShadow: 'none' }} elevation={0}>
+    <Box sx={{ borderBottom: 1, borderColor: "divider", mt: 6, boxShadow: 'none'}} elevation={0}>
       {isLoading ? (
         <Spinner />
       ) : (
+        <Box 
+        sx={{position: 'sticky', width: "100%",
+        bgcolor: 'white',
+        zIndex: 1,
+        backgroundColor: (theme) => alpha(theme.palette.background.default, 0.6),
+        backdropFilter: 'blur(6px)',
+        borderBottom: '0px solid rgba(0,0,0,0.3)',
+        }}>
         <Tabs
           value={value}
           onChange={handleChange}
-          sx={{ ml: 3 }}
+          sx={{
+            '& button:focus': {
+              outline: 'none',
+            },
+            
+           }}
           variant="scrollable"
           scrollButtons="auto"
         >
@@ -83,7 +99,7 @@ const CourseContent = () => {
               style={{ minWidth: `${maxTabWidth}ch` }}
             />
           ))}
-        </Tabs>
+        </Tabs></Box>
       )}
       <Divider
         variant="middle"
