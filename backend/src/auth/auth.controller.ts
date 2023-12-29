@@ -126,17 +126,26 @@ export class AuthController {
 
   @Post('/joinClassByEmail/:classId')
   async JoinClassByEmail(@Res() response, @Body() body: { email: string,url: string }, @Param() params: any) {
-    const user = await this.authService.checkUserExist(body.email);
+    try {
+      const user = await this.authService.checkUserExist(body.email);
 
-    if (user) {
-      //console.log(user);
-      const sendEmail =
-        await this.emailConfirmationService.sendJoinClassLink(user, body.url,params.classId);
-      if (sendEmail) {
+      if (user) {
+        await this.emailConfirmationService.sendJoinClassLink(user, body.url, params.classId);
+
         return response.status(HttpStatus.ACCEPTED).json({
-          sendEmail,
+          message: 'Email sent successfully.',
+        });
+      } else {
+        return response.status(HttpStatus.NOT_FOUND).json({
+          message: 'User not found.',
         });
       }
+    } catch (error) {
+      console.error('Error sending email:', error);
+
+      return response.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
+        message: 'Failed to send email.',
+      });
     }
   }
 
