@@ -43,14 +43,19 @@ export const ClassPeople = (props) => {
   const [open, setOpen] = useState(false);
   const [title, setTitle] = useState("Invite student");
 
-  const studentOptions = (studentId) => [
+  // const studentOptions = (studentId) => [
+  //   {
+  //     label: "Delete",
+  //     action: () => handleDelete(studentId),
+  //   },
+  // ];
+
+  const studentOptions =  [
     {
       label: "Delete",
-      action: () => handleDelete(studentId),
+      action: () => {}
     },
   ];
-
-
   const  handleDelete = async (studentId) =>{
     try {
       console.log(studentId + "check");
@@ -190,7 +195,10 @@ const Section = ({ title, data, icon, selectAll, options, sendMailAction }) => {
               user?._id !== item._id &&
               currentRole == "3000" && (
                 <OptionMenu
-                  options={options(item._id)}
+                  options={options ?? [{
+                    label: '',
+                    action: ()=>{}
+                  }]}
                   actionIcon={<MoreVert />}
                   key={item._id}
                 />
