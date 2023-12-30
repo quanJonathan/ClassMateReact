@@ -14,11 +14,13 @@ import {
   Avatar,
   ListItemButton,
   ListItemAvatar,
+  Button,
 } from "@mui/material";
 import {
   AccountCircleOutlined,
   More as MoreIcon,
   MoreVert,
+  PersonRemoveAlt1Outlined,
 } from "@mui/icons-material";
 import PersonAddAlt1OutlinedIcon from "@mui/icons-material/PersonAddAlt1Outlined";
 import { useAuth } from "../hook/useAuth";
@@ -34,11 +36,8 @@ import { toast } from "react-toastify";
 
 export const ClassPeople = (props) => {
   const { students, teachers, course } = props;
-  const [selectAll, setSelectAll] = useState(false);
-  const { token } = useAuth();
-  const handleSelectAll = () => {
-    setSelectAll(!selectAll);
-  };
+
+ 
 
   const [open, setOpen] = useState(false);
   const [title, setTitle] = useState("Invite student");
@@ -50,34 +49,7 @@ export const ClassPeople = (props) => {
   //   },
   // ];
 
-  const studentOptions =  [
-    {
-      label: "Delete",
-      action: () => {}
-    },
-  ];
-  const  handleDelete = async (studentId) =>{
-    try {
-      console.log(studentId + "check");
-      await axios.post(
-        `http://localhost:3001/class/removeStudent/${studentId}`,
-        {
-          class: {
-            id: course?._id
-          }
-        },
-        {
-          headers: {
-            Authorization: "Bearer " + token.refreshToken,
-          }
-        }
-      );
-      
-    } catch (error) {
-      console.error("Remove student failed:", error);
-      toast.error("Remove student failed");
-    }
-  }
+
 
   const openSendMailModal = (title) => {
     setOpen(true);
@@ -106,16 +78,15 @@ export const ClassPeople = (props) => {
           <Section
             title="Teachers"
             data={teachers}
+            course={course}
             icon={<PersonAddAlt1OutlinedIcon />}
-            selectAll={selectAll}
             sendMailAction={() => sendMailForTeacher()}
           />
           <Section
             title="Students"
             data={students}
+            course={course}
             icon={<PersonAddAlt1OutlinedIcon />}
-            selectAll={selectAll}
-            options={studentOptions}
             sendMailAction={() => sendMailForStudent()}
           />
         </Container>
@@ -124,8 +95,39 @@ export const ClassPeople = (props) => {
   );
 };
 
-const Section = ({ title, data, icon, selectAll, options, sendMailAction }) => {
+const Section = ({ title, data, icon, sendMailAction, course }) => {
+  
+  const { token } = useAuth();
+
   const [selectedItems, setSelectedItems] = useState([]);
+  const [selectAll, setSelectAll] = useState(false);
+  const studentOptions = (studentId)=> [
+    {
+      label: "Delete",
+      action: () => handleDelete(studentId)
+    },
+  ]
+
+  
+  const  handleDelete = async (studentId) =>{
+    try {
+      console.log(studentId + "check");
+      await axios.post(
+        `http://localhost:3001/class/removeStudent/${studentId}`,
+        {
+            id: course?._id
+        },
+        {
+          headers: {
+            Authorization: "Bearer " + token.refreshToken,
+          }
+        }
+      )
+    } catch (error) {
+      console.error("Remove student failed:", error);
+      toast.error("Remove student failed");
+    }
+  }
   const { id } = useParams();
 
   const handleToggle = (item) => {
@@ -150,8 +152,10 @@ const Section = ({ title, data, icon, selectAll, options, sendMailAction }) => {
 
   // console.log("currentClass")
 
-  const handleSelectAll = () => {
+  const getSelectedAll = () => {
+    setSelectAll(!selectAll);
     if (selectAll) {
+     
       setSelectedItems([]);
     } else {
       setSelectedItems([...data]);
@@ -161,7 +165,17 @@ const Section = ({ title, data, icon, selectAll, options, sendMailAction }) => {
   return (
     <Box sx={{ mb: 4 }}>
       <Box display="flex" justifyContent="space-between">
-        <Typography variant="h5" component="div" sx={{ flexGrow: 1 }}>
+      {currentRole == "3000" && (
+          <Checkbox
+          edge="start"
+          tabIndex={-1}
+          disableRipple
+          onChange={getSelectedAll}
+          checked={selectAll}
+            />
+            )}
+        
+        <Typography variant="h5" component="div" sx={{ flexGrow: 1, display: "flex", alignItems: "center" }}>
           {title}
         </Typography>
         {currentRole == "3000" && (
@@ -171,6 +185,7 @@ const Section = ({ title, data, icon, selectAll, options, sendMailAction }) => {
                 {data?.length} student {data?.length > 1 && "s"}
               </Typography>
             )} */}
+            <IconButton ><PersonRemoveAlt1Outlined/></IconButton>
             <IconButton onClick={sendMailAction}>{icon}</IconButton>
           </>
         )}
@@ -195,7 +210,7 @@ const Section = ({ title, data, icon, selectAll, options, sendMailAction }) => {
               user?._id !== item._id &&
               currentRole == "3000" && (
                 <OptionMenu
-                  options={options ?? [{
+                  options={studentOptions(item._id) ?? [{
                     label: '',
                     action: ()=>{}
                   }]}

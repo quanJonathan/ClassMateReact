@@ -200,7 +200,7 @@ export class ClassService {
       console.log(user);
       if (user.classes.length > 0) {
         user.classes = user.classes.filter(
-          (c) => (c.classId as Class).classId !== foundClass.classId,
+          (c) => { c.classId.toString()   !== foundClass.classId  }
         );
         foundClass.members = foundClass.members.filter(
           (member) =>
