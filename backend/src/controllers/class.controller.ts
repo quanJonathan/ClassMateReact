@@ -88,11 +88,11 @@ export class ClassController {
   }
 
   @Post('/removeStudent/:studentId')
-  @UseGuards(RefreshTokenGuard, RolesGuard)
-  @Roles(UserRoles.admin, UserRoles.teacher)
-  async removeStudent(@Req() req, @Param() params: any) {
-    const classObject = req.class;
-    return this.classService.removeStudent(classObject.id, params.studentId);
+  // @UseGuards(RefreshTokenGuard, RolesGuard)
+  // @Roles(UserRoles.admin, UserRoles.teacher)
+  async removeStudent(@Req() req, @Body() body: { id: string}, @Param() params: any) {
+    console.log(body.id);
+    return this.classService.removeStudent(body.id, params.studentId);
   }
 
   @Post('/updateComposition/:id')

@@ -233,7 +233,7 @@ const Section = ({ title, data, icon, selectAll, options, sendMailAction }) => {
 
               <ListItemText
                 primary={item.firstName + " " + item.lastName}
-                sx={{ flexGrow: 1, fontWeight: "bold" }}
+                sx={{ flexGrow: 1, fontWeight: "bold", ml: 2 }}
               />
             </ListItemButton>
           </ListItem>
