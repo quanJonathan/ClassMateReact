@@ -45,7 +45,7 @@ const CourseContent = () => {
   // console.log(teachers)
   // console.log(students)
   const currentClassOfUser = user?.classes?.find((it) => it.classId.classId === course?.classId)
-  console.log("currentClass" + currentClassOfUser)
+  // console.log("currentClass" + currentClassOfUser)
 
   const currentRole = currentClassOfUser?.role
   //console.log(currentRole)
@@ -64,7 +64,7 @@ const CourseContent = () => {
 
   const maxTabWidth = Math.max(...tabLabels.map((label) => label.length));
 
-  console.log(course);
+   console.log(course);
   const lgUp = useMediaQuery((theme) => theme.breakpoints.up('lg'));
 
   return (

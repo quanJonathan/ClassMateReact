@@ -159,16 +159,16 @@ export class AuthController {
   @Post('profile/update')
   @UseGuards(RefreshTokenGuard)
   async updateData(@Res() response, @Body() user: User) {
-    console.log(user)
+    // console.log(user)
     const result = await this.userService.update(user);
-    console.log(result);
+    // console.log(result);
     return response.status(HttpStatus.ACCEPTED).json(result);
   }
 
   @Post('setUserStudentId')
   @UseGuards(RefreshTokenGuard)
   async setStudentId(@Res() response, @Body() student: Student){
-    console.log(student)
+    // console.log(student)
     const result = await this.userService.setUserStudentId(student);
     return response.status(HttpStatus.ACCEPTED).json(result);
   }

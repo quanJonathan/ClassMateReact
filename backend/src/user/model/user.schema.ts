@@ -43,6 +43,9 @@ export class User {
 
   @Prop({unique: true})
   studentId: string;
+
+  @Prop({ type: mongoose.Schema.Types.ObjectId, auto: true })
+  _id: mongoose.Types.ObjectId;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
