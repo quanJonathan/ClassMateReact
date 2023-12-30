@@ -103,6 +103,12 @@ export class UserService {
     return find;
   }
 
+  async findByStudentID(id: string): Promise<User[]> {
+    const find = await this.userModel.find({studentId: id}).lean().exec();
+    // console.log(find);
+    return find;
+  }
+
   async findByToken(token: string): Promise<User[]> {
     const find = await this.userModel.find({refreshToken: token}).lean().exec();
     //console.log(find);
@@ -171,8 +177,8 @@ export class UserService {
   }
 
   async adminUpdate(user) {
-    const u = await this.findByEmail(user.email);
-    if (u.length <= 0)       
+    const u = await this.findOneById(user._id);
+    if (!u)       
     {
       console.log('User not found')
       return;
@@ -184,7 +190,7 @@ export class UserService {
       const passwordValidation = true;
       if (!passwordValidation) {
         console.log('Password Incorrect')
-        return await this.userModel.findOneAndUpdate({email: user.email}, {$set: {
+        return await this.userModel.findOneAndUpdate({_id: user._id}, {$set: {
           firstName: user.firstName,
           lastName: user.lastName,
           address: user.address,
@@ -193,19 +199,23 @@ export class UserService {
       }
       pass = await hashData(user.newPassword);
       console.log(pass)
-      return await this.userModel.findOneAndUpdate({email: user.email}, {$set: {
+      return await this.userModel.findOneAndUpdate({_id: user._id}, {$set: {
         firstName: user.firstName,
         lastName: user.lastName,
         address: user.address,
         phoneNumber: user.phoneNumber,
+        email: user.email,
+        studentId: user.studentId,
         password: pass
       }})
     }
-    return await this.userModel.findOneAndUpdate({email: user.email}, {$set: {
+    return await this.userModel.findOneAndUpdate({_id: user._id}, {$set: {
       firstName: user.firstName,
       lastName: user.lastName,
       address: user.address,
       phoneNumber: user.phoneNumber,
+      email: user.email,
+      studentId: user.studentId,
     }})
   }
 
@@ -228,7 +238,8 @@ export class UserService {
 
   async createUserByAdmin(user: User): Promise<User> {
 
-    const userExists = await this.userModel.findOne({email: user.email}).exec();
+    const userExists = await this.userModel.findOne(
+      user.email ? {email: user.email} : {studentId: user.studentId}).exec();
 
     if(userExists){
       throw new BadRequestException('User already exists')
@@ -247,7 +258,8 @@ export class UserService {
       address: user.address,
       phoneNumber: user.phoneNumber,
       photo: user.photo,
-      state: userStateEnum.activated
+      state: userStateEnum.activated,
+      studentId: user.studentId
     })
     return await newUser.save();
   }
