@@ -79,7 +79,8 @@ declare global {
     _id: ObjectId,
     memberId: ObjectId,
     score: number,
-    state: gradingStateEnum
+    state: gradingStateEnum,
+    studentId: string
   }
 
 }

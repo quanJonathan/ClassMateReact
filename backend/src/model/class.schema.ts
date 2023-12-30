@@ -23,6 +23,8 @@ export class Class {
  accessLink?: string;
  @Prop({type: [{type: mongoose.Types.ObjectId, ref: 'GradeComposition'}]})
  compositions: GradeComposition[];
+ @Prop({ type: mongoose.Schema.Types.ObjectId, auto: true })
+ _id: mongoose.Types.ObjectId;
 }
 
 export const ClassSchema = SchemaFactory.createForClass(Class);

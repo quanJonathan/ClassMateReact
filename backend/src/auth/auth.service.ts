@@ -144,7 +144,7 @@ export class AuthService {
     );
     return tokens;
     } catch(BadRequestException) {
-      console.log('error created')
+      // console.log('error created')
       return 'error';
     }
   }

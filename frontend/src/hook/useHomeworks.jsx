@@ -27,7 +27,7 @@ export function useHomeworks(members, homeworks) {
   let headers = [
     {
       sortingField: true,
-      align: "",
+      align: "justify",
     },
   ];
 

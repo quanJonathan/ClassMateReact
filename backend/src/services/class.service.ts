@@ -41,7 +41,7 @@ export class ClassService {
       })
       .exec();
 
-    console.log(classObject)
+    // console.log(classObject);
     return classObject;
   }
 
@@ -64,7 +64,7 @@ export class ClassService {
   async addClass(classObject: Class): Promise<Class | any> {
     const classId = generateString(6);
     const newClass = { ...classObject, classId: classId };
-    console.log(newClass);
+    // console.log(newClass);
     return await this.classModel.create(newClass);
   }
 
@@ -89,8 +89,8 @@ export class ClassService {
 
   async addStudentViaDocument(id: ObjectId, students: [Student]) {
     const classObject = this.classModel.findById(id);
-    if(classObject == null){
-      throw new NotFoundException("Class not found");
+    if (classObject == null) {
+      throw new NotFoundException('Class not found');
     }
 
     const saveStudents = students.map((s) => {
@@ -138,7 +138,7 @@ export class ClassService {
           classId: classId,
         },
       });
-      console.log(user);
+      // console.log(user);
       //console.log(foundClass)
 
       if (user.classes.length > 0) {
@@ -227,7 +227,7 @@ export class ClassService {
     const homeworks = await this.homeworkModel
       .find({ courseId: classId })
       .exec();
-    console.log(homeworks);
+    // console.log(homeworks);
     return homeworks;
   }
 
@@ -235,7 +235,7 @@ export class ClassService {
     const classObject = await this.classModel.findById(id);
 
     const objectId = new mongoose.Types.ObjectId(id);
-    console.log('adding homework');
+    // console.log('adding homework');
 
     const newHomework = new this.homeworkModel({
       doneMembers: homework.doneMembers,
@@ -253,28 +253,98 @@ export class ClassService {
     return await newHomework.save();
   }
 
-  async returnHomework(homework: UpdateHomework, id: ObjectId) {
-    const foundHomework = await this.homeworkModel.findById(homework._id);
+  async returnHomework(classId: ObjectId, homeworkId: ObjectId, userId: ObjectId) {
+    const foundHomework = await this.homeworkModel.findById(homeworkId);
     if (foundHomework === null) {
       throw new NotFoundException(
         'The homework is either deleted or not found',
       );
     }
 
-    const foundUser = await this.userModel.findById(homework.memberId).exec();
-    console.log(foundUser);
+    const foundUser = await this.userModel.findById(userId).exec();
+    // console.log(foundUser);
 
     const updateUser = foundHomework.doneMembers.find((member) => {
-      console.log(member.memberId);
+      // console.log(member.memberId);
       return (
         (member.memberId as ObjectId).toString() == foundUser._id.toString()
       );
     });
-    console.log(foundHomework);
-    console.log(updateUser);
+    // console.log(foundHomework);
+    // console.log(updateUser);
 
     updateUser.state = 'final';
-    foundHomework.save();
+    return await foundHomework.save();
+  }
+
+  async updateHomeworkScore(
+    classId: ObjectId,
+    newData: [UpdateHomework],
+    homeworkId: ObjectId,
+  ) {
+    const classObject = await this.classModel.findById(classId);
+
+    if (!classObject) {
+      throw new NotFoundException('Class is either deleted or not existed');
+    }
+
+    const foundHomework = await this.homeworkModel.findById(homeworkId);
+
+    if (!foundHomework) {
+      throw new NotFoundException('Homework is either removed or not existed');
+    }
+
+    await classObject.populate({
+      path: 'members',
+      select: '_id studentId',
+    });
+    // console.log(classObject)
+
+    await foundHomework.populate({
+      path: 'doneMembers.memberId doneMembers.state doneMembers.score',
+    });
+
+    // console.log(foundHomework.doneMembers);
+
+    const newDoneMembers = newData?.map((h) => {
+      const { score, studentId, ...other } = h;
+
+      console.log(studentId)
+      const currentUser = classObject.members.find(
+        (m) => m?.studentId == studentId.toString(),
+      );
+
+      // console.log(currentUser)
+
+      const foundUserInHomework = foundHomework.doneMembers.find((m) => {
+        return ((m.memberId as User)?._id).equals(currentUser?._id);
+      });
+
+      console.log(foundUserInHomework)
+
+      let returnData;
+      if (foundUserInHomework) {
+        returnData = {
+          state: foundUserInHomework?.state,
+          score: score,
+          memberId: foundUserInHomework?.memberId,
+        }
+      } else {
+        returnData = {
+          state: 'pending',
+          score: score,
+          memberId: currentUser?._id
+        }
+      }
+      return returnData;
+    });
+
+    
+    newDoneMembers.filter((n) => n != null)
+    // console.log(newDoneMembers);
+    foundHomework.doneMembers = newDoneMembers
+    // console.log(foundHomework.doneMembers)
+    return await foundHomework.save();
   }
 
   async updateHomework(newData: UpdateHomework, id: ObjectId) {
@@ -286,16 +356,16 @@ export class ClassService {
     }
 
     const foundUser = await this.userModel.findById(newData.memberId).exec();
-    console.log(foundUser);
+    // console.log(foundUser);
 
     const updateUser = foundHomework.doneMembers.find((member) => {
-      console.log(member.memberId);
+      // console.log(member.memberId);
       return (
         (member.memberId as ObjectId).toString() == foundUser._id.toString()
       );
     });
-    console.log(foundHomework);
-    console.log(updateUser);
+    // console.log(foundHomework);
+    // console.log(updateUser);
 
     if (updateUser) {
       updateUser.score = newData.score;

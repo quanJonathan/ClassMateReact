@@ -73,46 +73,34 @@ const ExcelLikeTable = ({ headers, rows }) => {
     },
   ];
 
-  const handleClose = () => {
-    console.log("Closing");
+  const constructDownloadData = (index) => {
+    const sampleData = [["studentId", "grade"]];
+    for (const row of rows) {
+      // console.log(row)
+      const user = row.user;
+      const homework = row.homeworks[index - 1];
+      sampleData.push([
+        user.studentId == "" ? "Add new value" : user?.studentId.toString(),
+        homework.score == "" ? 0 : homework?.score,
+      ]);
+    }
+    return sampleData;
   };
-
-  const bodyOptions = [
-    {
-      label: "View submit homework",
-      action: () => {
-        handleClose();
-      },
-    },
-    {
-      label: "Return homework",
-      action: () => {
-        handleClose();
-      },
-    },
-    {
-      label: "Accept feedback",
-      action: () => {
-        handleClose();
-      },
-    },
-  ];
 
   return (
     <TableContainer component={Paper}>
       <Table aria-label="scoring-table" sx={{ width: "auto" }}>
-        <CustomTableHeader data={headers} />
-        <CustomTableBody
-          data={rows}
-          options={bodyOptions}
-          rowHeaderOptions={rowHeaderOptions}
+        <CustomTableHeader
+          data={headers}
+          constructDownloadData={constructDownloadData}
         />
+        <CustomTableBody data={rows} rowHeaderOptions={rowHeaderOptions} />
       </Table>
     </TableContainer>
   );
 };
 
-const CustomTableHeader = ({ data }) => {
+const CustomTableHeader = ({ data, constructDownloadData }) => {
   // console.log("data in header");
   // console.log(data);
 
@@ -126,26 +114,30 @@ const CustomTableHeader = ({ data }) => {
 
   const setData = (index) => {
     // console.log(data[index])
+    setIndexOfHomework(index);
     setCurrentHomework(data[index]);
   };
 
   const [currentHomework, setCurrentHomework] = useState(null);
+  const [indexOfHomework, setIndexOfHomework] = useState(1);
 
-  const sampleGradingData = [
-    ["studentId", "Score"],
-    ["20127600", 10],
-    ["20127004", 10],
-    ["20127128", 10],
+  let sampleGradingData = [
+    ["studentId", "grade"],
+    ["20127600", "10"],
+    ["20127004", "10"],
+    ["20127128", "10"],
   ];
 
   const headerOptions = [
     {
       label: "Download template",
-      action: () =>
+      action: () => {
+        sampleGradingData = constructDownloadData(indexOfHomework);
         handleDownload(
           sampleGradingData,
           `sampleGrading_${currentHomework?.label}.xlsx`
-        ),
+        );
+      },
     },
     {
       label: "Upload grade",
@@ -165,34 +157,38 @@ const CustomTableHeader = ({ data }) => {
   const handleUploadAndUpdate = async (data, homework) => {
     const scoringDetail = [];
 
-    console.log(data)
+    console.log(homework);
     let isDataValid = true;
+
     data[1]?.forEach((col, colIndex) => {
-      if (col != sampleGradingData[colIndex]) {
+      // console.log(col)
+      // console.log(sampleGradingData[0])
+      if (colIndex > 0 && col != sampleGradingData[0][colIndex - 1]) {
         isDataValid = false;
       }
     });
 
     if (isDataValid) {
       data?.map((row, rowIndex) => {
+        console.log(row);
         if (row && rowIndex > 1) {
-          const studentId = row[0];
-          const score = row[1];
+          const studentId = row[1];
+          const score = row[2];
 
           if (studentId) {
             scoringDetail.push({
-              studentId: studentId,
+              studentId: studentId.toString(),
               score: score == "" ? 0 : score,
             });
           }
         }
       });
 
-      // console.log(data)
+      console.log(scoringDetail);
 
       try {
         const response = await axios.post(
-          `http://localhost:3001/class/updateAssignmentScore/${id}/a/${homework._id}`,
+          `http://localhost:3001/class/updateHomeworkScore/${id}/a/${homework.id}`,
           scoringDetail,
           {
             headers: {
@@ -201,7 +197,7 @@ const CustomTableHeader = ({ data }) => {
           }
         );
 
-        if (response.status == 202) {
+        if (response.status == '202') {
           toast.success(response.statusText);
         } else {
           toast.error(response.statusText);
@@ -209,22 +205,28 @@ const CustomTableHeader = ({ data }) => {
       } catch (e) {
         toast.error(e.toString());
       }
-    }else{
-      toast.error("Wrong format!!!, please follow sample file.")
+    } else {
+      toast.error("Wrong format!!!, please follow sample file.");
     }
   };
 
-  async function handleFileChange(e, rowIndex) {
+  async function handleFileChange(e, rowIndex, data) {
     const file = e.target.files[0];
 
     const workbook = new ExcelJS.Workbook();
-    await workbook.xlsx.load(file);
+    try {
+      await workbook.xlsx.load(file);
 
-    const worksheet = workbook.worksheets[0];
-    const excelData = worksheet.getSheetValues();
-    // console.log(excelData)
-
-    handleUploadAndUpdate(excelData, data[rowIndex]);
+      const worksheet = workbook.worksheets[0];
+      const excelData = worksheet.getSheetValues();
+      // console.log(excelData)
+      console.log(data);
+      handleUploadAndUpdate(excelData, data);
+    } catch (error) {
+      toast.error(error.toString());
+    } finally {
+      console.log("Excel file closed.");
+    }
   }
 
   return (
@@ -276,7 +278,7 @@ const CustomTableHeader = ({ data }) => {
                   id={`fileInput-${row?.id}`}
                   accept=".xlsx, .xls"
                   style={{ display: "none" }}
-                  onChange={(e) => handleFileChange(e, rowIndex)}
+                  onChange={(e) => handleFileChange(e, rowIndex, row)}
                 />
                 <Stack direction="column">
                   <Typography
@@ -313,7 +315,7 @@ const CustomTableHeader = ({ data }) => {
   );
 };
 
-const CustomTableBody = ({ data, options, rowHeaderOptions }) => {
+const CustomTableBody = ({ data, rowHeaderOptions }) => {
   // console.log("data in body");
   // console.log(data);
   const initialEditableStates = data?.map((d) => d.user.studentId == "");
@@ -329,8 +331,66 @@ const CustomTableBody = ({ data, options, rowHeaderOptions }) => {
   const { token } = useAuth();
   const { id } = useParams();
 
+  const handleClose = () => {
+    console.log("Closing");
+  };
+
+  const returnHomework = async () => {
+    try {
+      const response = await axios.post(
+        `http://localhost:3001/class/returnHomework/${id}/a/${
+          data[hoveredCell.rowIndex].homeworks[hoveredCell.colIndex]
+        }`,
+        {
+          userId: data[hoveredCell.rowIndex].user._id,
+        },
+        {
+          headers: {
+            Authorization: "Bearer: " + token?.refreshToken,
+          },
+        }
+      );
+
+      if (response.statusText == 202) {
+        toast.success(response.statusText);
+      } else {
+        toast.error(response.statusText);
+      }
+    } catch (error) {
+      toast.error(error);
+    }
+  };
+
+  const bodyOptions = [
+    {
+      label: "View submit homework",
+      action: () => {
+        handleClose();
+      },
+    },
+    {
+      label: "Return homework",
+      action: () => {
+        returnHomework();
+      },
+    },
+    {
+      label: "Accept feedback",
+      action: () => {
+        handleClose();
+      },
+    },
+  ];
+
+  let tempScore = 0;
+
   const handleCellEdit = (rowIndex, cellIndex, value) => {
     const updatedData = [...editedData];
+
+    tempScore =
+      updatedData[rowIndex].homeworks[cellIndex].score === ""
+        ? 0
+        : updatedData[rowIndex].homeworks[cellIndex].score;
     //console.log(updatedData[rowIndex].homeworks[cellIndex])
     updatedData[rowIndex].homeworks[cellIndex].score = value;
     setEditedData(updatedData);
@@ -350,11 +410,18 @@ const CustomTableBody = ({ data, options, rowHeaderOptions }) => {
     const newValue = editedData[rowIndex].homeworks[cellIndex].score;
     const maxScore = editedData[rowIndex].homeworks[cellIndex].maxScore;
 
-    if (!newValue) return;
+    if (!newValue) {
+      return;
+    }
 
-    if (isNaN(newValue)) toast.error("Must be a number");
-    else if (newValue > maxScore || newValue < 0) {
+    if (isNaN(newValue)) {
+      toast.error("Must be a number");
+      editedData[rowIndex].homeworks[cellIndex].score = tempScore;
+      tempScore = 0;
+    } else if (newValue > maxScore || newValue < 0) {
+      editedData[rowIndex].homeworks[cellIndex].score = tempScore;
       toast.error(`Must in range 0-${maxScore}`);
+      tempScore = 0;
     } else {
       const updateData = {
         _id: editedData[rowIndex].homeworks[cellIndex]._id,
@@ -569,7 +636,7 @@ const CustomTableBody = ({ data, options, rowHeaderOptions }) => {
                   hoveredCell?.colIndex === colIndex && (
                     <OptionMenu
                       actionIcon={<MoreVertIcon />}
-                      options={options}
+                      options={bodyOptions}
                     />
                   )}
               </Stack>

@@ -32,7 +32,7 @@ export class UserController {
     await this.authService.adminSignUp(user).then((newUSer) => {
       console.log(newUSer[0])
       if (newUSer === 'error') {
-        console.log('FAIL TO CREATE' + user.email)
+        console.log('FAIL TO CREATE' + (user.email ? user.email : user.studentId))
         return response.status(HttpStatus.BAD_REQUEST).json({
           token: newUSer,
           email: user.email
@@ -46,11 +46,11 @@ export class UserController {
   }
 
   @Post('ban')
-  async BanAccount(@Res() response, @Body() user: User) {
+  async BanAccount(@Res() response, @Body() user) {
     console.log(user.email)
-    const newUSer = await this.userService.findByEmail(user.email);
-    if (newUSer.length > 0) {
-      let user = newUSer[0];
+    let newUSer = await this.userService.findOneById(user.email);
+    if (newUSer) {
+      let user = newUSer;
       console.log(user)
       if (user.state && user.state !== userStateEnum.banned)
         this.userService.updateState(user, userStateEnum.banned);

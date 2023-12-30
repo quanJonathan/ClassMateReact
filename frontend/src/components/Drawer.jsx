@@ -233,7 +233,7 @@ export default function MiniDrawer({ children, page }) {
               <Breadcrumbs
                 separator="›"
                 aria-label="breadcrumb"
-                sx={{ fontSize: "15px" }}
+                sx={{ fontSize: "25px" }}
               >
                 <Link
                   color="inherit"

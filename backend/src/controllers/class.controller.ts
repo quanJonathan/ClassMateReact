@@ -1,5 +1,16 @@
 /* eslint-disable prettier/prettier */
-import { Body, Controller, Get, Param, Post, Put, Req, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpStatus,
+  Param,
+  Post,
+  Put,
+  Req,
+  Res,
+  UseGuards,
+} from '@nestjs/common';
 import { asyncScheduler } from 'rxjs';
 import { Roles } from 'src/authorization/roles.decorator';
 import { RolesGuard } from 'src/authorization/roles.guard';
@@ -22,11 +33,10 @@ export class ClassController {
   }
 
   @Get('/getClass/:id')
-  async getById(@Param() params: any){
+  async getById(@Param() params: any) {
     //console.log("get class")
-    return this.classService.getById(params.id)
+    return this.classService.getById(params.id);
   }
-
 
   @Get('/getClassMember/:classId')
   async getMember(@Param() params: any) {
@@ -50,11 +60,10 @@ export class ClassController {
 
   @Post('/joinClass/:classId')
   // @UseGuards(RefreshTokenGuard)
-  async joinClass(@Body() body, @Param() params : any){
-    console.log("joining class")
+  async joinClass(@Body() body, @Param() params: any) {
+    // console.log("joining class")
     const user = body;
-    const classId = params.classId
-    console.log(classId)
+    const classId = params.classId;
     return this.classService.addStudent(classId, user._id);
   }
 
@@ -73,17 +82,17 @@ export class ClassController {
   @Roles(UserRoles.admin, UserRoles.teacher)
   async addStudentToClass(@Req() req, @Param() params: any) {
     const user = req.user;
-    const classId = params.id
+    const classId = params.id;
     return this.classService.addStudent(classId, user._id);
   }
 
   @Post('/addStudents/:classId')
   // @UseGuards(RefreshTokenGuard)
   async addStudentsToClass(@Body() body, @Param() params: any) {
-    console.log("adding multiple user")
-    const students = body
-    console.log(students)
-    const classId = params.id
+    // console.log("adding multiple user")
+    const students = body;
+    // console.log(students)
+    const classId = params.id;
     return this.classService.addStudentViaDocument(classId, students);
   }
 
@@ -103,36 +112,58 @@ export class ClassController {
     return this.classService.updateComposition(params.id, composition);
   }
 
-  @Post('/updateHomework/:id')
-  async updateHomework(@Body() body, @Param() params: any){
-    const newData = body
-    const id = params.id
-    console.log(id)
-    console.log(newData)
+  @Post('/updateHomeworkScore/:id/a/:homeworkId')
+  // @UseGuards(RefreshTokenGuard)
+  async updateHomeworkScore(@Body() body, @Param() params: any, @Res() response: any) {
+    console.log('Updating score');
+    const _id = params.id;
+    const homeworkId = params.homeworkId;
 
-    return this.classService.updateHomework(newData, id)
+    const homeworks = body;
+    console.log(homeworks);
+    const result = this.classService.updateHomeworkScore(
+      _id,
+      homeworks,
+      homeworkId,
+    );
+
+    if (result) {
+      return response.status(HttpStatus.OK).json('Update data successfully');
+    }
+    return response.status(HttpStatus.BAD_REQUEST).json();
   }
 
-  @Post('returnHomework/:id')
-  async returnHomework(@Body() body, @Param() params: any){
-    const _id= params.id
-    const homework = body
+  @Post('/updateHomework/:id')
+  async updateHomework(@Body() body, @Param() params: any) {
+    const newData = body;
+    const id = params.id;
+    // console.log(id)
+    // console.log(newData)
 
-    return this.classService.returnHomework(_id, homework)
+    return this.classService.updateHomework(newData, id);
+  }
+
+  @Post('/returnHomework/:id/a/:homeworkId')
+  async returnHomework(@Body() body, @Param() params: any) {
+    const _id = params.id;
+    const userId = body;
+    const homeworkId = params.homeworkId
+
+    return this.classService.returnHomework(_id, homeworkId, userId);
   }
 
   @Get('/getHomeworks/:id')
   //@UseGuards(RefreshTokenGuard)
-  async getClassHomework(@Param() params: any){
-    console.log("get homework")
-    const classId = params.id
-    return this.classService.getHomeworks(classId)
+  async getClassHomework(@Param() params: any) {
+    // console.log("get homework")
+    const classId = params.id;
+    return this.classService.getHomeworks(classId);
   }
 
   @Post('/addHomework/:id')
-  async addHomework(@Body() body, @Param() params: any){
-    const homework = body
-    const id = params.id
-    return await this.classService.addHomeWork(id, homework)
+  async addHomework(@Body() body, @Param() params: any) {
+    const homework = body;
+    const id = params.id;
+    return await this.classService.addHomeWork(id, homework);
   }
 }
