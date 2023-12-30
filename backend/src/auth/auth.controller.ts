@@ -26,6 +26,7 @@ import { FacebookOAuthGuard } from 'src/guards/facebook-oauth.guard';
 import { AuthGuard } from '@nestjs/passport';
 
 import { EmailConfirmationService } from 'src/email/emailConfirmation.service';
+import { RolesGuard } from 'src/authorization/roles.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -186,8 +187,17 @@ export class AuthController {
   @Post('profile/update')
   @UseGuards(RefreshTokenGuard)
   async updateData(@Res() response, @Body() user: User) {
+    console.log(user)
     const result = await this.userService.update(user);
     console.log(result);
+    return response.status(HttpStatus.ACCEPTED).json(result);
+  }
+
+  @Post('setUserStudentId')
+  @UseGuards(RefreshTokenGuard)
+  async setStudentId(@Res() response, @Body() student: Student){
+    console.log(student)
+    const result = await this.userService.setUserStudentId(student);
     return response.status(HttpStatus.ACCEPTED).json(result);
   }
 }

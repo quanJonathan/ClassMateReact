@@ -100,7 +100,7 @@ const SubMenu = ({ item, open }) => {
                 flexDirection: "column",
                 justifyContent: subnav ? "initial" : "center",
               }}
-              key={item.subNav}
+              key={`${item.subNav}${index}`}
             >
               <IconButton
                 sx={{

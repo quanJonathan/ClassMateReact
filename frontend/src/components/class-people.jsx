@@ -148,7 +148,7 @@ const Section = ({ title, data, icon, selectAll, options, sendMailAction }) => {
   );
   const currentRole = currentClass[0].role;
 
-  // console.log(currentClass);
+  // console.log("currentClass")
 
   const handleSelectAll = () => {
     if (selectAll) {
@@ -229,7 +229,6 @@ const Section = ({ title, data, icon, selectAll, options, sendMailAction }) => {
                 edge="end"
                 aria-label="account of current user"
                 color="inherit"
-                sx={{ mr: 2 }}
               />
 
               <ListItemText

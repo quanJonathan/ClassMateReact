@@ -6,7 +6,6 @@ import { generateString } from 'src/helpers/random-string';
 import { Class, ClassDocument } from 'src/model/class.schema';
 import { GradeComposition } from 'src/model/grade-composition.schema';
 import { Homework, HomeworkDocument } from 'src/model/homework.schema';
-import { ClassesModule } from 'src/modules/class.module';
 import { User, UserDocument } from 'src/user/model/user.schema';
 
 export class ClassService {
@@ -31,7 +30,7 @@ export class ClassService {
       .findById(id)
       .populate({
         path: 'members',
-        select: 'firstName lastName state',
+        select: 'firstName lastName state studentId',
         populate: {
           path: 'classes.classId classes.role',
           select: 'classId className',
@@ -42,7 +41,7 @@ export class ClassService {
       })
       .exec();
 
-    //console.log(classObject)
+    console.log(classObject)
     return classObject;
   }
 
@@ -86,6 +85,43 @@ export class ClassService {
         return accessLink;
       }
     }
+  }
+
+  async addStudentViaDocument(id: ObjectId, students: [Student]) {
+    const classObject = this.classModel.findById(id);
+    if(classObject == null){
+      throw new NotFoundException("Class not found");
+    }
+
+    const saveStudents = students.map((s) => {
+      const names = s.fullName.split(' ');
+      const lastName = names.pop() || '';
+      const firstName = names.join(' ');
+
+      return {
+        studentId: s.studentId,
+        lastName: lastName,
+        firstName: firstName,
+        address: '',
+        phone: '',
+        roles: ['1000'],
+        provider: 'local',
+        providerId: '',
+        refreshToken: '',
+        accessToken: '',
+        photo: '',
+        state: 'not-activated',
+        email: '',
+        classes: [
+          {
+            classId: id,
+            role: '1000',
+          },
+        ],
+      };
+    });
+
+    return await this.userModel.insertMany(saveStudents);
   }
 
   async addStudent(classId: string, studentId: ObjectId) {
@@ -146,7 +182,7 @@ export class ClassService {
   }
 
   async removeStudent(classId: string, studentId: ObjectId) {
-    const foundClass = await this.classModel.findById(classId);
+    const foundClass = await this.classModel.findOne({ classId: classId });
     if (!foundClass) {
       throw new NotFoundException('Class not existed');
     } else {
@@ -233,9 +269,8 @@ export class ClassService {
     console.log(foundHomework);
     console.log(updateUser);
 
-    updateUser.state = 'final'
-    foundHomework.save()
-    
+    updateUser.state = 'final';
+    foundHomework.save();
   }
 
   async updateHomework(newData: UpdateHomework, id: ObjectId) {

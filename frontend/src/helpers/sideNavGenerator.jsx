@@ -13,7 +13,7 @@ export function useSideNavGenerator() {
   const {user} = useAuth()
   const classes = user?.classes
 
-  console.log(user)
+  // console.log(user)
 
 
   const teaching = classes?.filter((classObject) => classObject.role === "3000");

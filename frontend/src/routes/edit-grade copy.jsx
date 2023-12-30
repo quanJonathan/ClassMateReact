@@ -24,7 +24,7 @@ const ExcelLikeTable = () => {
   const [editCellId, setEditCellId] = useState(null);
 
   const handleMenuOpen = (event, id) => {
-    console.log(id)
+    // console.log(id)
     setAnchorEl(event.currentTarget);
     setHoveredCell(id);
   };
@@ -44,7 +44,7 @@ const ExcelLikeTable = () => {
 
   const handleCellEditCommit = ({ id, field, value }) => {
     // Handle cell value change (e.g., update data in state or make an API call)
-    console.log(`Cell edited: ${id}, ${field}, ${value}`);
+    // console.log(`Cell edited: ${id}, ${field}, ${value}`);
     setEditCellId(null);
   };
 

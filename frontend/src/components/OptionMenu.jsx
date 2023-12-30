@@ -9,18 +9,20 @@ import {
 import { useRef, useState } from "react";
 
 const ITEM_HEIGHT = 60;
-
-export default function OptionMenu({ options = [], actionIcon }) {
+function OptionMenu({ options, actionIcon, onClick }) {
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
+    if(typeof onClick === 'function') onClick();
     event.stopPropagation();
   };
   const handleClose = (option) => {
     setAnchorEl(null);
-    option?.action();
-  };
+
+    if(typeof option?.action === 'function')
+      option?.action();
+    };
 
   const maxMenuWidth = Math.max(...options?.map((label) => label.length));
 
@@ -34,8 +36,6 @@ export default function OptionMenu({ options = [], actionIcon }) {
         aria-expanded={open ? "true" : undefined}
         aria-haspopup="true"
         onClick={handleClick}
-        disableRipple
-        disableTouchRipple
         sx={{p: 0}}
       >
         {actionIcon}
@@ -65,3 +65,13 @@ export default function OptionMenu({ options = [], actionIcon }) {
     </Box>
   );
 }
+
+OptionMenu.defaultProps = {
+  onClick: () => {
+    // Default action when onClick is not provided 
+    // console.log("Default clicked")
+  },
+  options: []
+};
+
+export default OptionMenu
