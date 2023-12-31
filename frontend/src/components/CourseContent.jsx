@@ -19,6 +19,7 @@ import { useActionData } from "react-router-dom";
 import { useAuth } from "../hook/useAuth";
 import { alpha } from "@mui/material/styles";
 import { Settings } from "@mui/icons-material";
+import SettingDialog from "./SettingDialog";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -48,6 +49,7 @@ TabPanel.propTypes = {
 
 const CourseContent = () => {
   const [value, setValue] = useState(0);
+  const [isDialogOpen, setDialogOpen] = useState(false)
   const { course, teachers, students, isLoading, isError } = useClass();
   const { user } = useAuth();
   // console.log(teachers)
@@ -66,6 +68,10 @@ const CourseContent = () => {
     setValue(newValue);
   };
 
+  const openModal = () => {
+    setDialogOpen(true)
+  }
+
   const tabLabels = ["General Information", "HomeWork", "People"];
 
   if (currentRole === "3000") {
@@ -78,6 +84,12 @@ const CourseContent = () => {
   const lgUp = useMediaQuery((theme) => theme.breakpoints.up("lg"));
 
   return (
+
+    <>
+    <SettingDialog
+        open={isDialogOpen}
+        handleClose={() => setDialogOpen(false)}
+      />
     <Box
       sx={{ borderBottom: 1, borderColor: "divider", mt: 6, boxShadow: "none" }}
       elevation={0}
@@ -144,6 +156,7 @@ const CourseContent = () => {
         </TabPanel>
       )}
     </Box>
+    </>
   );
 };
 
