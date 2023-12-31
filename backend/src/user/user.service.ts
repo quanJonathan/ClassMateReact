@@ -2,7 +2,7 @@
 import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { User, UserDocument } from './model/user.schema';
-import { Model } from 'mongoose';
+import { Model, ObjectId } from 'mongoose';
 import { UserRoles } from '../enum/userRole.enum';
 import { authTypeEnum } from '../enum/authType.enum';
 import { hashData } from '../helpers/hash-data';
@@ -232,8 +232,12 @@ export class UserService {
     }})
   }
 
-  async getOne(email: string): Promise<User> {
+  async getOneByEmail(email: string): Promise<User> {
     return await this.userModel.findOne({email: email}, {password: 0}).exec()
+  }
+
+  async getOneEmail(id: ObjectId): Promise<string> {
+    return (await this.userModel.findById(id)).email
   }
 
   async createUserByAdmin(user: User): Promise<User> {

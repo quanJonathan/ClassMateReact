@@ -1,7 +1,9 @@
 /* eslint-disable prettier/prettier */
 import { ForbiddenException, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
+import { genSalt } from 'bcrypt';
 import mongoose, { Model, ObjectId } from 'mongoose';
+import { hashData } from 'src/helpers/hash-data';
 import { generateString } from 'src/helpers/random-string';
 import { Class, ClassDocument } from 'src/model/class.schema';
 import { GradeComposition } from 'src/model/grade-composition.schema';
@@ -9,6 +11,7 @@ import { Homework, HomeworkDocument } from 'src/model/homework.schema';
 import { User, UserDocument } from 'src/user/model/user.schema';
 
 export class ClassService {
+  
   constructor(
     @InjectModel(Class.name) private classModel: Model<ClassDocument>,
     @InjectModel(User.name) private userModel: Model<UserDocument>,
@@ -88,10 +91,12 @@ export class ClassService {
   }
 
   async addStudentViaDocument(id: ObjectId, students: [Student]) {
-    const classObject = this.classModel.findById(id);
+    const classObject = await this.classModel.findById(id);
     if (classObject == null) {
       throw new NotFoundException('Class not found');
     }
+
+    const unifiedPass = await hashData("123456")
 
     const saveStudents = students.map((s) => {
       const names = s.fullName.split(' ');
@@ -99,28 +104,33 @@ export class ClassService {
       const firstName = names.join(' ');
 
       return {
+        _id: new mongoose.Types.ObjectId(),
         studentId: s.studentId,
         lastName: lastName,
         firstName: firstName,
+        password: unifiedPass,
+        photo: '',
         address: '',
-        phone: '',
+        phoneNumber: '',
         roles: ['1000'],
         provider: 'local',
         providerId: '',
         refreshToken: '',
         accessToken: '',
-        photo: '',
         state: 'not-activated',
         email: '',
+        createdDate: new Date(Date.now()),
         classes: [
           {
-            classId: id,
+            classId: classObject._id,
             role: '1000',
           },
         ],
       };
     });
-
+    
+    classObject.members.push(...saveStudents);
+    await classObject.save();
     return await this.userModel.insertMany(saveStudents);
   }
 
@@ -198,6 +208,14 @@ export class ClassService {
     return homeworks;
   }
 
+  async getHomeworkById(homeworkId: any): Promise<Homework> {
+    const foundHomework = await this.homeworkModel.findById(homeworkId)
+    .select('-deadline -doneMembers -components -homeworkState -_id')
+    .exec()
+
+    return foundHomework
+  }
+
   async addHomeWork(id: string, homework: Homework) {
     const classObject = await this.classModel.findById(id);
 
@@ -228,20 +246,38 @@ export class ClassService {
       );
     }
 
+    const className = (await this.classModel.findById(classId)).className
     const foundUser = await this.userModel.findById(userId).exec();
     // console.log(foundUser);
 
+    await foundHomework.populate({
+      path: "doneMembers.memberId doneMembers.state doneMembers.score",
+      select: "email _id"
+    })
     const updateUser = foundHomework.doneMembers.find((member) => {
       // console.log(member.memberId);
       return (
-        (member.memberId as ObjectId).toString() == foundUser._id.toString()
+        (member.memberId as User)._id.toString() == foundUser._id.toString()
       );
     });
     // console.log(foundHomework);
     // console.log(updateUser);
 
     updateUser.state = 'final';
-    return await foundHomework.save();
+    await foundHomework.save();
+    
+    console.log(foundHomework.courseId)
+    console.log(updateUser)
+    // console.log()
+    return {
+      user: updateUser,
+      className: className,
+      homework: {
+        state: foundHomework.homeworkState,
+        maxScore: foundHomework.maxScore,
+        name: foundHomework.name
+      }
+    }
   }
 
   async updateHomeworkScore(

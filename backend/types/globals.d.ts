@@ -34,6 +34,7 @@ declare global {
     photo: string;
     accessToken?: string;
     refreshToken?: string;
+    studentId?: string;
   }
 
   interface IFaceBookUser{
@@ -45,6 +46,7 @@ declare global {
     photo: string;
     accessToken: string;
     refreshToken: string;
+    studentId: string;
   }
 
   namespace Express {
@@ -63,10 +65,16 @@ declare global {
     refreshToken: string;
   }
 
-  interface Homework{
-    name: string,
+  interface MailUser{
+    memberId: ObjectId | User;
     score: number;
     state: string;
+  }
+
+  interface MailHomework{
+    state: string;
+    maxScore: number;
+    name: string;
   }
 
   interface Student{

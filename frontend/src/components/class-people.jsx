@@ -188,7 +188,7 @@ const Section = ({ title, data, icon, selectAll, options, sendMailAction }) => {
               )}
               <Avatar
                 {...stringAvatar(
-                  user ? `${user.firstName} ${user.lastName}` : "Default Name"
+                  item ? `${item?.firstName} ${item?.lastName}` : "Default Name"
                 , { mr: 2 })}
                 size="medium"
                 edge="end"

@@ -7,6 +7,8 @@ import EmailService from '../email/email.service';
 import { UserService } from '../user/user.service';
 import { userStateEnum } from 'src/enum/userState.enum';
 import { User } from 'src/user/model/user.schema';
+import { ObjectId } from 'mongoose';
+import { Homework } from 'src/model/homework.schema';
 
 @Injectable()
 export class EmailConfirmationService {
@@ -105,17 +107,107 @@ export class EmailConfirmationService {
     return this.emailService.sendMail(emailTemplate);
   }
 
-  public async sendReturnHomeworkLink(user: Partial<User>, homework: Homework) {
-    const email = user.email;
+  public async sendReturnHomeworkLink(user: MailUser, className: string, homework: MailHomework) {
 
-    const emailTemplate = {
-      to: email,
-      subject: `Graded: "${homework.name}"
-      `,
-      text: 'random things'
-    };
-    //console.log(emailTemplate);
-    return this.emailService.sendMail(emailTemplate);
-  }
+    if ((user.memberId as User).email) {
+      const htmlText = `
+      <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            border: 1px solid #000;
+            padding: 20px;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        header {
+            width: 100%;
+            margin-bottom: 10px; 
+        }
+        button {
+            width: 100%;
+            background: none;
+            border: none;
+            padding: 0;
+            font: inherit;
+            cursor: pointer;
+            color: inherit;
+            text-decoration: none;
+            text-align: center;
+            word-break: ellipsis;
+        }
+        h5 {
+            color: gray;
+            align-content: start;
+            margin: 0; 
+        }
+        hr {
+            color: black;
+            width: 100%;
+            margin: 10px 0; 
+        }
+        
+        h3 {
+          padding: 0;
+          margin: 0;
+        }
+        p {
+            margin: 0; 
+        }
   
+        a {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #B6A5FF;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+        
+        .container{
+          margin: 10px;
+          width: 90%;
+        }
+    </style>
+    <title>ClassMate</title>
+</head>
+<body>
+
+    <header>
+        <button type="button">${className}</button>
+    </header>
+
+    <hr>
+    <a href="" style="background-color: #000000;">${homework.name}</a>
+  
+    <div class="container">
+      <h5>Grade</h5>
+      <h3><strong>Score: ${user.score}/${homework.maxScore}</strong></h3>
+      <p>Your assignment has been graded</p>
+    </div>
+
+    <a href="https://www.example.com">View grade</a>
+
+</body>
+</html>
+      `;
+
+      
+      const emailTemplate = {
+        to: (user.memberId as User).email,
+        subject: `Graded: "${homework.name}"`,
+        html: htmlText,
+      }; 
+      return this.emailService.sendMail(emailTemplate);
+    }
+
+    //console.log(emailTemplate) 
+  }
 }
