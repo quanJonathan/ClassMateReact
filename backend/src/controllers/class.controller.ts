@@ -16,6 +16,7 @@ import { Roles } from 'src/authorization/roles.decorator';
 import { RolesGuard } from 'src/authorization/roles.guard';
 import { EmailConfirmationService } from 'src/email/emailConfirmation.service';
 import { UserRoles } from 'src/enum/userRole.enum';
+import { AccessTokenGuard } from 'src/guards/access-token.guard';
 import { RefreshTokenGuard } from 'src/guards/refresh-token.guard';
 import { ClassService } from 'src/services/class.service';
 
@@ -81,7 +82,7 @@ export class ClassController {
   }
 
   @Post('/addStudents/:classId')
-  // @UseGuards(RefreshTokenGuard)
+  @UseGuards(RefreshTokenGuard)
   async addStudentsToClass(@Body() body, @Param() params: any) {
     console.log("adding multiple user")
     const students = body;
@@ -98,16 +99,16 @@ export class ClassController {
     return this.classService.removeStudent(classObject.id, params.studentId);
   }
 
-  @Post('/updateComposition/:id')
-  @UseGuards(RefreshTokenGuard, RolesGuard)
-  @Roles(UserRoles.admin, UserRoles.teacher)
+  @Post('/updateOrAddGradeCompositions/:id')
+  // @UseGuards(RefreshTokenGuard)
   async updateComposition(@Req() req, @Param() params: any) {
-    const composition = req.composition;
-    return this.classService.updateComposition(params.id, composition);
+    console.log("Updating grade compositions")
+    const compositions = req.body;
+    return this.classService.updateComposition(params.id, compositions);
   }
 
   @Post('/updateHomeworkScore/:id/a/:homeworkId')
-  // @UseGuards(RefreshTokenGuard)
+  @UseGuards(RefreshTokenGuard)
   async updateHomeworkScore(@Body() body, @Param() params: any, @Res() response: any) {
     console.log('Updating score');
     const _id = params.id;
@@ -158,7 +159,7 @@ export class ClassController {
   }
 
   @Get('/getHomeworks/:id')
-  //@UseGuards(RefreshTokenGuard)
+  // @UseGuards(RefreshTokenGuard)
   async getClassHomework(@Param() params: any) {
     // console.log("get homework")
     const classId = params.id;

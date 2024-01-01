@@ -2,7 +2,7 @@
 import { ForbiddenException, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { genSalt } from 'bcrypt';
-import mongoose, { Model, ObjectId } from 'mongoose';
+import mongoose, { Model, Mongoose, ObjectId } from 'mongoose';
 import { hashData } from 'src/helpers/hash-data';
 import { generateString } from 'src/helpers/random-string';
 import { Class, ClassDocument } from 'src/model/class.schema';
@@ -11,11 +11,12 @@ import { Homework, HomeworkDocument } from 'src/model/homework.schema';
 import { User, UserDocument } from 'src/user/model/user.schema';
 
 export class ClassService {
-  
   constructor(
     @InjectModel(Class.name) private classModel: Model<ClassDocument>,
     @InjectModel(User.name) private userModel: Model<UserDocument>,
     @InjectModel(Homework.name) private homeworkModel: Model<HomeworkDocument>,
+    @InjectModel(GradeComposition.name)
+    private gradeCompositionModel: Model<GradeComposition>,
   ) {}
 
   async getAllClass(): Promise<Class[]> {
@@ -41,6 +42,9 @@ export class ClassService {
       })
       .populate({
         path: 'homeworks',
+      })
+      .populate({
+        path: "compositions"
       })
       .exec();
 
@@ -96,7 +100,7 @@ export class ClassService {
       throw new NotFoundException('Class not found');
     }
 
-    const unifiedPass = await hashData("123456")
+    const unifiedPass = await hashData('123456');
 
     const saveStudents = students.map((s) => {
       const names = s.fullName.split(' ');
@@ -128,7 +132,7 @@ export class ClassService {
         ],
       };
     });
-    
+
     classObject.members.push(...saveStudents);
     await classObject.save();
     return await this.userModel.insertMany(saveStudents);
@@ -193,11 +197,60 @@ export class ClassService {
 
   async updateComposition(
     classId: ObjectId,
-    GradeComposition: GradeComposition,
+    gradeCompositions: UpdateGradeComposition[],
   ) {
-    const foundCompostion = await this.classModel
-      .findById(classId)
-      .populate('compostion');
+    try {
+      const foundClass = await this.classModel
+        .findById(classId);
+
+      if (!foundClass) {
+        throw new NotFoundException('Class is not existed or deleted');
+      }
+
+      console.log(foundClass)
+
+      if(!gradeCompositions) return
+
+      console.log(gradeCompositions)
+
+      for (const gradeComposition of gradeCompositions) {
+        const existingComposition = foundClass.compositions.find((comp) =>
+          comp._id.equals(gradeComposition._id),
+        );
+
+        if (!existingComposition) {
+          const newGradeComposition = new this.gradeCompositionModel({
+            _id: new mongoose.Types.ObjectId(),
+            courseId: foundClass,
+            homeworks: [],
+            name: gradeComposition.name,
+            gradeScale: gradeComposition.gradeScale
+          });
+          console.log(newGradeComposition)
+          await newGradeComposition.save();
+          (foundClass.compositions as mongoose.Types.ObjectId[]).push(newGradeComposition._id);
+          await foundClass.save();
+        } else {
+          console.log(existingComposition);
+          if(gradeComposition.isDelete){
+            console.log("deleting")
+            foundClass.compositions = (foundClass.compositions.filter((c) => !(c._id).equals(gradeComposition._id)) as mongoose.Types.ObjectId[])
+            await this.homeworkModel.updateMany({composition: gradeComposition}, {composition: null})
+            await this.gradeCompositionModel.findOneAndDelete({_id: gradeComposition._id})
+            await foundClass.save()
+          }else{
+          await this.gradeCompositionModel.findOneAndUpdate({_id: existingComposition._id}, {
+            name: gradeComposition.name, 
+            gradeScale: gradeComposition.gradeScale
+          })
+        }
+        }
+      }
+      return gradeCompositions.filter((g) => g.isDelete == false)
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
   }
 
   async getHomeworks(classId: ObjectId): Promise<Homework | any> {
@@ -209,11 +262,12 @@ export class ClassService {
   }
 
   async getHomeworkById(homeworkId: any): Promise<Homework> {
-    const foundHomework = await this.homeworkModel.findById(homeworkId)
-    .select('-deadline -doneMembers -components -homeworkState -_id')
-    .exec()
+    const foundHomework = await this.homeworkModel
+      .findById(homeworkId)
+      .select('-deadline -doneMembers -components -homeworkState -_id')
+      .exec();
 
-    return foundHomework
+    return foundHomework;
   }
 
   async addHomeWork(id: string, homework: Homework) {
@@ -238,7 +292,11 @@ export class ClassService {
     return await newHomework.save();
   }
 
-  async returnHomework(classId: ObjectId, homeworkId: ObjectId, userId: ObjectId) {
+  async returnHomework(
+    classId: ObjectId,
+    homeworkId: ObjectId,
+    userId: ObjectId,
+  ) {
     const foundHomework = await this.homeworkModel.findById(homeworkId);
     if (foundHomework === null) {
       throw new NotFoundException(
@@ -246,14 +304,14 @@ export class ClassService {
       );
     }
 
-    const className = (await this.classModel.findById(classId)).className
+    const className = (await this.classModel.findById(classId)).className;
     const foundUser = await this.userModel.findById(userId).exec();
     // console.log(foundUser);
 
     await foundHomework.populate({
-      path: "doneMembers.memberId doneMembers.state doneMembers.score",
-      select: "email _id"
-    })
+      path: 'doneMembers.memberId doneMembers.state doneMembers.score',
+      select: 'email _id',
+    });
     const updateUser = foundHomework.doneMembers.find((member) => {
       // console.log(member.memberId);
       return (
@@ -265,9 +323,9 @@ export class ClassService {
 
     updateUser.state = 'final';
     await foundHomework.save();
-    
-    console.log(foundHomework.courseId)
-    console.log(updateUser)
+
+    console.log(foundHomework.courseId);
+    console.log(updateUser);
     // console.log()
     return {
       user: updateUser,
@@ -275,9 +333,9 @@ export class ClassService {
       homework: {
         state: foundHomework.homeworkState,
         maxScore: foundHomework.maxScore,
-        name: foundHomework.name
-      }
-    }
+        name: foundHomework.name,
+      },
+    };
   }
 
   async updateHomeworkScore(
@@ -312,7 +370,7 @@ export class ClassService {
     const newDoneMembers = newData?.map((h) => {
       const { score, studentId, ...other } = h;
 
-      console.log(studentId)
+      console.log(studentId);
       const currentUser = classObject.members.find(
         (m) => m?.studentId == studentId.toString(),
       );
@@ -323,7 +381,7 @@ export class ClassService {
         return ((m.memberId as User)?._id).equals(currentUser?._id);
       });
 
-      console.log(foundUserInHomework)
+      console.log(foundUserInHomework);
 
       let returnData;
       if (foundUserInHomework) {
@@ -331,21 +389,20 @@ export class ClassService {
           state: foundUserInHomework?.state,
           score: score,
           memberId: foundUserInHomework?.memberId,
-        }
+        };
       } else {
         returnData = {
           state: 'pending',
           score: score,
-          memberId: currentUser?._id
-        }
+          memberId: currentUser?._id,
+        };
       }
       return returnData;
     });
 
-    
-    newDoneMembers.filter((n) => n != null)
+    newDoneMembers.filter((n) => n != null);
     // console.log(newDoneMembers);
-    foundHomework.doneMembers = newDoneMembers
+    foundHomework.doneMembers = newDoneMembers;
     // console.log(foundHomework.doneMembers)
     return await foundHomework.save();
   }

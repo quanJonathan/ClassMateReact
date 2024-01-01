@@ -197,7 +197,7 @@ const CustomTableHeader = ({ data, constructDownloadData }) => {
           }
         );
 
-        if (response.status == '202') {
+        if (response.status == "202") {
           toast.success(response.statusText);
         } else {
           toast.error(response.statusText);

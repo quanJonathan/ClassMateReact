@@ -21,8 +21,8 @@ export class Class {
  homeworks: Homework[];
  @Prop({unique: true})
  accessLink?: string;
- @Prop({type: [{type: mongoose.Types.ObjectId, ref: 'GradeComposition'}]})
- compositions: GradeComposition[];
+ @Prop({type: [{type: mongoose.Schema.Types.ObjectId, ref: 'GradeComposition'}]})
+ compositions: GradeComposition[] | mongoose.Types.ObjectId[];
  @Prop({ type: mongoose.Schema.Types.ObjectId, auto: true })
  _id: mongoose.Types.ObjectId;
 }

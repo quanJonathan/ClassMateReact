@@ -5,6 +5,7 @@ import { ClassService } from 'src/services/class.service';
 import { Module } from '@nestjs/common';
 import { User, UserSchema } from 'src/user/model/user.schema';
 import { Homework, HomeworkSchema } from 'src/model/homework.schema';
+import { GradeComposition, GradeCompositionSchema } from 'src/model/grade-composition.schema';
 
 @Module({
   imports: [
@@ -12,6 +13,9 @@ import { Homework, HomeworkSchema } from 'src/model/homework.schema';
     MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
     MongooseModule.forFeature([
       { name: Homework.name, schema: HomeworkSchema },
+    ]),
+    MongooseModule.forFeature([
+      { name: GradeComposition.name, schema: GradeCompositionSchema },
     ]),
   ],
   providers: [ClassService],

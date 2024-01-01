@@ -1,5 +1,6 @@
 {
   "dependencies": {
-    "passport-facebook": "^3.0.0"
+    "passport-facebook": "^3.0.0",
+    "react-draggable-list": "^4.1.0"
   }
 }

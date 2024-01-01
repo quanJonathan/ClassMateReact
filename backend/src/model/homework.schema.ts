@@ -5,6 +5,7 @@ import { gradingStateEnum } from 'src/enum/gradeState';
 import { homeworkStateEnum } from 'src/enum/homeworkState';
 import { User } from 'src/user/model/user.schema';
 import { Class } from './class.schema';
+import { GradeComposition } from './grade-composition.schema';
 export type HomeworkDocument = Homework & Document;
 
 // Note that the classId is for shown only
@@ -58,6 +59,9 @@ export class Homework {
   // active, non-active, overdue
   @Prop({ default: homeworkStateEnum.inactive, enum: homeworkStateEnum })
   homeworkState: string;
+
+  @Prop({type: mongoose.Schema.Types.ObjectId, ref: 'GradeComposition'})
+  composition: GradeComposition
 }
 
 export const HomeworkSchema = SchemaFactory.createForClass(Homework);

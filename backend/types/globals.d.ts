@@ -1,7 +1,8 @@
 /* eslint-disable prettier/prettier */
-import { ObjectId } from 'mongoose';
+import { ObjectId, mongo } from 'mongoose';
 import { authTypeEnum } from 'src/enum/authType.enum';
 import { gradingStateEnum } from 'src/enum/gradeState';
+import { Homework } from 'src/model/homework.schema';
 import {User as UserEntity } from 'src/user/model/user.schema'
 /* eslint-disable prettier/prettier */
 declare global {
@@ -89,6 +90,15 @@ declare global {
     score: number,
     state: gradingStateEnum,
     studentId: string
+  }
+
+  interface UpdateGradeComposition{
+    _id: mongoose.Schema.Types.ObjectId,
+    courseId: Class,
+    gradeScale: number,
+    name: string,
+    homework: Homework[],
+    isDelete: boolean
   }
 
 }
