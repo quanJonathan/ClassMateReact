@@ -58,6 +58,30 @@ export class ClassController {
     return this.classService.addClass(classObject);
   }
 
+  
+  
+  @Get('/getOne/:id')
+  async getClassId(@Param() params: any) {
+    //console.log("get class")
+    //console.log(params)
+    return await this.classService.getByClassId(params.id);
+  }
+
+  @Post('/updateState/')
+  async updateState(@Body() body) {
+    console.log(body)
+    return await this.classService.updateState(body);
+  }
+
+
+  @Post('/updateState')
+  @UseGuards()
+  async update(@Body() body) {
+    const classObject = body;
+    // console.log(body)
+    return this.classService.updateState(classObject);
+  }
+
   @Post('/generateAccessLink/:id')
   async generateAndReturn(@Param() params: any) {
     return this.classService.generateAccessLink(params.id);

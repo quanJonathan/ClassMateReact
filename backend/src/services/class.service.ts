@@ -70,10 +70,24 @@ export class ClassService {
 
   async addClass(classObject: Class): Promise<Class | any> {
     const classId = generateString(6);
-    const newClass = { ...classObject, classId: classId };
+    const newClass = { ...classObject, classId: classId, state: 'active' };
     // console.log(newClass);
     return await this.classModel.create(newClass);
   }
+
+  async updateState(classObject: Class) {
+    return await this.classModel.findOneAndUpdate({classId: classObject.classId}, {$set: {
+      state: classObject.state,
+    }})
+  }
+
+
+    
+  async getByClassId(classId: ObjectId): Promise<Class | any> {
+    return await this.classModel
+    .findOne({ classId: classId })
+    }
+
 
   async generateAccessLink(id: ObjectId): Promise<string> {
     const foundClass = await this.classModel.findById(id);

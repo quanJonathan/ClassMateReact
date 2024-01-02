@@ -25,6 +25,8 @@ export class Class {
  compositions: GradeComposition[] | mongoose.Types.ObjectId[];
  @Prop({ type: mongoose.Schema.Types.ObjectId, auto: true })
  _id: mongoose.Types.ObjectId;
+ @Prop()
+ state?: string; // active and inactive
 }
 
 export const ClassSchema = SchemaFactory.createForClass(Class);
