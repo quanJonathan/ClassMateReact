@@ -19,6 +19,8 @@ import { useAuth } from "../hook/useAuth";
 import { alpha } from "@mui/material/styles";
 import { Settings } from "@mui/icons-material";
 import SettingDialog from "./SettingDialog";
+import { useIsTeacher } from "../helpers/getCurrentRole";
+import { useParams } from "react-router-dom";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -51,14 +53,10 @@ const CourseContent = () => {
   const [isDialogOpen, setDialogOpen] = useState(false);
   const { course, teachers, students, isLoading, isError } = useClass();
   const { user } = useAuth();
+  const {id} = useParams()
   // console.log(teachers)
   // console.log(students)
-  const currentClassOfUser = user?.classes?.find(
-    (it) => it.classId.classId === course?.classId
-  );
-  // console.log("currentClass" + currentClassOfUser)
-
-  const currentRole = currentClassOfUser?.role;
+  const isTeacher = useIsTeacher(id)
   //console.log(currentRole)
 
   //console.log(currentRole === '3000')
@@ -73,13 +71,13 @@ const CourseContent = () => {
 
   const tabLabels = ["General Information", "HomeWork", "People"];
 
-  if (currentRole === "3000") {
+  if (isTeacher) {
     tabLabels.push("Grade");
   }
 
   const maxTabWidth = Math.max(...tabLabels.map((label) => label.length));
 
-  console.log(course);
+  // console.log(course);
 
   const getGradeScaleLeft = () => {
     let finalValue = 100
@@ -144,9 +142,11 @@ const CourseContent = () => {
                 />
               ))}
             </Tabs>
+            {isTeacher && 
             <IconButton edge="start" sx={{ p: 0 }} onClick={openModal}>
               <Settings />
             </IconButton>
+            }
           </Box>
         )}
         <Divider
@@ -157,7 +157,7 @@ const CourseContent = () => {
           <ClassGeneral course={course} user={user} />
         </TabPanel>
         <TabPanel value={value} index={1}>
-          <ClassHomeWork />
+          <ClassHomeWork homeworks={course?.homeworks}/>
         </TabPanel>
         <TabPanel value={value} index={2}>
           <ClassPeople
@@ -166,7 +166,7 @@ const CourseContent = () => {
             course={course}
           />
         </TabPanel>
-        {currentRole === "3000" && (
+        {isTeacher && (
           <TabPanel value={value} index={3}>
             <ClassGrade members={students} homeworks={course?.homeworks} />
           </TabPanel>

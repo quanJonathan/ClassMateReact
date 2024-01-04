@@ -29,6 +29,7 @@ import FullScreenDialog from "./FullScreenDialog";
 import FormDialog from "./FormDialog";
 import SendMailDialog from "./SendMailDialog";
 import AddPeopleDialog from "./AddPeopleDialog";
+import {useIsTeacher} from "../helpers/getCurrentRole"
 
 export const ClassPeople = (props) => {
   const { students, teachers, course } = props;
@@ -66,7 +67,6 @@ export const ClassPeople = (props) => {
         isOpen={open}
         title={title}
         handleClose={() => setOpen(false)}
-
         course={course}
       />
       <Card>
@@ -111,10 +111,7 @@ const Section = ({ title, data, icon, selectAll, options, sendMailAction }) => {
 
   const { user } = useAuth();
 
-  const currentClass = user?.classes.filter(
-    (classObject) => classObject.classId._id == id
-  );
-  const currentRole = currentClass[0].role;
+  const currentRole = useIsTeacher(id);
 
   // console.log("currentClass")
 
@@ -172,24 +169,25 @@ const Section = ({ title, data, icon, selectAll, options, sendMailAction }) => {
           >
             <ListItemButton onClick={() => handleToggle(item)} dense>
               {user?._id !== item._id && currentRole == "3000" && (
-                <>
-                  <ListItemIcon>
-                    <Checkbox
-                      edge="start"
-                      checked={selectedItems.indexOf(item) !== -1}
-                      tabIndex={-1}
-                      disableRipple
-                      inputProps={{
-                        "aria-labelledby": `checkbox-list-label-${item._id}`,
-                      }}
-                    />
-                  </ListItemIcon>
-                </>
+                <ListItemIcon>
+                  <Checkbox
+                    edge="start"
+                    checked={selectedItems.indexOf(item) !== -1}
+                    tabIndex={-1}
+                    disableRipple
+                    inputProps={{
+                      "aria-labelledby": `checkbox-list-label-${item._id}`,
+                    }}
+                  />
+                </ListItemIcon>
               )}
               <Avatar
                 {...stringAvatar(
-                  item ? `${item?.firstName} ${item?.lastName}` : "Default Name"
-                , { mr: 2 })}
+                  item
+                    ? `${item?.firstName} ${item?.lastName}`
+                    : "Default Name",
+                  { mr: 2 }
+                )}
                 size="medium"
                 edge="end"
                 aria-label="account of current user"
