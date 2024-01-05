@@ -28,6 +28,7 @@ import {
   ChevronRight,
   AccountCircle,
   Add,
+  Assignment,
 } from "@mui/icons-material";
 import AppName from "./WebName";
 import { useAuth } from "../hook/useAuth.jsx";
@@ -40,6 +41,8 @@ import OptionMenu from "./OptionMenu.jsx";
 import FullScreenDialog from "./FullScreenDialog.jsx";
 import { stringAvatar } from "../helpers/stringAvator";
 import axios from "axios";
+import AssignmentViewingDetails from "../routes/assignment-viewing-details.jsx";
+import AssignmentViewingAll, { AssignmentViewingAllMain } from "../routes/assignment-viewing-all.jsx";
 
 const drawerWidth = 280;
 const openedMixin = (theme) => ({
@@ -324,6 +327,8 @@ export default function MiniDrawer({ children, page }) {
         {page === "Dashboard" && <HomeContent />}
         {page === "Profile" && children}
         {page === "Course" && <CourseContent />}
+        {page === "AssignmentViewingDetails" && <AssignmentViewingDetails/>}
+        {page === "AssignmentViewingAll" && <AssignmentViewingAllMain/>}
       </Box>
     </>
   );

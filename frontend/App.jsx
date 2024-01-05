@@ -21,6 +21,8 @@ import FacebookOAuthSuccessRedirect from "./src/components/FacebookOAuthSuccessR
 import MainPageCourse from "./src/routes/main-page-course";
 import JoinClassVerify from "./src/routes/join-class-verify";
 import JoinClass from "./src/routes/join-class";
+import AssignmentViewingDetails from "./src/routes/assignment-viewing-details";
+import AssignmentViewingAll from "./src/routes/assignment-viewing-all";
 
 export const router = createBrowserRouter(
   createRoutesFromElements(
@@ -55,6 +57,8 @@ export const router = createBrowserRouter(
 
         <Route path="/c">
           <Route path=":id" element={<MainPageCourse />} />
+          <Route path=":id/a/:homeworkId" element={<AssignmentViewingDetails />} />
+          <Route path=":id/a/all" element={<AssignmentViewingAll />} />
         </Route>
       </Route>
 

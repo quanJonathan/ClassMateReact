@@ -58,6 +58,7 @@ export class FacebookStrategy extends PassportStrategy(Strategy, 'facebook') {
       providerId: '',
       accessToken: accessToken,
       refreshToken: refreshToken,
+      studentId: '',
     };
     // console.log(profile.emails)
     // console.log(profile.name)

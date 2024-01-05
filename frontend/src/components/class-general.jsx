@@ -30,6 +30,7 @@ import DownloadExcelButton from "./DownloadExcelButton";
 import { stringAvatar } from "../helpers/stringAvator";
 import { useParams } from "react-router-dom";
 import { useAuth } from "../hook/useAuth";
+import { toast } from "react-toastify";
 
 export const ClassGeneral = ({ course, user }) => {
   const [excelData, setExcelData] = useState(null);
@@ -85,7 +86,7 @@ export const ClassGeneral = ({ course, user }) => {
   const handleUpload = async (data) => {
     // Handle the uploaded data as needed
     setExcelData(data);
-    console.log("Uploaded Excel Data:", data);
+    // console.log("Uploaded Excel Data:", data);
 
     const students = [];
     data.forEach((row, rowIndex) => {
@@ -97,10 +98,11 @@ export const ClassGeneral = ({ course, user }) => {
       }
     });
 
-    console.log("adding");
-    console.log(students);
+    // console.log("adding");
+    // console.log(students);
 
-    await axios.post(
+    console.log(id)
+    const response = await axios.post(
       `http://localhost:3001/class/addStudents/${id}`,
       students,
       {
@@ -109,6 +111,11 @@ export const ClassGeneral = ({ course, user }) => {
         },
       }
     );
+    if(response.status == 202){
+      toast.success(response.statusText)
+    }else{
+      toast.error(response.statusText)
+    }
     console.log(students);
   };
 

@@ -23,13 +23,11 @@ export class User {
   @Prop()
   phoneNumber: string;
   @Prop({required: true, unique: true})
-  roles: [string];
+  roles: string[];
   @Prop({default: authTypeEnum.local, enum: authTypeEnum})
   provider: string;
   @Prop({default: Object.keys(authTypeEnum).indexOf('local')})
   providerId: string;
-  @Prop()
-  name: string;
   @Prop({default: ''})
   refreshToken: string;
   @Prop({default: ''})

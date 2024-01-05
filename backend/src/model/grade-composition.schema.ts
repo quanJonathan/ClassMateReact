@@ -1,6 +1,8 @@
 /* eslint-disable prettier/prettier */
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose, { Document } from 'mongoose';
+import { Class } from './class.schema';
+import { Homework } from './homework.schema';
 export type GradeCompositionDocument = GradeComposition & Document;
 
 // Note that the classId is for shown only
@@ -8,18 +10,21 @@ export type GradeCompositionDocument = GradeComposition & Document;
 @Schema()
 export class GradeComposition {
 
+  @Prop({ type: mongoose.Schema.Types.ObjectId, auto: true })
+  _id: mongoose.Types.ObjectId;
+  
   // the class _id field
-  @Prop({required: true})
-  classId: {type: mongoose.Types.ObjectId, ref: 'Class'};
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Class' })
+  courseId: Class;
 
   @Prop({required: true, unique: true})
   name: string;
 
-  @Prop()
-  gradeScale: {type: number, min: 1, max: 100};
+  @Prop({type: Number, min: 1, max: 100})
+  gradeScale: number;
 
-  @Prop()
-  homeworks: [{type: mongoose.Types.ObjectId, ref: 'Homework'}];
+  @Prop({type: [{type: mongoose.Types.ObjectId, ref: 'Homework'}]})
+  homeworks: Homework[];
 }
 
 export const GradeCompositionSchema = SchemaFactory.createForClass(GradeComposition);

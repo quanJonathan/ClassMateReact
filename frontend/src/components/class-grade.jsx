@@ -197,7 +197,7 @@ const CustomTableHeader = ({ data, constructDownloadData }) => {
           }
         );
 
-        if (response.status == '202') {
+        if (response.status == "202") {
           toast.success(response.statusText);
         } else {
           toast.error(response.statusText);
@@ -339,7 +339,7 @@ const CustomTableBody = ({ data, rowHeaderOptions }) => {
     try {
       const response = await axios.post(
         `http://localhost:3001/class/returnHomework/${id}/a/${
-          data[hoveredCell.rowIndex].homeworks[hoveredCell.colIndex]
+          data[hoveredCell.rowIndex].homeworks[hoveredCell.colIndex]._id
         }`,
         {
           userId: data[hoveredCell.rowIndex].user._id,
@@ -351,7 +351,7 @@ const CustomTableBody = ({ data, rowHeaderOptions }) => {
         }
       );
 
-      if (response.statusText == 202) {
+      if (response.status == 202) {
         toast.success(response.statusText);
       } else {
         toast.error(response.statusText);
