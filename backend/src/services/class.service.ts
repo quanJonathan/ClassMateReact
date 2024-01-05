@@ -34,7 +34,7 @@ export class ClassService {
       .findById(id)
       .populate({
         path: 'members',
-        select: 'firstName lastName state studentId',
+        select: 'firstName lastName state studentId email',
         populate: {
           path: 'classes.classId classes.role',
           select: 'classId className',

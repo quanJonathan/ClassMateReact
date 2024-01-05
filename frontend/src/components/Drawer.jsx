@@ -231,20 +231,21 @@ export default function MiniDrawer({ children, page }) {
             </IconButton>
 
             <AppName />
-
+           
             <Stack spacing={2} sx={{ flexGrow: 1 }}>
               <Breadcrumbs
                 separator="›"
                 aria-label="breadcrumb"
                 sx={{ fontSize: "25px" }}
               >
+                   {children &&
                 <Link
                   color="inherit"
                   onClick={() => navigate(`/c/${children?.classId?._id}`)}
                   sx={{ fontSize: "15px" }}
                 >
                   {`> ${children?.className}`}
-                </Link>
+                </Link>}
               </Breadcrumbs>
             </Stack>
 

@@ -17,6 +17,7 @@ import {
   Button,
 } from "@mui/material";
 import {
+  AccountCircle,
   AccountCircleOutlined,
   More as MoreIcon,
   MoreVert,
@@ -41,7 +42,9 @@ export const ClassPeople = (props) => {
  
 
   const [open, setOpen] = useState(false);
+  const [personal,setPersonal] = useState(false);
   const [title, setTitle] = useState("Invite student");
+  const [url,setUrl] = useState("");
 
   // const studentOptions = (studentId) => [
   //   {
@@ -51,6 +54,13 @@ export const ClassPeople = (props) => {
   // ];
 
 
+  const openCreateLinkForEmptyUser =(studentId) =>{
+    console.dir(studentId)
+    setPersonal(true);
+  
+    setUrl(`http://localhost:5173/c/join/${course?._id}/${studentId}`)
+    sendMailForStudent();
+  }
 
   const openSendMailModal = (title) => {
     setOpen(true);
@@ -70,8 +80,10 @@ export const ClassPeople = (props) => {
       <AddPeopleDialog
         isOpen={open}
         title={title}
+        personal={personal}
         handleClose={() => setOpen(false)}
         course={course}
+        url={url}
       />
       <Card>
         <Container style={{ marginTop: 20, justifyContent: "center" }}>
@@ -86,6 +98,7 @@ export const ClassPeople = (props) => {
             title="Students"
             data={students}
             course={course}
+            createLink={openCreateLinkForEmptyUser}
             icon={<PersonAddAlt1OutlinedIcon />}
             sendMailAction={() => sendMailForStudent()}
           />
@@ -95,7 +108,9 @@ export const ClassPeople = (props) => {
   );
 };
 
-const Section = ({ title, data, icon, sendMailAction, course }) => {
+const Section = ({ title, data, icon, sendMailAction, createLink, course }) => {
+
+
   
   const { token } = useAuth();
 
@@ -133,7 +148,7 @@ const Section = ({ title, data, icon, sendMailAction, course }) => {
   const handleToggle = (item) => {
     const currentIndex = selectedItems.indexOf(item);
     const newSelectedItems = [...selectedItems];
-
+   
     if (currentIndex === -1) {
       newSelectedItems.push(item);
     } else {
@@ -235,7 +250,22 @@ const Section = ({ title, data, icon, sendMailAction, course }) => {
                   />
                 </ListItemIcon>
               )}
-              <Avatar
+              {(item.email ==='' || !item.email) ?
+              (<IconButton
+              size="medium"
+              edge="start"
+              aria-label="account of current user"
+              color="gray"
+            >
+              <AccountCircle
+                sx={{
+                    width: "45px",
+                    height: "45px"
+                  }}
+              />
+            </IconButton>)
+            : 
+              (<Avatar
                 {...stringAvatar(
                   item
                     ? `${item?.firstName} ${item?.lastName}`
@@ -246,12 +276,19 @@ const Section = ({ title, data, icon, sendMailAction, course }) => {
                 edge="end"
                 aria-label="account of current user"
                 color="inherit"
+              />)
+                }
+              <ListItemText
+                primary={(item.email ==='' || !item.email)? item.studentId : item.firstName + " " + item.lastName}
+                sx={{ flexGrow: 1, fontWeight: "bold", ml: 2,  color: (item.email ==='' || !item.email) ? "gray" : "inherit", }}
+
               />
 
-              <ListItemText
-                primary={item.firstName + " " + item.lastName}
-                sx={{ flexGrow: 1, fontWeight: "bold", ml: 2 }}
-              />
+                { (item.email ==='' || !item.email) && (<Button onClick={()=>createLink(item.studentId)} variant="contained" color="primary" elevation={0} sx={{
+                "textTransform": "none"
+            }}>
+           Create an Invite Link
+          </Button>)}
             </ListItemButton>
           </ListItem>
         ))}

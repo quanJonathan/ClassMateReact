@@ -20,7 +20,7 @@ import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import axios from "axios";
 
-  export default function AddPeopleDialog({ isOpen, handleClose, course, title }) {
+  export default function AddPeopleDialog({ isOpen, handleClose, course, title, personal=false, url="" }) {
     // const textareaRef = useRef(null)
     const {id} = useParams();
         // const [chips, setChips] = useState([]);
@@ -95,7 +95,8 @@ import axios from "axios";
       <div>
         <Dialog open={isOpen} onClose={handleClose}>
           <DialogTitle>{`${title} to our classroom`}</DialogTitle>
-          <DialogContent>
+          { !personal &&
+          (<DialogContent>
             {/* <Autocomplete
               clearIcon={false}
               options={[]}
@@ -110,7 +111,9 @@ import axios from "axios";
             />
             <ListItem></ListItem> */}
 
-   <SearchBar setResults={setResults} />
+ 
+   
+      <SearchBar setResults={setResults} />
       <div style={{ padding: 3}}>
         {/* {results.map((result, id) => (
     result.email !== "admin2@gmail.com" && result.email !== "classmate.admin@gmail.com" && result.email !== user.email && (
@@ -175,8 +178,10 @@ import axios from "axios";
         ))}
       </List>
       </div>
-          </DialogContent>
-          <DialogTitle>or send a invitation link to your friend</DialogTitle>
+     
+          </DialogContent>)}
+          
+          {!personal && <DialogTitle>or send a invitation link to your friend</DialogTitle>}
           <DialogContent>
           <form style={{
             padding: 0,
@@ -190,7 +195,7 @@ import axios from "axios";
             // ref={textareaRef}
             id="invitation-link"
             className="text"
-            value={role === 'teacher' ? `http://localhost:5173/c/t/join/${course?._id}` : `http://localhost:5173/c/join/${course?._id}`}
+            value={role === 'teacher' ? `http://localhost:5173/c/t/join/${course?._id}` : (personal ? url : `http://localhost:5173/c/join/${course?._id}`)}
             variant="outlined"
             size="small"
             InputProps={{
@@ -217,7 +222,7 @@ import axios from "axios";
         <Button variant="contained" color="primary" elevation={0} sx={{
                 "textTransform": "none"
             }}
-            onClick={()=>copyTextAction(role === 'teacher' ? `http://localhost:5173/c/t/join/${course?._id}` : `http://localhost:5173/c/join/${course?._id}`)}
+            onClick={()=>copyTextAction(role === 'teacher' ? `http://localhost:5173/c/t/join/${course?._id}` : (personal ? url :`http://localhost:5173/c/join/${course?._id}`))}
             >
            Copy
           </Button>
