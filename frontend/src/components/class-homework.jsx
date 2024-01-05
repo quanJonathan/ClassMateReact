@@ -108,7 +108,7 @@ export const ClassHomeWork = ({ homeworks }) => {
   return (
     <Box sx={{ px: 15 }}>
       {isTeacher ? (
-        <Button variant="contained" sx={{ backgroundColor: "black" }}>
+        <Button variant="contained">
           Create homework
         </Button>
       ) : (

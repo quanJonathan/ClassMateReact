@@ -179,7 +179,7 @@ const Section = ({ title, data, icon, sendMailAction, course }) => {
         <Typography variant="h5" component="div" sx={{ flexGrow: 1, display: "flex", alignItems: "center" }}>
           {title}
         </Typography>
-        {currentRole == "3000" && (
+        {currentRole && (
           <>
             {/* {data?.length > 0 && (
               <Typography variant="body2" fontWeight="bold">
@@ -209,7 +209,7 @@ const Section = ({ title, data, icon, sendMailAction, course }) => {
             }}
             secondaryAction={
               user?._id !== item._id &&
-              currentRole == "3000" && (
+              currentRole && (
                 <OptionMenu
                   options={studentOptions(item._id) ?? [{
                     label: '',
@@ -222,7 +222,7 @@ const Section = ({ title, data, icon, sendMailAction, course }) => {
             }
           >
             <ListItemButton onClick={() => handleToggle(item)} dense>
-              {user?._id !== item._id && currentRole == "3000" && (
+              {user?._id !== item._id && currentRole  && (
                 <ListItemIcon>
                   <Checkbox
                     edge="start"

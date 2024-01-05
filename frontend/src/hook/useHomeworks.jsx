@@ -60,6 +60,8 @@ export function useHomeworks(members, homeworks, compositions) {
 
   // console.log(homeworks);
 
+  // console.log(members)
+
   let headers = [
     {
       sortingField: true,
