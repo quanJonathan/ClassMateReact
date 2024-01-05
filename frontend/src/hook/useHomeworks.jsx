@@ -3,7 +3,43 @@ import { useParams } from "react-router-dom";
 import useSWR from "swr";
 import { useAuth } from "./useAuth";
 
-export function useHomeworks(members, homeworks) {
+const calculateTotalScore = (member, homeworks, compositions) => {
+  let result = 0;
+  // console.log(compositions)
+  compositions?.map((c, index) => {
+    let temp = 0;
+    const foundHomeworks = homeworks.filter((h) => h.composition._id == c._id);
+    //console.log("homework of composition " + c.name + "for " +  member?.studentId)
+    //console.log("grade scale " +  c.gradeScale)
+    //console.log(foundHomeworks)
+    foundHomeworks.map((h) => {
+      const foundUser = h.doneMembers.find((h) => h.memberId == member._id);
+      if (foundUser && foundUser.state == "final") {
+        //console.log("score for homework " + foundUser.score)
+        temp = temp + foundUser.score / h.maxScore;
+      }
+    });
+
+    //console.log(temp)
+    
+    //console.log(foundHomeworks?.length)
+
+    //console.log("currentScore for " + member?.studentId)
+    //console.log(temp)
+    if(foundHomeworks.length != 0){
+      result = result + (temp / foundHomeworks.length) * c.gradeScale / 100;
+    }
+
+    //console.log("total score "+  result );
+  });
+
+  return {
+    _id: "total_score_" + member._id,
+    score: result.toFixed(2)*100,
+  }
+};
+
+export function useHomeworks(members, homeworks, compositions) {
   // const { token } = useAuth();
   // const fetcher = (url) =>
   //   axios
@@ -28,6 +64,10 @@ export function useHomeworks(members, homeworks) {
     {
       sortingField: true,
       align: "justify",
+      totalScore: {
+        label: "Total score",
+        id: "total_scoring_field",
+      }
     },
   ];
 
@@ -39,6 +79,7 @@ export function useHomeworks(members, homeworks) {
       label: homework.name,
       deadline: homework.deadline,
       totalScore: homework.maxScore,
+      composition: homework.composition,
       minWidth: 170,
       align: "left",
     };
@@ -46,14 +87,13 @@ export function useHomeworks(members, homeworks) {
   });
 
   rows = members?.map((member) => {
-    const { doneHomework, notDoneHomework } = homeworks.reduce(
+    const { doneHomework } = homeworks.reduce(
       (acc, homework) => {
         const doneMember = homework.doneMembers.find(
           (doneMember) => doneMember.memberId === member._id
         );
 
         if (doneMember) {
-          
           acc.doneHomework.push({
             score: doneMember.score || 0,
             state: doneMember.state || "pending",
@@ -61,15 +101,8 @@ export function useHomeworks(members, homeworks) {
             _id: homework._id,
           });
         } else {
-
-          // acc.notDoneHomework.push({
-          //   score: 0,
-          //   state: "pending",
-          //   maxScore: homework.maxScore,
-          //   _id: homework._id,
-          // });
           acc.doneHomework.push({
-            score: '',
+            score: "",
             state: "pending",
             maxScore: homework.maxScore,
             _id: homework._id,
@@ -81,16 +114,12 @@ export function useHomeworks(members, homeworks) {
       { doneHomework: [], notDoneHomework: [] }
     );
 
-    // const allHomeworks = [...doneHomework, ...notDoneHomework]
-    //   .slice()
-    //   .sort((a, b) => {
-    //     homeworks.findIndex((h) => h._id === a._id) -
-    //       homeworks.findIndex((h) => h._id === b._id);
-    //   });
-      const allHomeworks = [...doneHomework];
+    const allHomeworks = [...doneHomework];
 
-      //console.log(member)
-    return { user: member, align: "center", homeworks: allHomeworks };
+    const totalScore = calculateTotalScore(member, homeworks, compositions)
+    // console.log(totalScore)
+    //console.log(member)
+    return { user: member, totalScore: totalScore, align: "center", homeworks: allHomeworks };
   });
 
   // rows.forEach((row) =>{
