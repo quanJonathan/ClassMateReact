@@ -145,9 +145,13 @@ const Section = ({ title, data, icon, sendMailAction, course }) => {
 
   const { user } = useAuth();
 
-  const currentRole = useIsTeacher(id);
+  // const currentRole = useIsTeacher(id);
 
   // console.log("currentClass")
+  const currentClass = user?.classes.filter(
+    (classObject) => classObject.classId._id == id
+  );
+  const currentRole = currentClass[0].role;
 
   const getSelectedAll = () => {
     setSelectAll(!selectAll);
