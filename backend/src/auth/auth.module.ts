@@ -14,10 +14,12 @@ import { FacebookStrategy } from 'strategy/facebook.strategy';
 import { EmailConfirmationService } from 'src/email/emailConfirmation.service';
 import EmailService from 'src/email/email.service';
 import { EmailConfirmationController } from 'src/email/emailConfirmation.controller';
+import { ClassesModule } from 'src/modules/class.module';
 
 @Module({
   imports: [
     UsersModule,
+    ClassesModule,
     JwtModule.register({}),
     // PassportModule,
     // PassportModule.register({ defaultStrategy: 'jwt' }),

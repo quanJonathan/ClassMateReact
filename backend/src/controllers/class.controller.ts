@@ -93,6 +93,16 @@ export class ClassController {
     return this.classService.addStudent(classId, user._id);
   }
 
+  @Post('/joinClassAsTeacher/:classId')
+  @UseGuards(RefreshTokenGuard)
+  async joinClassAsTeacher(@Req() req, @Param() params : any){
+    console.log("joining class")
+    const user = req.user;
+    const classId = params.classId
+    console.log(classId)
+    return this.classService.addTeacher(classId, user._id);
+  }
+
   @Put('/addStudent/:classId')
   @UseGuards(RefreshTokenGuard, RolesGuard)
   @Roles(UserRoles.admin, UserRoles.teacher)
@@ -113,11 +123,11 @@ export class ClassController {
   }
 
   @Post('/removeStudent/:studentId')
-  @UseGuards(RefreshTokenGuard, RolesGuard)
-  @Roles(UserRoles.admin, UserRoles.teacher)
-  async removeStudent(@Req() req, @Param() params: any) {
-    const classObject = req.class;
-    return this.classService.removeStudent(classObject.id, params.studentId);
+  // @UseGuards(RefreshTokenGuard, RolesGuard)
+  // @Roles(UserRoles.admin, UserRoles.teacher)
+  async removeStudent(@Req() req, @Body() body: { id: string}, @Param() params: any) {
+    console.log(body.id);
+    return this.classService.removeStudent(body.id, params.studentId);
   }
 
   @Post('/updateOrAddGradeCompositions/:id')

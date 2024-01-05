@@ -16,31 +16,85 @@ import {
 import { SearchBar } from "./SearchBar";
 import { useAuth } from "../hook/useAuth";
 import { stringAvatar } from "../helpers/stringAvator";
+import { useParams } from "react-router-dom";
+import { toast } from "react-toastify";
+import axios from "axios";
 
-  export default function AddPeopleDialog({ isOpen, handleClose, course }) {
-    const textareaRef = useRef(null)
-    // const [chips, setChips] = useState([]);
-   
+  export default function AddPeopleDialog({ isOpen, handleClose, course, title }) {
+    // const textareaRef = useRef(null)
+    const {id} = useParams();
+        // const [chips, setChips] = useState([]);
+    const {token} = useAuth();
     const [results,setResults] = useState([]);
+    const [loading,setLoading] = useState(false);
+
+    const role = title.slice(7);
+    console.log(role);
     const {user} = useAuth();
     const copyTextAction = (text) => {
-        if (textareaRef.current) {
-          textareaRef.current.value = text;
-          textareaRef.current.select();
+        // if (textareaRef.current) {
+        //   textareaRef.current.value = text;
+          
+       
     
           try {
             // Copy the text to the clipboard
-            document.execCommand('copy');
+            navigator.clipboard.writeText(text)
             console.log('Text copied to clipboard:', text);
           } catch (err) {
             console.error('Unable to copy to clipboard:', err);
           }
-        }
+        // }
       };
+
+      const handleSendJoiningEmail = async (email) => {
+        setLoading(true)
+       
+        const body = {
+          email: email,
+          url: role === 'teacher' ? `http://localhost:5173/c/t/join/${course?._id}` : `http://localhost:5173/c/join/${course?._id}`
+        };
+       
+        await axios
+        .post(`http://localhost:3001/auth/joinClassByEmail/${id}`, body, {
+          headers: {
+            Authorization: "Bearer " + token?.refreshToken,
+          },
+        })
+        .then(function (res) {
+          console.log(res);
+          setLoading(false)
+          toast.success("Send Invitation Link Successfully!");
+        })
+        .catch(function (error) {
+          if (error.response) {
+            console.log(error.response.data);
+            console.log(error.response.status);
+            console.log(error.response.headers);
+            toast.error('Send Invitation Link Failed due to :' + error.response.data);
+          } else if (error.request) {
+            // The request was made but no response was received
+            // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+            // http.ClientRequest in node.js
+            console.log(error.request);
+            toast.error('Send Invitation Link Failed');
+          } else {
+            // Something happened in setting up the request that triggered an Error
+            console.log("Error", error.message);
+            toast.error('Send Invitation Link Failed');
+    
+          }
+          console.log(error.config);
+        });
+        } 
+        
+  
+    
+    
     return (
       <div>
         <Dialog open={isOpen} onClose={handleClose}>
-          <DialogTitle>Invite people to our classroom</DialogTitle>
+          <DialogTitle>{`${title} to our classroom`}</DialogTitle>
           <DialogContent>
             {/* <Autocomplete
               clearIcon={false}
@@ -112,9 +166,9 @@ import { stringAvatar } from "../helpers/stringAvator";
               />
             </ListItemButton>
 
-            <Button variant="contained" color="primary" elevation={0} sx={{
+            <Button onClick={()=>handleSendJoiningEmail(item.email)} variant="contained" color="primary" elevation={0} sx={{
                 "textTransform": "none"
-            }}>
+            }} disabled={item.classes.some(classObj => classObj.classId === id) || loading}>
            Invite
           </Button>
           </ListItem>
@@ -133,10 +187,10 @@ import { stringAvatar } from "../helpers/stringAvator";
             width: "100%"
         }}>
           <TextField
-            ref={textareaRef}
+            // ref={textareaRef}
             id="invitation-link"
             className="text"
-            value={`http://localhost:5173/c/join/${course?.classId}`}
+            value={role === 'teacher' ? `http://localhost:5173/c/t/join/${course?._id}` : `http://localhost:5173/c/join/${course?._id}`}
             variant="outlined"
             size="small"
             InputProps={{
@@ -163,7 +217,7 @@ import { stringAvatar } from "../helpers/stringAvator";
         <Button variant="contained" color="primary" elevation={0} sx={{
                 "textTransform": "none"
             }}
-            onClick={()=>copyTextAction(`http://localhost:5173/c/join/${course?.classId}`)}
+            onClick={()=>copyTextAction(role === 'teacher' ? `http://localhost:5173/c/t/join/${course?._id}` : `http://localhost:5173/c/join/${course?._id}`)}
             >
            Copy
           </Button>

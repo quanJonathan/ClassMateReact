@@ -20,6 +20,7 @@ import ResetPassword from "./src/routes/reset-password";
 import FacebookOAuthSuccessRedirect from "./src/components/FacebookOAuthSuccessRedirect";
 import MainPageCourse from "./src/routes/main-page-course";
 import JoinClassVerify from "./src/routes/join-class-verify";
+import JoinClass from "./src/routes/join-class";
 import AssignmentViewingDetails from "./src/routes/assignment-viewing-details";
 import AssignmentViewingAll from "./src/routes/assignment-viewing-all";
 
@@ -29,6 +30,7 @@ export const router = createBrowserRouter(
       <Route path="/" element={<HomeLayout />}>
         <Route path="" element={<Root />} />
         <Route path="sign-in" element={<SignIn />} />
+     
         <Route path="sign-up" element={<SignUp />} />
         <Route path="forgot-password" element={<ForgotPassword />} />
       </Route>
@@ -58,15 +60,20 @@ export const router = createBrowserRouter(
           <Route path=":id/a/:homeworkId" element={<AssignmentViewingDetails />} />
           <Route path=":id/a/all" element={<AssignmentViewingAll />} />
         </Route>
-      </Route>
 
-      <Route path="/c">
-        <Route path=":id/:classId" element={<JoinClassVerify />} />
+        <Route path="/c">
+        <Route path="join/:classId" element={<JoinClass />} />
+        <Route path="join/verify/:classId" element={<JoinClassVerify />} />
+        <Route path="t/join/:classId" element={<JoinClass />} />
+        <Route path="t/join/verify/:classId" element={<JoinClassVerify />} />
       </Route>
       <Route path="/confirm-email">
         <Route path="send/" element={<ConfirmEmail />} />
         <Route path="receive/:refreshToken" element={<ConfirmEmailRecieve />} />
       </Route>
+      </Route>
+
+     
     </Route>
   )
 );

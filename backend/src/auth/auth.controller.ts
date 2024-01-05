@@ -9,6 +9,7 @@ import {
   Res,
   UseGuards,
   Query,
+  Param,
   UnauthorizedException,
 } from '@nestjs/common';
 import { GoogleOAuthGuard } from '../guards/google-oauth.guard';
@@ -123,6 +124,33 @@ export class AuthController {
       }
     }
   }
+
+  @Post('/joinClassByEmail/:classId')
+  @UseGuards(RefreshTokenGuard)
+  async JoinClassByEmail(@Res() response, @Body() body: { email: string,url: string }, @Param() params: any) {
+    try {
+      const user = await this.authService.checkUserExist(body.email);
+
+      if (user) {
+        await this.emailConfirmationService.sendJoinClassLink(user, body.url, params.classId);
+
+        return response.status(HttpStatus.ACCEPTED).json({
+          message: 'Email sent successfully.',
+        });
+      } else {
+        return response.status(HttpStatus.NOT_FOUND).json({
+          message: 'User not found.',
+        });
+      }
+    } catch (error) {
+      console.error('Error sending email:', error);
+
+      return response.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
+        message: 'Failed to send email.',
+      });
+    }
+  }
+
 
   @Post('reset-password')
   async ResetPassword(

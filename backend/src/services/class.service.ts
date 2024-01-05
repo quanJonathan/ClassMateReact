@@ -157,7 +157,7 @@ export class ClassService {
   }
 
   async addStudent(classId: string, studentId: ObjectId) {
-    //console.log(classId)
+    console.log(classId)
     const foundClass = await this.classModel.findOne({ classId: classId });
     //console.log(foundClass)
     if (!foundClass) {
@@ -184,12 +184,14 @@ export class ClassService {
     }
   }
 
-  async removeStudent(classId: string, studentId: ObjectId) {
+
+  async addTeacher(classId: string, studentId: ObjectId) {
+    console.log(classId)
     const foundClass = await this.classModel.findOne({ classId: classId });
+    //console.log(foundClass)
     if (!foundClass) {
       throw new NotFoundException('Class not existed');
     } else {
-      await foundClass.populate('members', '_id');
       await foundClass.populate('members');
       const user = await this.userModel.findById(studentId).populate({
         path: 'classes.classId',
@@ -197,9 +199,40 @@ export class ClassService {
           classId: classId,
         },
       });
+      console.log(user);
+      //console.log(foundClass)
+
+      if (user.classes.length > 0) {
+        throw new ForbiddenException('User already in the class');
+      } else {
+        foundClass.members.push(user);
+        user.classes.push({ classId: foundClass._id, role: '3000' });
+        await user.save();
+        await foundClass.save();
+      }
+    }
+  }
+
+  async removeStudent(classId: string, studentId: ObjectId) {
+    const foundClass = await this.classModel.findById(classId);
+   
+    if (!foundClass) {
+      throw new NotFoundException('Class not existed');
+    } else {
+      // await foundClass.populate('members', '_id');
+      const classFound = await foundClass.populate('members');
+      console.log(classFound);
+      const user = await this.userModel.findById(studentId).populate({
+        path: 'classes',
+        match: {
+          classId: classId,
+        },
+      });
+
+      console.log(user);
       if (user.classes.length > 0) {
         user.classes = user.classes.filter(
-          (c) => (c.classId as Class).classId !== foundClass.classId,
+          (c) => { c.classId.toString()   !== foundClass.classId  }
         );
         foundClass.members = foundClass.members.filter(
           (member) =>
