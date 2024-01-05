@@ -13,6 +13,7 @@ import AppName from "../components/WebName.jsx";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useAuth } from "../hook/useAuth.jsx";
+import { toast } from "react-toastify";
 
 
 
@@ -42,6 +43,25 @@ const  url  = useLocation();
 const role = url.pathname.split('/')[2] === 't' ? 'teacher' : 'student'
 const navigate = useNavigate();
   const [result, setResult] = useState(null);
+
+  const {user} = useAuth();
+
+  const handleJoinClass = () => {
+
+   
+    if (role === 'teacher'){
+      navigate(`/c/t/join/verify/${result?.classId}`)
+    }
+    else {
+      if (user?.studentId){
+        navigate(`/c/join/verify/${result?.classId}`)
+      }
+      else {
+        toast.warning("Student ID required! Please go to profile and update your student ID.")
+      }
+    }
+   
+  }
 
   useEffect(() => {
     const fetchData = async () => {
@@ -100,7 +120,7 @@ const navigate = useNavigate();
                     "textTransform": "none",
                     "color": "white"
                 }}
-                onClick={()=> navigate(role ==='teacher' ? `/c/t/join/verify/${result?.classId}` :`/c/join/verify/${result?.classId}`)}
+                onClick={handleJoinClass}
                 >
                 Continue
                 </Button>
