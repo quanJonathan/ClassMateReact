@@ -212,5 +212,26 @@ export class EmailConfirmationService {
 
     //console.log(emailTemplate) 
   }
+
+  public async sendJoinClassLink(user: Partial<User>, url: string, classId: ObjectId) {
+    try {
+     
+      const course = await this.classService.getByRealId(classId);
+      console.log(course);
+    
+      if (!course) {
+        throw new BadRequestException('Course not found');
+      }
+      const text = `Welcome to ClassMate website.\n To join ${course.className}, click here: \n${url}`;
+      const emailTemplate = {
+        to: user.email,
+        subject: 'Join Classroom',
+        text,
+      };
+      await this.emailService.sendMail(emailTemplate);
+    } catch (error) {
+      throw new BadRequestException(error.message || 'Failed to send join class email');
+    }
+  }
 }
 
