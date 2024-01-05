@@ -15,6 +15,7 @@ import { EmailModule } from './email/email.module';
 import { JwtModule } from '@nestjs/jwt';
 import { ClassesModule } from './modules/class.module';
 import { ClassController } from './controllers/class.controller';
+import { ClassService } from './services/class.service';
 
 @Module({
   imports: [

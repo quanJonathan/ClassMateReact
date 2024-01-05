@@ -7,6 +7,7 @@ import EmailService from '../email/email.service';
 import { UserService } from '../user/user.service';
 import { userStateEnum } from 'src/enum/userState.enum';
 import { User } from 'src/user/model/user.schema';
+import { ClassService } from 'src/services/class.service';
 import { ObjectId } from 'mongoose';
 import { Homework } from 'src/model/homework.schema';
 
@@ -17,6 +18,7 @@ export class EmailConfirmationService {
     private readonly configService: ConfigService,
     private readonly emailService: EmailService,
     private readonly usersService: UserService,
+    private readonly classService: ClassService
   ) {}
 
   public async resendConfirmationLink(email: string) {
@@ -210,4 +212,26 @@ export class EmailConfirmationService {
 
     //console.log(emailTemplate) 
   }
+
+  public async sendJoinClassLink(user: Partial<User>, url: string, classId: ObjectId) {
+    try {
+     
+      const course = await this.classService.getByRealId(classId);
+      console.log(course);
+    
+      if (!course) {
+        throw new BadRequestException('Course not found');
+      }
+      const text = `Welcome to ClassMate website.\n To join ${course.className}, click here: \n${url}`;
+      const emailTemplate = {
+        to: user.email,
+        subject: 'Join Classroom',
+        text,
+      };
+      await this.emailService.sendMail(emailTemplate);
+    } catch (error) {
+      throw new BadRequestException(error.message || 'Failed to send join class email');
+    }
+  }
 }
+
