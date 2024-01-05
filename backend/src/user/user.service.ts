@@ -185,6 +185,14 @@ export class UserService {
       throw new BadRequestException('user not found');
     }
     let pass= null;
+
+    if (user.studentId) {
+    const userExists = await this.userModel.findOne(
+      {studentId: user.studentId} ).exec();
+    if (userExists) {
+      throw new BadRequestException(`StudentId ${user.studentId} already in-use`)
+    }
+  }
     
     if (user.oldPassword) {
       const passwordValidation = true;
@@ -222,6 +230,17 @@ export class UserService {
   async updateState(user: User, state: string) {
     return await this.userModel.findOneAndUpdate({email: user.email}, {$set: {
       state: state,
+    }})
+  }
+
+  async updateStudentId(user: User) {
+    const userExists = await this.userModel.findOne(
+      {studentId: user.studentId} ).exec();
+    if (userExists) {
+      throw new BadRequestException(`StudentId ${user.studentId} already in-use`)
+    }
+    return await this.userModel.findOneAndUpdate({email: user.email}, {$set: {
+      studentId: user.studentId,
     }})
   }
 
