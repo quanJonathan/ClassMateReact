@@ -38,7 +38,7 @@ export async function handleDownload(defaultData, fileName){
     document.body.removeChild(a);
   }
 
-const DownloadExcelButton = ({defaultData = sampleDataForClass, name = 'example.xlsx'}) => {
+const DownloadExcelButton = ({defaultData, name}) => {
   
   return (
     <IconButton onClick={() => handleDownload(defaultData, name)}>
@@ -46,5 +46,10 @@ const DownloadExcelButton = ({defaultData = sampleDataForClass, name = 'example.
     </IconButton>
   );
 };
+
+DownloadExcelButton.defaultProps = {
+  defaultData: sampleDataForClass,
+  name: 'example.xlsx'
+}
 
 export default DownloadExcelButton;

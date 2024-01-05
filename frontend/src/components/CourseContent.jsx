@@ -53,10 +53,10 @@ const CourseContent = () => {
   const [isDialogOpen, setDialogOpen] = useState(false);
   const { course, teachers, students, isLoading, isError } = useClass();
   const { user } = useAuth();
-  const {id} = useParams()
+  const { id } = useParams();
   // console.log(teachers)
   // console.log(students)
-  const isTeacher = useIsTeacher(id)
+  const isTeacher = useIsTeacher(id);
   //console.log(currentRole)
 
   //console.log(currentRole === '3000')
@@ -80,10 +80,12 @@ const CourseContent = () => {
   // console.log(course);
 
   const getGradeScaleLeft = () => {
-    let finalValue = 100
-    course.compositions.map((c) => { finalValue = finalValue - parseInt(c.gradeScale)})
-    return finalValue == 0 ? 0: finalValue
-  }
+    let finalValue = 100;
+    course.compositions.map((c) => {
+      finalValue = finalValue - parseInt(c.gradeScale);
+    });
+    return finalValue == 0 ? 0 : finalValue;
+  };
 
   return (
     <>
@@ -142,11 +144,11 @@ const CourseContent = () => {
                 />
               ))}
             </Tabs>
-            {isTeacher && 
-            <IconButton edge="start" sx={{ p: 0 }} onClick={openModal}>
-              <Settings />
-            </IconButton>
-            }
+            {isTeacher && (
+              <IconButton edge="start" sx={{ p: 0 }} onClick={openModal}>
+                <Settings />
+              </IconButton>
+            )}
           </Box>
         )}
         <Divider
@@ -157,7 +159,7 @@ const CourseContent = () => {
           <ClassGeneral course={course} user={user} />
         </TabPanel>
         <TabPanel value={value} index={1}>
-          <ClassHomeWork homeworks={course?.homeworks}/>
+          <ClassHomeWork homeworks={course?.homeworks} />
         </TabPanel>
         <TabPanel value={value} index={2}>
           <ClassPeople
@@ -168,7 +170,11 @@ const CourseContent = () => {
         </TabPanel>
         {isTeacher && (
           <TabPanel value={value} index={3}>
-            <ClassGrade members={students} homeworks={course?.homeworks} />
+            <ClassGrade
+              members={students}
+              homeworks={course?.homeworks}
+              compositions={course?.compositions}
+            />
           </TabPanel>
         )}
       </Box>

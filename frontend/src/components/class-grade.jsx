@@ -16,6 +16,7 @@ import {
   MenuItem,
   Stack,
   styled,
+  Button,
 } from "@mui/material";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { useHomeworks } from "../hook/useHomeworks";
@@ -26,11 +27,11 @@ import { format } from "date-fns";
 import axios from "axios";
 import { useAuth } from "../hook/useAuth";
 import { toast } from "react-toastify";
-import _ from "lodash";
 import ExcelJS from "exceljs";
 
 import MuiTableCell from "@mui/material/TableCell";
-import { handleDownload } from "./DownloadExcelButton";
+import DownloadExcelButton, { handleDownload } from "./DownloadExcelButton";
+import ExcelUploadButton from "./UploadExcelButton";
 
 const TableCell = styled(MuiTableCell)`
   :last-of-type{
@@ -43,8 +44,8 @@ const TableCell = styled(MuiTableCell)`
   }
 `;
 
-export const ClassGrade = ({ members, homeworks }) => {
-  const { headers, rows } = useHomeworks(members, homeworks);
+export const ClassGrade = ({ members, homeworks, compositions }) => {
+  const { headers, rows } = useHomeworks(members, homeworks, compositions);
 
   // console.log("rows")
   // console.log(rows)
@@ -102,7 +103,7 @@ const ExcelLikeTable = ({ headers, rows }) => {
 
 const CustomTableHeader = ({ data, constructDownloadData }) => {
   // console.log("data in header");
-  // console.log(data);
+  //console.log(data);
 
   const [selectedValue, setSelectedValue] = useState("first"); // Set the initial value
   const { token } = useAuth();
@@ -238,23 +239,47 @@ const CustomTableHeader = ({ data, constructDownloadData }) => {
               align={row?.align}
               key={`header-${rowIndex}`}
               sx={{
+                display: "flex",
+                height: 200,
+                flexDirection: "column",
                 border: "1px solid #ddd",
-                width: 40,
                 minWidth: 0,
+                justifyContent: "space-between",
               }}
             >
-              <Select
-                label="Sort"
-                value={selectedValue}
-                onChange={handleChange}
-                autoWidth
-                sx={{
-                  minWidth: "unset",
-                }}
+              <Stack flexDirection="row" spacing={2} alignItems="center">
+                <Button variant="text">
+                  <DownloadExcelButton />
+                  <Typography>Download all grade</Typography>
+                </Button>
+              </Stack>
+
+              <Stack
+                alignSelf="flex-end"
+                flexDirection="row"
+                justifyContent="space-between"
+                sx={{ m: 0, p: 0 }}
               >
-                <MenuItem value="first">Group by First Name</MenuItem>
-                <MenuItem value="last">Group by Last Name</MenuItem>
-              </Select>
+                <Select
+                  label="Sort"
+                  value={selectedValue}
+                  onChange={handleChange}
+                  autoWidth
+                  sx={{
+                    minWidth: "10",
+                    mr: 6,
+                  }}
+                >
+                  <MenuItem value="first">Group by First Name</MenuItem>
+                  <MenuItem value="last">Group by Last Name</MenuItem>
+                </Select>
+                <Typography
+                  key={row?.totalScore?.id}
+                  sx={{ alignSelf: "flex-end" }}
+                >
+                  {row.totalScore?.label}
+                </Typography>
+              </Stack>
             </TableCell>
           ) : (
             <TableCell
@@ -270,7 +295,8 @@ const CustomTableHeader = ({ data, constructDownloadData }) => {
               <Box
                 sx={{
                   display: "flex",
-                  justifyContent: "space-between",
+                  alignContent: "flex-start",
+                  justifyContent: "flex-start",
                 }}
               >
                 <input
@@ -280,7 +306,11 @@ const CustomTableHeader = ({ data, constructDownloadData }) => {
                   style={{ display: "none" }}
                   onChange={(e) => handleFileChange(e, rowIndex, row)}
                 />
-                <Stack direction="column">
+                <Stack
+                  direction="column"
+                  justifyContent="flex-start"
+                  alignContent="flex-start"
+                >
                   <Typography
                     variant="body2"
                     color="text.secondary"
@@ -290,6 +320,17 @@ const CustomTableHeader = ({ data, constructDownloadData }) => {
                   </Typography>
                   <Link>{row?.label}</Link>
                   <Divider />
+                  <Typography
+                    variant="body2"
+                    color="text.secondary"
+                    sx={{
+                      textOverflow: "ellipsis",
+                      whiteSpace: "wrap",
+                      overflow: "hidden",
+                    }}
+                  >
+                    {row?.composition?.name}
+                  </Typography>
                   <Typography
                     variant="body2"
                     color="text.secondary"
@@ -508,13 +549,14 @@ const CustomTableBody = ({ data, rowHeaderOptions }) => {
       {data?.map((row, rowIndex) => (
         <TableRow key={`row-${row?._id}-${rowIndex}`}>
           <TableCell align={row?.align}>
-            <Stack direction="row" justifyContent="space-between">
+            <Stack direction="row" justifyContent="start" spacing={2}>
               {row?.user.state == "activated" ? (
                 <Avatar
                   {...stringAvatar(
                     row?.user
                       ? `${row?.user.lastName} ${row?.user.firstName}`
-                      : "Default Name"
+                      : "Default Name",
+                    { alignSelf: "center" }
                   )}
                   size="large"
                   edge="start"
@@ -525,48 +567,70 @@ const CustomTableBody = ({ data, rowHeaderOptions }) => {
                   size="large"
                   edge="start"
                   aria-label="account of user"
+                  sx={{ alignSelf: "center" }}
                 />
               )}
               {/* <Typography alignContent="center" sx={{ mt: 1, ml: 2 }}>
                 {row?.user.studentId}
               </Typography> */}
-              <TextField
-                id={`name-${rowIndex}`}
-                value={row?.user.studentId}
-                //inputMode="numeric"
-                variant="standard"
-                autoComplete="off"
-                onChange={(e) => handleIdEdit(rowIndex, e.target.value)}
-                maxRows={1}
-                sx={{
-                  minWidth: 0,
-                  maxWidth: "50%",
-                  textAlign: "center",
-                  mt: 1,
-                  input: {
-                    m: 0,
-                  },
-                }}
-                placeholder="MSSV"
-                inputProps={{
-                  autoComplete: "off",
-                }}
-                InputProps={{
-                  disableUnderline: true,
-                  readOnly: !editableStates[rowIndex],
-                }}
-                onKeyDown={(e) => handleIdKeyDown(e, rowIndex)}
-                //onBlur={(e) => handleSaving(rowIndex, colIndex)}
-                type="text"
-              />
-              <OptionMenu
+              <Box display="flex" flexDirection="column" sx={{ width: "55%" }}>
+                <TextField
+                  id={`name-${rowIndex}`}
+                  value={row?.user.studentId}
+                  //inputMode="numeric"
+                  variant="standard"
+                  autoComplete="off"
+                  onChange={(e) => handleIdEdit(rowIndex, e.target.value)}
+                  maxRows={1}
+                  sx={{
+                    minWidth: 0,
+                    maxWidth: "50%",
+                    textAlign: "center",
+                    p: 0,
+                    mt: 1,
+                    input: {
+                      m: 0,
+                      p: 0,
+                    },
+                  }}
+                  placeholder="MSSV"
+                  inputProps={{
+                    autoComplete: "off",
+                  }}
+                  InputProps={{
+                    disableUnderline: true,
+                    readOnly: !editableStates[rowIndex],
+                  }}
+                  onKeyDown={(e) => handleIdKeyDown(e, rowIndex)}
+                  //onBlur={(e) => handleSaving(rowIndex, colIndex)}
+                  type="text"
+                />
+
+                <Typography
+                  variant="body2"
+                  sx={{ alignSelf: "start", m: 0, p: 0 }}
+                >
+                  {row?.user.firstName + " " + row?.user.lastName}
+                </Typography>
+              </Box>
+
+              {/* <OptionMenu
                 actionIcon={<MoreVertIcon />}
                 options={rowHeaderOptions}
-              />
+              /> */}
+
+              <Typography
+                variant="body1"
+                color="text.secondary"
+                key={row?.totalScore.id}
+                sx={{
+                  alignSelf: "center",
+                  justifyContent: "start",
+                }}
+              >
+                {row?.totalScore.score}%
+              </Typography>
             </Stack>
-            <Typography variant="body2">
-              {row?.user.firstName + " " + row?.user.lastName}
-            </Typography>
           </TableCell>
           {row?.homeworks?.map((col, colIndex) => (
             <TableCell
@@ -597,11 +661,11 @@ const CustomTableBody = ({ data, rowHeaderOptions }) => {
                   }
                   maxRows={1}
                   sx={{
-                    minWidth: 0,
-                    maxWidth: "50%",
-                    textAlign: "center",
+                    maxWidth: 44,
+                    textAlign: "right",
                     input: {
                       m: 0,
+                      pl: 0,
                       color: col?.state !== "final" ? "green" : "black",
                       fontWeight: col?.state !== "final" ? "600" : "normal",
                     },

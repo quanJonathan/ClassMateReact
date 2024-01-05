@@ -42,6 +42,9 @@ export class ClassService {
       })
       .populate({
         path: 'homeworks',
+        populate: {
+          path: 'composition'
+        }
       })
       .populate({
         path: "compositions"
