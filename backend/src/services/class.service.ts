@@ -34,7 +34,7 @@ export class ClassService {
       .findById(id)
       .populate({
         path: 'members',
-        select: 'firstName lastName state studentId',
+        select: 'firstName lastName state studentId email',
         populate: {
           path: 'classes.classId classes.role',
           select: 'classId className',
@@ -43,11 +43,11 @@ export class ClassService {
       .populate({
         path: 'homeworks',
         populate: {
-          path: 'composition'
-        }
+          path: 'composition',
+        },
       })
       .populate({
-        path: "compositions"
+        path: 'compositions',
       })
       .exec();
 
@@ -79,18 +79,19 @@ export class ClassService {
   }
 
   async updateState(classObject: Class) {
-    return await this.classModel.findOneAndUpdate({classId: classObject.classId}, {$set: {
-      state: classObject.state,
-    }})
+    return await this.classModel.findOneAndUpdate(
+      { classId: classObject.classId },
+      {
+        $set: {
+          state: classObject.state,
+        },
+      },
+    );
   }
 
-
-    
   async getByClassId(classId: ObjectId): Promise<Class | any> {
-    return await this.classModel
-    .findOne({ classId: classId })
-    }
-
+    return await this.classModel.findOne({ classId: classId });
+  }
 
   async generateAccessLink(id: ObjectId): Promise<string> {
     const foundClass = await this.classModel.findById(id);
@@ -217,18 +218,17 @@ export class ClassService {
     gradeCompositions: UpdateGradeComposition[],
   ) {
     try {
-      const foundClass = await this.classModel
-        .findById(classId);
+      const foundClass = await this.classModel.findById(classId);
 
       if (!foundClass) {
         throw new NotFoundException('Class is not existed or deleted');
       }
 
-      console.log(foundClass)
+      console.log(foundClass);
 
-      if(!gradeCompositions) return
+      if (!gradeCompositions) return;
 
-      console.log(gradeCompositions)
+      console.log(gradeCompositions);
 
       for (const gradeComposition of gradeCompositions) {
         const existingComposition = foundClass.compositions.find((comp) =>
@@ -241,29 +241,41 @@ export class ClassService {
             courseId: foundClass,
             homeworks: [],
             name: gradeComposition.name,
-            gradeScale: gradeComposition.gradeScale
+            gradeScale: gradeComposition.gradeScale,
           });
-          console.log(newGradeComposition)
+          console.log(newGradeComposition);
           await newGradeComposition.save();
-          (foundClass.compositions as mongoose.Types.ObjectId[]).push(newGradeComposition._id);
+          (foundClass.compositions as mongoose.Types.ObjectId[]).push(
+            newGradeComposition._id,
+          );
           await foundClass.save();
         } else {
           console.log(existingComposition);
-          if(gradeComposition.isDelete){
-            console.log("deleting")
-            foundClass.compositions = (foundClass.compositions.filter((c) => !(c._id).equals(gradeComposition._id)) as mongoose.Types.ObjectId[])
-            await this.homeworkModel.updateMany({composition: gradeComposition}, {composition: null})
-            await this.gradeCompositionModel.findOneAndDelete({_id: gradeComposition._id})
-            await foundClass.save()
-          }else{
-          await this.gradeCompositionModel.findOneAndUpdate({_id: existingComposition._id}, {
-            name: gradeComposition.name, 
-            gradeScale: gradeComposition.gradeScale
-          })
-        }
+          if (gradeComposition.isDelete) {
+            console.log('deleting');
+            foundClass.compositions = foundClass.compositions.filter(
+              (c) => !c._id.equals(gradeComposition._id),
+            ) as mongoose.Types.ObjectId[];
+            await this.homeworkModel.updateMany(
+              { composition: gradeComposition },
+              { composition: null },
+            );
+            await this.gradeCompositionModel.findOneAndDelete({
+              _id: gradeComposition._id,
+            });
+            await foundClass.save();
+          } else {
+            await this.gradeCompositionModel.findOneAndUpdate(
+              { _id: existingComposition._id },
+              {
+                name: gradeComposition.name,
+                gradeScale: gradeComposition.gradeScale,
+              },
+            );
+          }
         }
       }
-      return gradeCompositions.filter((g) => g.isDelete == false)
+      return gradeCompositions.filter((g) => g.isDelete == false);
     } catch (error) {
       console.log(error);
       throw error;
@@ -355,6 +367,48 @@ export class ClassService {
     };
   }
 
+  async returnHomeworks(_id: ObjectId, homeworkId: ObjectId) {
+    const foundHomework = await this.homeworkModel
+      .findById(homeworkId)
+      .populate('doneMembers.memberId');
+    if (foundHomework === null) {
+      throw new NotFoundException(
+        'The homework is either deleted or not found',
+      );
+    }
+    const foundClass = await this.classModel.findById(_id).populate('members');
+    const users = foundClass.members;
+
+    users.map((u) => {
+      const role = u.classes.find((c) =>  (c.classId as Class)._id.equals(foundClass._id)).role
+      if(role == '3000') return
+      const user = foundHomework.doneMembers.find((d) =>
+        u._id.equals((d.memberId as User)._id)
+      );
+      if (!user) {
+        foundHomework.doneMembers.push({
+          memberId: u,
+          state: 'final',
+          score: 0,
+        });
+      } else {
+        user.state = 'final';
+      }
+    });
+
+    await foundHomework.save();
+
+    return {
+      users: foundHomework.doneMembers,
+      className: foundClass.className,
+      homework: {
+        state: foundHomework.homeworkState,
+        maxScore: foundHomework.maxScore,
+        name: foundHomework.name,
+      },
+    };
+  }
+
   async updateHomeworkScore(
     classId: ObjectId,
     newData: [UpdateHomework],
@@ -398,7 +452,7 @@ export class ClassService {
         return ((m.memberId as User)?._id).equals(currentUser?._id);
       });
 
-      console.log(foundUserInHomework);
+      // console.log(foundUserInHomework);
 
       let returnData;
       if (foundUserInHomework) {
@@ -421,7 +475,9 @@ export class ClassService {
     // console.log(newDoneMembers);
     foundHomework.doneMembers = newDoneMembers;
     // console.log(foundHomework.doneMembers)
-    return await foundHomework.save();
+    await foundHomework.save();
+
+    return 'Save successfully';
   }
 
   async updateHomework(newData: UpdateHomework, id: ObjectId) {

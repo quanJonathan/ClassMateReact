@@ -58,8 +58,6 @@ export class ClassController {
     return this.classService.addClass(classObject);
   }
 
-  
-  
   @Get('/getOne/:id')
   async getClassId(@Param() params: any) {
     //console.log("get class")
@@ -69,10 +67,9 @@ export class ClassController {
 
   @Post('/updateState/')
   async updateState(@Body() body) {
-    console.log(body)
+    console.log(body);
     return await this.classService.updateState(body);
   }
-
 
   @Post('/updateState')
   @UseGuards()
@@ -108,9 +105,9 @@ export class ClassController {
   @Post('/addStudents/:classId')
   @UseGuards(RefreshTokenGuard)
   async addStudentsToClass(@Body() body, @Param() params: any) {
-    console.log("adding multiple user")
+    console.log('adding multiple user');
     const students = body;
-    console.log(students)
+    console.log(students);
     const classId = params.classId;
     return this.classService.addStudentViaDocument(classId, students);
   }
@@ -126,14 +123,18 @@ export class ClassController {
   @Post('/updateOrAddGradeCompositions/:id')
   // @UseGuards(RefreshTokenGuard)
   async updateComposition(@Req() req, @Param() params: any) {
-    console.log("Updating grade compositions")
+    console.log('Updating grade compositions');
     const compositions = req.body;
     return this.classService.updateComposition(params.id, compositions);
   }
 
   @Post('/updateHomeworkScore/:id/a/:homeworkId')
   @UseGuards(RefreshTokenGuard)
-  async updateHomeworkScore(@Body() body, @Param() params: any, @Res() response: any) {
+  async updateHomeworkScore(
+    @Body() body,
+    @Param() params: any,
+    @Res() response: any,
+  ) {
     console.log('Updating score');
     const _id = params.id;
     const homeworkId = params.homeworkId;
@@ -164,21 +165,51 @@ export class ClassController {
 
   @Post('/returnHomework/:id/a/:homeworkId')
   async returnHomework(@Body() body, @Param() params: any) {
-    console.log("Returning")
+    console.log('Returning');
     const _id = params.id;
     const userId = body.userId;
-    const homeworkId = params.homeworkId
+    const homeworkId = params.homeworkId;
 
-    console.log(_id)
-    console.log(userId)
+    console.log(_id);
+    console.log(userId);
+    console.log(homeworkId);
+
+    const result = await this.classService.returnHomework(
+      _id,
+      homeworkId,
+      userId,
+    );
+
+    if (result) {
+      this.emailConfirmService.sendReturnHomeworkLink(
+        result.user,
+        result.className,
+        result.homework,
+      );
+    } else {
+      throw new BadRequestException('Return homework Failed');
+    }
+  }
+
+  @Post('/returnHomeworks/:id/a/:homeworkId')
+  async returnHomeworks(@Res() res: any, @Param() params: any) {
+    console.log('Returning multiple');
+    const _id = params.id;
+    const homeworkId = params.homeworkId;
+    console.log(_id);
     console.log(homeworkId)
 
-    const result = await this.classService.returnHomework(_id, homeworkId, userId);
+    const result = await this.classService.returnHomeworks(_id, homeworkId);
 
-    if(result){
-      this.emailConfirmService.sendReturnHomeworkLink(result.user, result.className, result.homework)
-    }else{
-      throw new BadRequestException("Return homework Failed")
+    if (result) {
+      await this.emailConfirmService.sendMultipleReturnHomeworkLink(
+        result.className,
+        result.homework,
+        result.users,
+      );
+      return res.status(HttpStatus.OK).json(result);
+    } else {
+      throw new BadRequestException('Return homework Failed');
     }
   }
 
