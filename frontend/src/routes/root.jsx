@@ -9,26 +9,26 @@ import WebAppBar from "../components/AppBar";
 export default function Root() {
   return (
     <Box
-    sx={{
-      backgroundImage: "url(/assets/landing-background.png)",
-      position: "absolute",
-      top: 0,
-      right: 0,
-      left: 0,
-      minHeight: "100vh",
-      backgroundSize: "100%",
-      backgroundRepeat: "no-repeat",
-    }}
-  >
-    <Container>
-        <WebAppBar/>
-      <IntroSection />
-      <ImpactSection />
-      <CoursesSection />
-      <BenefitSection />
-      <GetStarted />
-    </Container>
-    <Footer />
-  </Box>
+      sx={{
+        backgroundImage: "url(/assets/landing-background.png)",
+        position: "absolute",
+        top: 0,
+        right: 0,
+        left: 0,
+        minHeight: "100vh",
+        backgroundSize: "100%",
+        backgroundRepeat: "no-repeat",
+      }}
+    >
+      <Container>
+        <WebAppBar />
+        <IntroSection />
+        <ImpactSection />
+        <CoursesSection />
+        <BenefitSection />
+        <GetStarted />
+      </Container>
+      <Footer />
+    </Box>
   );
 }

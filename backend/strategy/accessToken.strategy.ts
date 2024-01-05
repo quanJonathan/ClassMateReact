@@ -21,18 +21,18 @@ export class AccessTokenStrategy extends PassportStrategy(Strategy, 'jwt') {
   }
 
   async validate(payload: IJwtPayload) {
-    console.log(payload);
+    //console.log(payload);
     if (payload.email && payload.provider) {
       const { password, ...rest } = await this.userService.findOneByEmailAndProvider(
         payload.email, payload.provider
       );
-      console.log(rest)
+      // console.log(rest)
       return rest;
     }
     return { provider: payload.provider, email: payload.email };
   }
 
   success(user: any, info?: any): void {
-    console.log('user');
+    // console.log('user');
   }
 }

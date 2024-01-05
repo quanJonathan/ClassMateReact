@@ -1,8 +1,9 @@
 /* eslint-disable prettier/prettier */
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { authTypeEnum } from 'src/enum/authType.enum';
-import { Document } from 'mongoose';
+import mongoose, { Document, ObjectId } from 'mongoose';
 import { userStateEnum } from 'src/enum/userState.enum';
+import { Class } from 'src/model/class.schema';
 export type UserDocument = User & Document;
 
 @Schema()
@@ -11,7 +12,7 @@ export class User {
   firstName: string;
   @Prop({required: true})
   lastName: string;
-  @Prop({ required: true, unique: true, lowercase: true })
+  @Prop({ lowercase: true })
   email: string;
   @Prop()
   password: string;
@@ -22,13 +23,11 @@ export class User {
   @Prop()
   phoneNumber: string;
   @Prop({required: true, unique: true})
-  roles: [string];
+  roles: string[];
   @Prop({default: authTypeEnum.local, enum: authTypeEnum})
   provider: string;
   @Prop({default: Object.keys(authTypeEnum).indexOf('local')})
   providerId: string;
-  @Prop()
-  name: string;
   @Prop({default: ''})
   refreshToken: string;
   @Prop({default: ''})
@@ -37,6 +36,14 @@ export class User {
   photo: string;
   @Prop({default: userStateEnum.notActivated, enum: userStateEnum})
   state: string;
+  @Prop({type: [{'classId' : {type: mongoose.Schema.Types.ObjectId, ref: 'Class'}, 'role' : String}]})
+  classes: {'classId': ObjectId | Class, 'role': string}[]
+
+  @Prop({unique: true})
+  studentId: string;
+
+  @Prop({ type: mongoose.Schema.Types.ObjectId, auto: true })
+  _id: mongoose.Types.ObjectId;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

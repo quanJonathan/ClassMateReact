@@ -1,142 +1,171 @@
-import { useState } from 'react';
-import { Box, styled, useTheme, Toolbar, List,
-  CssBaseline, Typography, Divider, IconButton,
- Menu as MenuComponent, MenuItem, Container
+import { useState } from "react";
+import {
+  Box,
+  styled,
+  useTheme,
+  Toolbar,
+  List,
+  CssBaseline,
+  Divider,
+  IconButton,
+  Menu as MenuComponent,
+  MenuItem,
+  Container,
+  Breadcrumbs,
+  Avatar,
+  ListItemText,
+  Menu,
+  ListItemIcon,
+  useMediaQuery
 } from "@mui/material";
-import MuiDrawer from '@mui/material/Drawer';
-import MuiAppBar from '@mui/material/AppBar';
-import HomeContent from './HomeContent';
+import MuiDrawer from "@mui/material/Drawer";
+import MuiAppBar from "@mui/material/AppBar";
+import HomeContent from "./HomeContent";
 
-import { Home, Menu as MenuIcon, School,  ChevronLeft, ChevronRight, AccountCircle, KeyboardArrowDown, KeyboardArrowUp } from '@mui/icons-material';
+import {
+  Menu as MenuIcon,
+  ChevronLeft,
+  ChevronRight,
+  AccountCircle,
+  Add,
+  Assignment,
+} from "@mui/icons-material";
 import AppName from "./WebName";
 import { useAuth } from "../hook/useAuth.jsx";
-import { useNavigate } from "react-router-dom";
-import SubMenu from './Submenu.jsx';
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import SubMenu from "./Submenu.jsx";
+import { useSideNavGenerator } from "../helpers/sideNavGenerator";
+import { Stack } from "@mui/system";
+import CourseContent from "../components/CourseContent.jsx";
+import OptionMenu from "./OptionMenu.jsx";
+import FullScreenDialog from "./FullScreenDialog.jsx";
+import { stringAvatar } from "../helpers/stringAvator";
+import axios from "axios";
+import AssignmentViewingDetails from "../routes/assignment-viewing-details.jsx";
+import AssignmentViewingAll, { AssignmentViewingAllMain } from "../routes/assignment-viewing-all.jsx";
 
-
-const drawerWidth = 240;
-
-
-const SidebarData = [
-  {
-    title: 'Home',
-    path: '/dashboard',
-    icon: <Home />
-
-  },
-  {
-    title: 'Courses',
-    path: '',
-    icon: <School />,
-    iconClosed: <KeyboardArrowDown sx={{display: "flex", alignItems: "center", ml: 2}} />,
-    iconOpened: <KeyboardArrowUp sx={{display: "flex", alignItems: "center", ml: 2}} />,
-
-    subNav: [
-      {
-        title: 'Course 1',
-        path: '',
-        icon: <School />
-      },
-      {
-        title: 'Course 2',
-        path: '',
-        icon: <School />
-      }
-    ]
-  },
-];
+const drawerWidth = 280;
 const openedMixin = (theme) => ({
   width: drawerWidth,
-  transition: theme.transitions.create('width', {
+  transition: theme.transitions.create("width", {
     easing: theme.transitions.easing.sharp,
     duration: theme.transitions.duration.enteringScreen,
   }),
-  overflowX: 'hidden',
+  overflowX: "hidden",
 });
 
 const closedMixin = (theme) => ({
-  transition: theme.transitions.create('width', {
+  transition: theme.transitions.create("width", {
     easing: theme.transitions.easing.sharp,
     duration: theme.transitions.duration.leavingScreen,
   }),
-  overflowX: 'hidden',
+  overflowX: "hidden",
   width: `calc(${theme.spacing(7)} + 1px)`,
-  [theme.breakpoints.up('sm')]: {
-    width: `calc(${theme.spacing(8)} + 1px)`,
+  [theme.breakpoints.up("sm")]: {
+    width: `calc(${theme.spacing(8)} + 20px)`,
   },
 });
 
-const DrawerHeader = styled('div')(({ theme }) => ({
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'space-between',
-  padding: theme.spacing(0, 1),
-  // necessary for content to be below app bar
-  ...theme.mixins.toolbar,
+const Drawer = styled(MuiDrawer, 
+//   {
+//   shouldForwardProp: (prop) => prop !== "open",
+// }
+)(({ theme, open }) => ({
+  width: drawerWidth,
+  flexShrink: 0,
+  whiteSpace: "nowrap",
+  boxSizing: "border-box",
+  ...(open && {
+    ...openedMixin(theme),
+    "& .MuiDrawer-paper": openedMixin(theme),
+  }),
+  ...(!open && {
+    ...closedMixin(theme),
+    "& .MuiDrawer-paper": closedMixin(theme),
+  }),
 }));
 
+
 const AppBar = styled(MuiAppBar, {
-  shouldForwardProp: (prop) => prop !== 'open',
+  shouldForwardProp: (prop) => prop !== "open",
 })(({ theme, open }) => ({
-  zIndex: theme.zIndex.drawer + 1,
-  transition: theme.transitions.create(['width', 'margin'], {
+  zIndex: theme.zIndex.drawer + (true ? 1 : 0),
+  transition: theme.transitions.create(["width", "margin"], {
     easing: theme.transitions.easing.sharp,
     duration: theme.transitions.duration.leavingScreen,
   }),
-  ...(open && {
-    marginLeft: drawerWidth,
-    width: `calc(100% - ${drawerWidth}px)`,
-    transition: theme.transitions.create(['width', 'margin'], {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.enteringScreen,
-    }),
-  }),
+  // ...(open && {
+  //   width: `calc(100% - ${drawerWidth}px)`,
+  //   transition: theme.transitions.create(["width", "margin"], {
+  //     easing: theme.transitions.easing.sharp,
+  //     duration: theme.transitions.duration.enteringScreen,
+  //   }),
+  // }),
 }));
 
-const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' })(
-  ({ theme, open }) => ({
-    width: drawerWidth,
-    flexShrink: 0,
-    whiteSpace: 'nowrap',
-    boxSizing: 'border-box',
-    ...(open && {
-      ...openedMixin(theme),
-      '& .MuiDrawer-paper': openedMixin(theme),
-    }),
-    ...(!open && {
-      ...closedMixin(theme),
-      '& .MuiDrawer-paper': closedMixin(theme),
-    }),
-  }),
-);
+const DrawerHeader = styled("div")(({ theme }) => ({
+display: "flex",
+alignItems: "center",
+justifyContent: "space-between",
+padding: theme.spacing(0, 1),
+// necessary for content to be below app bar
+...theme.mixins.toolbar,
+}));
 
-export default function MiniDrawer({children, page}) {
+
+
+export default function MiniDrawer({ children, page }) {
+  const lgUp = useMediaQuery((theme) => theme.breakpoints.up('lg'));
+
   const { logout, isAuthenticated, user } = useAuth();
+  // console.log(user);
   const theme = useTheme();
   const [open, setOpen] = useState(false);
-  const [menuData, setMenuData] = useState("Home");
-  const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState(null);
   const [anchorEl, setAnchorEl] = useState(null);
+  const [isDialogAddOpen, setDialogAddOpen] = useState(false);
+  const [isDialogJoinOpen, setDialogJoinOpen] = useState(false);
 
-  // console.log(open + " " + menuData + " " + mobileMoreAnchorEl + " " + anchorEl);
+  const location = useLocation();
+  // console.log(location)
 
   const handleProfileMenuOpen = (event) => {
-    setAnchorEl(event.currentTarget);
+    setAnchorEl(event.target);
+    console.log(event.target);
   };
+
+  const handleDrawerOpenClose = () => {
+    setOpen(!open);
+  };
+
+  const options = [
+    {
+      label: "Join class",
+      action: () => handleJoinClassModal(),
+    },
+    {
+      label: "Create class",
+      action: () => handleOpenAddModal(),
+    },
+  ];
+
+  const handleOpenAddModal = () => {
+    setDialogAddOpen(true);
+  };
+
+  const handleJoinClassModal = () => {
+    setDialogJoinOpen(true);
+  };
+
+  const SidebarData = useSideNavGenerator();
 
   const isMenuOpen = Boolean(anchorEl);
-  const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
+
   const handleMenuClose = () => {
     setAnchorEl(null);
-    handleMobileMenuClose();
-  };
-
-  const handleMobileMenuClose = () => {
-    setMobileMoreAnchorEl(null);
   };
 
   const menuId = "primary-search-account-menu";
-  const renderMenu = (
+  const renderMenu =(anchorEl) => (
     <MenuComponent
       anchorEl={anchorEl}
       anchorOrigin={{
@@ -153,120 +182,153 @@ export default function MiniDrawer({children, page}) {
       onClose={handleMenuClose}
     >
       <MenuItem onClick={() => navigate("/user/profile")}>Profile</MenuItem>
-      <MenuItem onClick={() => navigate('/dashboard')}>Dashboard</MenuItem>
-      <MenuItem onClick={ () =>  {
-        logout()
-        setAnchorEl(null)
-      }} sx={{ color: "red" }}>
+      <MenuItem onClick={() => navigate("/dashboard")}>Dashboard</MenuItem>
+      <MenuItem
+        onClick={() => {
+          logout();
+          setAnchorEl(null);
+        }}
+        sx={{ color: "red" }}
+      >
         Log out
       </MenuItem>
     </MenuComponent>
   );
 
   const navigate = useNavigate();
-  const handleCloseNavMenu = (path) => {
-    setAnchorEl(null);
-    if (path) {
-      navigate(path);
-    }
-  };
+
   return (
     <>
       <CssBaseline />
-      <AppBar position="fixed"
-      elevation={4}
-      open={open}
-      sx={{
-        bgcolor: "#FFF",
-        color: "#2f2f2f",
-        
-      }}>
-         <Container maxWidth="x1">
-        <Toolbar sx={{height: {xs: "12vh", md: "10vh"}}}>
-          <IconButton
-            color="inherit"
-            aria-label="open drawer"
-            onClick={()=> setOpen(!open)}
-            edge="start"
+      <FullScreenDialog
+        open={isDialogJoinOpen}
+        handleClose={() => setDialogJoinOpen(false)}
+      />
+      <AppBar
+        position={true ? "fixed" : "absolute"}
+        elevation={1}
+        open={open}
+        sx={{
+          height: "70px",
+          bgcolor: "#FFF",
+          color: "#2f2f2f",
+        }}
+      >
+        <Container maxWidth="xl">
+          <Toolbar
+            sx={{
+              height: { xs: "12vh", md: "10vh" },
+              justifyContent: "space-between",
+            }}
           >
-            <MenuIcon />
-          </IconButton>
+            <IconButton
+              color="inherit"
+              aria-label="open drawer"
+              onClick={handleDrawerOpenClose}
+              edge="start"
+            >
+              <MenuIcon />
+            </IconButton>
 
-          <AppName   />
-          <Box sx={{ flexGrow: 1 }}>
-                <Typography color="#5f6368"  sx={{
-                    fontWeight: "medium",
-                    fontSize: "20px",
-                    display: {
-                      xs: "none",
-                      md: "block"
-                    }
-                }}>
-                   {page}
-                </Typography>
-            </Box>
+            <AppName />
+
+            <Stack spacing={2} sx={{ flexGrow: 1 }}>
+              <Breadcrumbs
+                separator="›"
+                aria-label="breadcrumb"
+                sx={{ fontSize: "25px" }}
+              >
+                <Link
+                  color="inherit"
+                  onClick={() => navigate(`/c/${children?.classId?._id}`)}
+                  sx={{ fontSize: "15px" }}
+                >
+                  {`> ${children?.className}`}
+                </Link>
+              </Breadcrumbs>
+            </Stack>
 
             <Box
-              sx={{ display: { xs: "none", md: "flex", alignItems: "center" } }}
-              style={{ marginLeft: "100px" }}
+              sx={{
+                display: {
+                  xs: "none",
+                  ml: "auto",
+                  alignItems: "center",
+                  justifyContent: "space-evenly",
+                  md: "flex",
+                },
+              }}
             >
-        
-              {isAuthenticated() &&
-                (
-                <IconButton
-                  size="large"
-                  edge="end"
-                  aria-label="account of current user"
-                  aria-controls={menuId}
-                  aria-haspopup="true"
-                  onClick={handleProfileMenuOpen}
-                  color="inherit"
-                >
-                   <AccountCircle sx={{width: "40px", height: "40px"}}/>
-                </IconButton>
+              {isAuthenticated() && (
+                <>
+                  {location.pathname === "/dashboard" && (
+                    <OptionMenu options={options} actionIcon={<Add />} />
+                  )}
+                  <Avatar
+                    {...stringAvatar(
+                      user
+                        ? `${user.firstName} ${user.lastName}`
+                        : "Default Name",
+                      {
+                        ml: 2,
+                      }
+                    )}
+                    size="large"
+                    edge="end"
+                    aria-label="account of current user"
+                    aria-controls={menuId}
+                    aria-haspopup="true"
+                    onClick={handleProfileMenuOpen}
+                  >
+                    {/* <AccountCircle sx={{ width: "40px", height: "40px" }} /> */}
+                  </Avatar>
+                </>
               )}
-  
             </Box>
-        </Toolbar>
+          </Toolbar>
         </Container>
-        {renderMenu}
+        {renderMenu(anchorEl)}
       </AppBar>
-      <Drawer variant="permanent" open={open} >
-        <DrawerHeader sx={{marginTop: {xs: "120px", md: "100px" }}}>
-        
-                {isAuthenticated() && open && (
-                <IconButton
-               size="large"
-               edge="center"
-               onClick={handleProfileMenuOpen}
-               color="inherit"
-                >
-               <AccountCircle sx={{width: "70px", height: "70px"}}/>
-             </IconButton>
-                )}
-             <IconButton onClick={()=>setOpen(!open)}>
-            {theme.direction === 'rtl' ? <ChevronRight /> : <ChevronLeft />}
+      <Drawer variant={lgUp ? "permanent" : "temporary"} open={open} onClose={handleDrawerOpenClose}>
+        <Toolbar />
+        <DrawerHeader sx={{paddingTop: '10%'}}>
+          {isAuthenticated() && open && (
+            <IconButton
+              size="large"
+              edge="start"
+              onClick={handleProfileMenuOpen}
+              color="inherit"
+            >
+              <AccountCircle sx={{ width: "70px", height: "70px" }} />
+            </IconButton>
+          )}
+          <IconButton onClick={handleDrawerOpenClose}>
+            {!open ? <ChevronRight /> : <ChevronLeft />}
           </IconButton>
         </DrawerHeader>
         <Divider />
-       
+
         <List>
-      
-        {SidebarData.map((item, index) => {
-              return <SubMenu item={item} key={index} open={open} />;
-            })}
-      
+          {SidebarData.map((item, index) => (
+            <SubMenu item={item} key={index} open={open} />
+          ))}
         </List>
 
-
         <Divider />
-  
       </Drawer>
-      <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
-      
-       {page =="Dashboard" && <HomeContent /> }
-       { page =="Profile" && children }
-      
+      <Box
+        component="main"
+        sx={{
+          flexGrow: 1,
+          p: 3,
+          transition: "margin-left 0.3s",
+        }}
+      >
+        {page === "Dashboard" && <HomeContent />}
+        {page === "Profile" && children}
+        {page === "Course" && <CourseContent />}
+        {page === "AssignmentViewingDetails" && <AssignmentViewingDetails/>}
+        {page === "AssignmentViewingAll" && <AssignmentViewingAllMain/>}
       </Box>
     </>
   );
