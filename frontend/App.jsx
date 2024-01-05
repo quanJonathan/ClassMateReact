@@ -60,9 +60,8 @@ export const router = createBrowserRouter(
           <Route path=":id/a/:homeworkId" element={<AssignmentViewingDetails />} />
           <Route path=":id/a/all" element={<AssignmentViewingAll />} />
         </Route>
-      </Route>
 
-      <Route path="/c">
+        <Route path="/c">
         <Route path="join/:classId" element={<JoinClass />} />
         <Route path="join/verify/:classId" element={<JoinClassVerify />} />
         <Route path="t/join/:classId" element={<JoinClass />} />
@@ -72,6 +71,9 @@ export const router = createBrowserRouter(
         <Route path="send/" element={<ConfirmEmail />} />
         <Route path="receive/:refreshToken" element={<ConfirmEmailRecieve />} />
       </Route>
+      </Route>
+
+     
     </Route>
   )
 );
