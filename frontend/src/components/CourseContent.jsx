@@ -69,7 +69,7 @@ const CourseContent = () => {
     setDialogOpen(true);
   };
 
-  const tabLabels = ["General Information", "HomeWork", "People"];
+  const tabLabels = ["General", "HomeWork", "People"];
 
   if (isTeacher) {
     tabLabels.push("Grade");
@@ -114,7 +114,7 @@ const CourseContent = () => {
           <Box
             sx={{
               position: "sticky",
-              width: "100%",
+              width: "96%",
               bgcolor: "white",
               zIndex: 1,
               backgroundColor: (theme) =>
@@ -124,6 +124,13 @@ const CourseContent = () => {
               display: "flex",
               justifyContent: "flex-start",
               alignContent: "flex-start",
+              ml: 1,
+              "@media screen and (max-width: 500px)": {
+                display: 'flex',
+                justifyContent: "center",
+                alignContent: "center",
+                ml: 3
+              },
             }}
           >
             <Tabs
@@ -134,7 +141,7 @@ const CourseContent = () => {
                   outline: "none",
                 },
                 flexShrink: 0,
-                width: "95%",
+                flexGrow: 1
               }}
               variant="scrollable"
               scrollButtons="auto"
@@ -143,19 +150,26 @@ const CourseContent = () => {
                 <Tab
                   key={`tab-${label}`}
                   label={label}
-                  style={{ minWidth: `${maxTabWidth}ch` }}
+                  style={{ minWidth: `${maxTabWidth}px` }}
                 />
               ))}
             </Tabs>
             {isTeacher && (
               <IconButton
                 edge="end"
-                sx={{ width: 20, height: 20, mt: 2}}
+                sx={{
+                  width: 20,
+                  height: 20,
+                  mt: 2,
+                  "@media screen and (max-width: 500px)": {
+                    display: "none",
+                  },
+                }}
                 onClick={openModal}
                 aria-label="settings"
                 id="long-button"
               >
-                <Settings sx={{width: 30, height: 30}}/>
+                <Settings sx={{ width: 30, height: 30 }} />
               </IconButton>
             )}
           </Box>

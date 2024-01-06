@@ -112,7 +112,7 @@ export class EmailConfirmationService {
 
   public async sendReturnHomeworkLink(user: MailUser, className: string, homework: MailHomework) {
 
-    if ((user.memberId as User).email) {
+    if ((user.memberId as User)?.email) {
       const htmlText = `
       <!DOCTYPE html>
 <html lang="en">

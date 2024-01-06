@@ -73,7 +73,7 @@ export const ClassPeople = (props) => {
   };
 
   return (
-    <Box sx={{px: 10}}>
+    <Box sx={{ px: 10 }}>
       <AddPeopleDialog
         isOpen={open}
         title={title}
@@ -91,14 +91,16 @@ export const ClassPeople = (props) => {
             icon={<PersonAddAlt1OutlinedIcon />}
             sendMailAction={() => sendMailForTeacher()}
           />
-          <Section
-            title="Students"
-            data={students}
-            course={course}
-            createLink={openCreateLinkForEmptyUser}
-            icon={<PersonAddAlt1OutlinedIcon />}
-            sendMailAction={() => sendMailForStudent()}
-          />
+          {students?.length >= 1 && (
+            <Section
+              title="Students"
+              data={students}
+              course={course}
+              createLink={openCreateLinkForEmptyUser}
+              icon={<PersonAddAlt1OutlinedIcon />}
+              sendMailAction={() => sendMailForStudent()}
+            />
+          )}
         </Container>
       </Card>
     </Box>
@@ -201,7 +203,7 @@ const Section = ({ title, data, icon, sendMailAction, createLink, course }) => {
       <Divider
         sx={{
           height: "4px",
-          color: 'black'
+          color: "black",
         }}
       />
       <List>

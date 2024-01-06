@@ -398,7 +398,7 @@ export class ClassService {
     const updateUser = foundHomework.doneMembers.find((member) => {
       // console.log(member.memberId);
       return (
-        (member.memberId as User)._id.toString() == foundUser._id.toString()
+        (member.memberId as User)?._id.toString() == foundUser?._id.toString()
       );
     });
     // console.log(foundHomework);
@@ -439,7 +439,7 @@ export class ClassService {
       ).role;
       if (role == '3000') return;
       const user = foundHomework.doneMembers.find((d) =>
-        u._id.equals((d.memberId as User)._id),
+        u?._id.equals((d.memberId as User)?._id),
       );
       if (!user) {
         foundHomework.doneMembers.push({
@@ -550,7 +550,7 @@ export class ClassService {
     const updateUser = foundHomework.doneMembers.find((member) => {
       // console.log(member.memberId);
       return (
-        (member.memberId as ObjectId).toString() == foundUser._id.toString()
+        (member.memberId as ObjectId)?.toString() == foundUser?._id?.toString()
       );
     });
     // console.log(foundHomework);

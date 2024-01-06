@@ -24,7 +24,12 @@ export const AuthProvider = ({ children }) => {
 
   const [currentJoiningLink, setCurrentJoiningLink] = useLocalStorage("currentJoiningLink", null);
 
+  const [hasDataChange, setHasDataChange] = useState(false)
+
   const navigate = useNavigate();
+
+  // const serverUrl = import.meta.env.VITE_SERVER_URL
+  //console.log(serverUrl)
 
   useEffect(() => {
     // Check if the token is expired or not present
@@ -66,6 +71,7 @@ export const AuthProvider = ({ children }) => {
         console.log("update \n" + Object.values(data));
         if (data) {
           setUser(data);
+          setHasDataChange(false)
           // navigate(0);
         }
       } catch (exception) {
@@ -80,7 +86,7 @@ export const AuthProvider = ({ children }) => {
         navigate("/", { replace: true });
       }
     } else {
-      if (isTokenValid(token)) {
+      if (isTokenValid(token) || hasDataChange) {
         console.log("fetch data");
         fetchData();
       }
@@ -150,6 +156,7 @@ export const AuthProvider = ({ children }) => {
     () => ({
       token,
       setToken,
+      setHasDataChange,
       user,
       login,
       logout,

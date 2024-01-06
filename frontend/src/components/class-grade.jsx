@@ -32,6 +32,7 @@ import ExcelJS from "exceljs";
 import MuiTableCell from "@mui/material/TableCell";
 import DownloadExcelButton, { handleDownload } from "./DownloadExcelButton";
 import ExcelUploadButton from "./UploadExcelButton";
+import { mutate } from "swr";
 
 const TableCell = styled(MuiTableCell)`
   :last-of-type{
@@ -64,7 +65,7 @@ const ExcelLikeTable = ({ headers, rows, course }) => {
   //   console.log("headers")
   //   console.log(headers)
   const { id } = useParams();
-  const {token} = useAuth();
+  const { token } = useAuth();
 
   const openModal = () => {};
 
@@ -125,9 +126,7 @@ const ExcelLikeTable = ({ headers, rows, course }) => {
   const returnHomeworks = async (homework) => {
     try {
       const response = await axios.post(
-        `http://localhost:3001/class/returnHomeworks/${id}/a/${
-          homework?.id
-        }`,
+        `http://localhost:3001/class/returnHomeworks/${id}/a/${homework?.id}`,
         {
           headers: {
             Authorization: "Bearer: " + token?.refreshToken,
@@ -145,20 +144,24 @@ const ExcelLikeTable = ({ headers, rows, course }) => {
     }
   };
 
-  return (
-    <TableContainer component={Paper} sx={{p: 0, m: 0, minWidth: '100%'}}>
-      <Table aria-label="scoring-table" sx={{ width: "auto" }}>
-        <CustomTableHeader
-          data={headers}
-          constructDownloadData={constructDownloadData}
-          constructGradeData={constructGradeData}
-          course={course}
-          returnAllHomework={returnHomeworks}
-        />
-        <CustomTableBody data={rows} rowHeaderOptions={rowHeaderOptions} />
-      </Table>
-    </TableContainer>
-  );
+  if (headers?.length <= 1) {
+    return <Typography>No homeworks</Typography>;
+  } else {
+    return (
+      <TableContainer component={Paper} sx={{ p: 0, m: 0, minWidth: "100%" }}>
+        <Table aria-label="scoring-table" sx={{ width: "auto" }}>
+          <CustomTableHeader
+            data={headers}
+            constructDownloadData={constructDownloadData}
+            constructGradeData={constructGradeData}
+            course={course}
+            returnAllHomework={returnHomeworks}
+          />
+          <CustomTableBody data={rows} rowHeaderOptions={rowHeaderOptions} />
+        </Table>
+      </TableContainer>
+    );
+  }
 };
 
 const CustomTableHeader = ({
@@ -212,9 +215,14 @@ const CustomTableHeader = ({
     },
     { label: "Edit" },
     { label: "Delete", action: () => handleDelete() },
-    { label: "Return all", action: () => returnAllHomework(currentHomework) },
+    {
+      label: "Return all",
+      action: () => {
+        returnAllHomework(currentHomework);
+        mutate(`http://localhost:3001/class/getClass/${id}`);
+      },
+    },
   ];
-
 
   const handleUpload = () => {
     // Programmatically trigger the file input click
@@ -266,7 +274,9 @@ const CustomTableHeader = ({
         );
 
         if (response.status === HttpStatusCode.Ok) {
-          toast.success(`Update score for homework ${homework?.label} succeeded`);
+          toast.success(
+            `Update score for homework ${homework?.label} succeeded`
+          );
         } else {
           toast.error(response.statusText);
         }
@@ -297,10 +307,7 @@ const CustomTableHeader = ({
     }
   }
 
-  const handleDelete = async () => {
-    
-  }
-
+  const handleDelete = async () => {};
 
   return (
     <TableHead>
@@ -319,7 +326,12 @@ const CustomTableHeader = ({
                 justifyContent: "space-between",
               }}
             >
-              <Stack flexDirection="row" spacing={2} sx={{ m: 0 }} alignSelf='flex-end'>
+              <Stack
+                flexDirection="row"
+                spacing={2}
+                sx={{ m: 0 }}
+                alignSelf="flex-end"
+              >
                 <DownloadExcelButton
                   defaultData={constructGradeData()}
                   name={`${course?.className}_grading.xlsx`}
@@ -465,8 +477,12 @@ const CustomTableBody = ({ data, rowHeaderOptions }) => {
         }
       );
 
-      if (response.status === HttpStatusCode.Ok) {
-        toast.success(response.statusText);
+      if (response.status === HttpStatusCode.Ok || response.status === 201) {
+        toast.success(
+          `Return homework for ${
+            data[hoveredCell.rowIndex].user?.studentId
+          } successfully`
+        );
       } else {
         toast.error(response.statusText);
       }
@@ -554,7 +570,8 @@ const CustomTableBody = ({ data, rowHeaderOptions }) => {
             },
           }
         );
-        if (response.status === HttpStatusCode.Ok) {
+        console.log(response);
+        if (response.status === HttpStatusCode.Ok || response.status === 201) {
           toast.success("Update score succeeded");
         } else {
           toast.error("Error occurred");

@@ -84,6 +84,12 @@ export default function HomeContent() {
     [theme.breakpoints.down("md")]: {
       width: "100%",
     },
+    [theme.breakpoints.down("sm")]: {
+      width: "100%",
+      flexDirection: 'column',
+      justifyContent: 'flex-start',
+      alignContent: 'flex-start'
+    },
     display: "flex",
   }));
 
