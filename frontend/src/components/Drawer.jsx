@@ -43,6 +43,8 @@ import { stringAvatar } from "../helpers/stringAvator";
 import axios from "axios";
 import AssignmentViewingDetails from "../routes/assignment-viewing-details.jsx";
 import AssignmentViewingAll, { AssignmentViewingAllMain } from "../routes/assignment-viewing-all.jsx";
+import AddPeopleDialog from "./AddPeopleDialog.jsx";
+import CreateClassDialog from "./CreateClassDialog.jsx";
 
 const drawerWidth = 280;
 const openedMixin = (theme) => ({
@@ -203,6 +205,10 @@ export default function MiniDrawer({ children, page }) {
       <FullScreenDialog
         open={isDialogJoinOpen}
         handleClose={() => setDialogJoinOpen(false)}
+      />
+      <CreateClassDialog
+       isOpen={isDialogAddOpen}
+       handleClose={() => setDialogAddOpen(false)}
       />
       <AppBar
         position={true ? "fixed" : "absolute"}

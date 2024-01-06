@@ -95,7 +95,13 @@ function ClassCard({ item, user }) {
       <div style={{
           height: "190px",
           borderBottom: "1px solid #dcdcdc"
-      }}></div>
+      }}>
+          <Typography style={{
+             fontSize: "15px",
+             padding: "20px",
+             fontStyle: "italic"
+        }}>{item?.classId?.description ?? ""}</Typography>
+      </div>
     </ClassBox>
   );
 }

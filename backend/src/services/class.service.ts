@@ -37,7 +37,7 @@ export class ClassService {
         select: 'firstName lastName state studentId email',
         populate: {
           path: 'classes.classId classes.role',
-          select: 'classId className',
+          select: 'classId className description',
         },
       })
       .populate({
@@ -63,7 +63,7 @@ export class ClassService {
         select: 'firstName lastName state',
         populate: {
           path: 'classes.classId classes.role',
-          select: 'classId className',
+          select: 'classId className description',
         },
       })
       .exec();
