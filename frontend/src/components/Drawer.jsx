@@ -346,7 +346,7 @@ export default function MiniDrawer({ children, page }) {
         {page === "Profile" && children}
         {page === "Course" && <CourseContent />}
         {page === "AssignmentViewingDetails" && (
-          <AssignmentViewingDetailsMain />
+           <AssignmentViewingDetailsMain course={children} />
         )}
         {page === "AssignmentViewingAll" && <AssignmentViewingAllMain />}
       </Box>

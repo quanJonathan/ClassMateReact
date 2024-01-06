@@ -1,8 +1,3 @@
-import axios from "axios";
-import { useParams } from "react-router-dom";
-import useSWR from "swr";
-import { useAuth } from "./useAuth";
-
 export const calculateTotalScore = (member, homeworks, compositions) => {
   let result = 0;
   // console.log(compositions)

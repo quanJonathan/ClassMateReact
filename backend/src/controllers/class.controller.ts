@@ -55,7 +55,7 @@ export class ClassController {
   async addClass(@Res() res: any, @Body() body) {
     const classObject = body.class;
     const user = body.user;
-    const result = await this.classService.addClass(classObject, user);
+    const result = await this.classService.addClass(classObject, user._id);
 
     if (result) {
       return res.status(HttpStatus.OK).json(result);
