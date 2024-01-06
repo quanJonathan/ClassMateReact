@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import useSWR from "swr";
 import { useAuth } from "./useAuth";
 
-const calculateTotalScore = (member, homeworks, compositions) => {
+export const calculateTotalScore = (member, homeworks, compositions) => {
   let result = 0;
   // console.log(compositions)
   compositions?.map((c, index) => {

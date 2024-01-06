@@ -5,7 +5,10 @@ export function useIsTeacher(id) {
     const currentClass = user?.classes.filter(
         (classObject) => classObject.classId._id == id
       );
-    const currentRole = currentClass[0].role;
+    const currentRole = currentClass[0]?.role;
 
-    return currentRole == '3000'
+    if(currentRole)
+      return currentRole == '3000'
+
+    return false
 }

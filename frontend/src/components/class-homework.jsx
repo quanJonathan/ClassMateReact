@@ -1,4 +1,8 @@
-import { AssignmentIndOutlined, AssignmentOutlined } from "@mui/icons-material";
+import {
+  AssignmentIndOutlined,
+  AssignmentOutlined,
+  MoreVert,
+} from "@mui/icons-material";
 import {
   Accordion,
   AccordionDetails,
@@ -16,9 +20,11 @@ import { useState } from "react";
 import { format } from "date-fns";
 import { DndProvider, useDrag, useDrop } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 
 import { useIsTeacher } from "../helpers/getCurrentRole";
+import OptionMenu from "./OptionMenu";
+import { Stack } from "@mui/system";
 
 const CourseCardMini = ({ id, text, index, moveCard }) => {
   const [, ref] = useDrag({
@@ -99,87 +105,102 @@ const DraggableContent = () => {
 };
 
 export const ClassHomeWork = ({ homeworks }) => {
-  console.log(homeworks);
+  // console.log(homeworks);
   const navigate = useNavigate();
   const { id } = useParams();
 
   const isTeacher = useIsTeacher(id);
 
-  return (
-    <Box sx={{ px: 15 }}>
-      {isTeacher ? (
-        <Button variant="contained">
-          Create homework
-        </Button>
-      ) : (
-        <Button
-          variant="text"
-          sx={{ minHeight: 0 }}
-          onClick={() => navigate(`/c/${id}/a/all`)}
-        >
-          <Icon sx={{ verticalAlign: "middle" }}>
-            <AssignmentIndOutlined />
-          </Icon>
-          View your homeworks
-        </Button>
-      )}
-      <Box sx={{ py: 4 }}>
-        {homeworks?.map((homework, index) => (
-          <Accordion
-            elevation={1}
-            square
-            key={homework._id}
+  const [expandedAccordion, setExpandedAccordion] = useState(null);
+
+  const handleAccordionChange = (panel) => (event, isExpanded) => {
+    setExpandedAccordion(isExpanded ? panel : null);
+  };
+
+  if (!homeworks) return <Typography>No homeworks</Typography>;
+  else
+    return (
+      <Box sx={{ px: 15 }}>
+        {isTeacher ? (
+          <Button variant="contained">Create homework</Button>
+        ) : (
+          <Button
+            variant="text"
+            sx={{ minHeight: 0 }}
+            onClick={() => navigate(`/c/${id}/a/all`)}
           >
-            <AccordionSummary
-              aria-controls={`panel-${homework._id}-content`}
-              id={`panel-${homework._id}-header`}
-              sx={{ p: 1, mb: 0, backgroundColor: "#fff" }}
+            <Icon sx={{ verticalAlign: "middle" }}>
+              <AssignmentIndOutlined />
+            </Icon>
+            View your homeworks
+          </Button>
+        )}
+        <Box sx={{ py: 4 }}>
+          {homeworks?.map((homework, index) => (
+            <Accordion
+              elevation={1}
+              square
+              key={homework._id}
+              sx={{ borderRadius: 2 }}
+              expanded={expandedAccordion === homework._id}
+              onChange={handleAccordionChange(homework._id)}
             >
-              <Icon sx={{ ml: 3, mr: 2 }}>
-                <AssignmentOutlined />
-              </Icon>
-              <Typography
-                sx={{ flexShrink: 0, width: "40%", fontWeight: "500" }}
+              <AccordionSummary
+                aria-controls={`panel-${homework._id}-content`}
+                id={`panel-${homework._id}-header`}
+                sx={{ p: 1, mb: 0, backgroundColor: "#fff" }}
               >
-                {homework?.name}
-              </Typography>
-              <Typography
-                variant="subtitle2"
-                color="text.secondary"
-                sx={{
-                  flexShrink: 0,
-                  width: "30%",
-                  fontWeight: "400",
-                  flexGrow: 1,
-                }}
-              >
-                {homework?.composition?.name}
-              </Typography>
-              <Typography
-                variant="subtitle2"
-                color="text.secondary"
-                sx={{ fontWeight: "400" }}
-              >
-                {homework?.deadline == ""
-                  ? "No deadline"
-                  : "Due at " + format(homework?.deadline, "HH:mm yyyy-MM-dd")}
-              </Typography>
-            </AccordionSummary>
-            <AccordionDetails>
+                <Icon sx={{ ml: 3, mr: 2 }}>
+                  <AssignmentOutlined />
+                </Icon>
+                <Typography
+                  sx={{ flexShrink: 0, width: "40%", fontWeight: "500" }}
+                >
+                  {homework?.name}
+                </Typography>
+                <Typography
+                  variant="subtitle2"
+                  color="text.secondary"
+                  sx={{
+                    flexShrink: 0,
+                    width: "25%",
+                    fontWeight: "400",
+                    flexGrow: 1,
+                  }}
+                >
+                  {homework?.composition?.name}
+                </Typography>
+
+                <Stack flexDirection="row" justifyContent="space-between">
+                  <Typography
+                    variant="subtitle2"
+                    color="text.secondary"
+                    sx={{ fontWeight: "400" }}
+                  >
+                    {homework?.deadline == ""
+                      ? "No deadline"
+                      : "Due at " +
+                        format(homework?.deadline, "HH:mm yyyy-MM-dd")}
+                  </Typography>
+                  <OptionMenu
+                    actionIcon={<MoreVert sx={{ height: 30, width: 30 }} />}
+                  />
+                </Stack>
+              </AccordionSummary>
+              <AccordionDetails sx={{ ml: 3, mr: 2 }}>
                 <Typography>{homework?.name}</Typography>
-            </AccordionDetails>
-            <AccordionActions sx={{ justifyContent: "flex-start" }}>
+              </AccordionDetails>
               <Divider />
-              <Button
-                variant="text"
-                onClick={() => navigate(`/c/${id}/a/${homework?._id}/details`)}
+              <AccordionActions
+                sx={{ justifyContent: "flex-start", ml: 3, mr: 2 }}
               >
-                View details
-              </Button>
-            </AccordionActions>
-          </Accordion>
-        ))}
+                <Link to={`/c/${id}/a/${homework?._id}/details`}>
+                  View details
+                </Link>
+              </AccordionActions>
+            </Accordion>
+          ))}
+        </Box>
       </Box>
-    </Box>
-  );
+    );
 };

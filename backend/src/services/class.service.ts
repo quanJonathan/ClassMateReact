@@ -1,8 +1,13 @@
 /* eslint-disable prettier/prettier */
-import { ForbiddenException, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  ForbiddenException,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { genSalt } from 'bcrypt';
 import mongoose, { Model, Mongoose, ObjectId } from 'mongoose';
+import { userStateEnum } from 'src/enum/userState.enum';
 import { hashData } from 'src/helpers/hash-data';
 import { generateString } from 'src/helpers/random-string';
 import { Class, ClassDocument } from 'src/model/class.schema';
@@ -71,11 +76,28 @@ export class ClassService {
     return classObject.members;
   }
 
-  async addClass(classObject: Class): Promise<Class | any> {
+  async addClass(classObject: Class, userId: ObjectId): Promise<Class | any> {
+    const foundUser = await this.userModel.findById(userId);
+    if (!foundUser) {
+      throw new NotFoundException('User not found');
+    }
+
+    if (foundUser.state == userStateEnum.banned) {
+      throw new BadRequestException('This user is currently banned');
+    }
+
     const classId = generateString(6);
     const newClass = { ...classObject, classId: classId, state: 'active' };
+
     // console.log(newClass);
-    return await this.classModel.create(newClass);
+    const createClass = new this.classModel(newClass);
+    createClass.members.push(foundUser);
+
+    foundUser.classes.push({ classId: createClass, role: '3000' });
+    await createClass.save();
+    await foundUser.save();
+
+    return `Create class ${classObject.className} successfully`;
   }
 
   async updateState(classObject: Class) {
@@ -157,7 +179,7 @@ export class ClassService {
   }
 
   async addStudent(classId: string, studentId: ObjectId) {
-    console.log(classId)
+    console.log(classId);
     const foundClass = await this.classModel.findOne({ classId: classId });
     //console.log(foundClass)
     if (!foundClass) {
@@ -184,9 +206,8 @@ export class ClassService {
     }
   }
 
-
   async addTeacher(classId: string, studentId: ObjectId) {
-    console.log(classId)
+    console.log(classId);
     const foundClass = await this.classModel.findOne({ classId: classId });
     //console.log(foundClass)
     if (!foundClass) {
@@ -215,7 +236,7 @@ export class ClassService {
 
   async removeStudent(classId: string, studentId: ObjectId) {
     const foundClass = await this.classModel.findById(classId);
-   
+
     if (!foundClass) {
       throw new NotFoundException('Class not existed');
     } else {
@@ -231,9 +252,9 @@ export class ClassService {
 
       console.log(user);
       if (user.classes.length > 0) {
-        user.classes = user.classes.filter(
-          (c) => { c.classId.toString()   !== foundClass.classId  }
-        );
+        user.classes = user.classes.filter((c) => {
+          c.classId.toString() !== foundClass.classId;
+        });
         foundClass.members = foundClass.members.filter(
           (member) =>
             member.email !== user.email && user.provider === member.provider,
@@ -413,10 +434,12 @@ export class ClassService {
     const users = foundClass.members;
 
     users.map((u) => {
-      const role = u.classes.find((c) =>  (c.classId as Class)._id.equals(foundClass._id)).role
-      if(role == '3000') return
+      const role = u.classes.find((c) =>
+        (c.classId as Class)._id.equals(foundClass._id),
+      ).role;
+      if (role == '3000') return;
       const user = foundHomework.doneMembers.find((d) =>
-        u._id.equals((d.memberId as User)._id)
+        u._id.equals((d.memberId as User)._id),
       );
       if (!user) {
         foundHomework.doneMembers.push({

@@ -18,10 +18,11 @@ import {
   MenuItem,
   MenuList,
   Paper,
+  Tooltip,
   Typography,
   useMediaQuery,
 } from "@mui/material";
-import { Box } from "@mui/system";
+import { Box, Stack } from "@mui/system";
 import axios from "axios";
 import OptionMenu from "./OptionMenu";
 import { useRef, useState } from "react";
@@ -101,7 +102,7 @@ export const ClassGeneral = ({ course, user }) => {
     // console.log("adding");
     // console.log(students);
 
-    console.log(id)
+    console.log(id);
     const response = await axios.post(
       `http://localhost:3001/class/addStudents/${id}`,
       students,
@@ -111,22 +112,27 @@ export const ClassGeneral = ({ course, user }) => {
         },
       }
     );
-    if(response.status == 202){
-      toast.success(response.statusText)
-    }else{
-      toast.error(response.statusText)
+    if (response.status == 202) {
+      toast.success(response.statusText);
+    } else {
+      toast.error(response.statusText);
     }
     console.log(students);
   };
 
   const isSmallScreen = useMediaQuery("(max-width:600px)");
   return (
-    <div style={{ paddingBottom: "50px" }}>
-      <textarea
-        ref={textareaRef}
-        style={{ display: 'none' }}
-        readOnly
-      />
+    <div
+      style={{
+        paddingBottom: "50px",
+        paddingLeft: "10px",
+        paddingRight: "10px",
+        justifyContent: "center",
+        alignContent: "center",
+        position: "relative",
+      }}
+    >
+      <textarea ref={textareaRef} style={{ display: "none" }} readOnly />
       <Card
         sx={{
           width: "100%",
@@ -139,12 +145,12 @@ export const ClassGeneral = ({ course, user }) => {
           position: "relative",
           backgroundColor: "#0a9689",
           color: "white",
-          height: "350px",
+          height: "250px",
           marginTop: "30px",
         }}
       >
-        <CardActions sx={{ position: "relative" }}>
-          <Box sx={{ position: "absolute", top: 0, left: 0, padding: 2 }}>
+        <CardActions>
+          <Box sx={{ position: "absolute", bottom: 0, left: 0, padding: 2 }}>
             <Typography
               variant="h3"
               component="div"
@@ -159,8 +165,13 @@ export const ClassGeneral = ({ course, user }) => {
              fontStyle: "italic"
         }}>{course?.description ?? ""}</Typography>
           </Box>
-          <ExcelUploadButton onUpload={handleUpload} />
-          <DownloadExcelButton />
+          <Stack
+            flexDirection="row"
+            sx={{ position: "absolute", right: 0, top: 0 }}
+          >
+            <ExcelUploadButton onUpload={handleUpload} />
+            <DownloadExcelButton toolTipName="Download template" />
+          </Stack>
         </CardActions>
       </Card>
       {!isSmallScreen && (

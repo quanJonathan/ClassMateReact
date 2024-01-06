@@ -34,17 +34,15 @@ import SendMailDialog from "./SendMailDialog";
 import AddPeopleDialog from "./AddPeopleDialog";
 import axios from "axios";
 import { toast } from "react-toastify";
-import {useIsTeacher} from "../helpers/getCurrentRole"
+import { useIsTeacher } from "../helpers/getCurrentRole";
 
 export const ClassPeople = (props) => {
   const { students, teachers, course } = props;
 
- 
-
   const [open, setOpen] = useState(false);
-  const [personal,setPersonal] = useState(false);
+  const [personal, setPersonal] = useState(false);
   const [title, setTitle] = useState("Invite student");
-  const [url,setUrl] = useState("");
+  const [url, setUrl] = useState("");
 
   // const studentOptions = (studentId) => [
   //   {
@@ -53,14 +51,13 @@ export const ClassPeople = (props) => {
   //   },
   // ];
 
-
-  const openCreateLinkForEmptyUser =(studentId) =>{
-    console.dir(studentId)
+  const openCreateLinkForEmptyUser = (studentId) => {
+    console.dir(studentId);
     setPersonal(true);
-  
-    setUrl(`http://localhost:5173/c/join/${course?._id}/${studentId}`)
+
+    setUrl(`http://localhost:5173/c/join/${course?._id}/${studentId}`);
     sendMailForStudent();
-  }
+  };
 
   const openSendMailModal = (title) => {
     setOpen(true);
@@ -76,7 +73,7 @@ export const ClassPeople = (props) => {
   };
 
   return (
-    <>
+    <Box sx={{px: 10}}>
       <AddPeopleDialog
         isOpen={open}
         title={title}
@@ -104,51 +101,47 @@ export const ClassPeople = (props) => {
           />
         </Container>
       </Card>
-    </>
+    </Box>
   );
 };
 
 const Section = ({ title, data, icon, sendMailAction, createLink, course }) => {
-
-
-  
   const { token } = useAuth();
 
   const [selectedItems, setSelectedItems] = useState([]);
   const [selectAll, setSelectAll] = useState(false);
-  const studentOptions = (studentId)=> [
+  const studentOptions = (studentId) => [
     {
       label: "Delete",
-      action: () => handleDelete(studentId)
+      action: () => handleDelete(studentId),
     },
-  ]
+  ];
 
-  
-  const  handleDelete = async (studentId) =>{
+  const handleDelete = async (studentId) => {
     try {
       console.log(studentId + "check");
       await axios.post(
         `http://localhost:3001/class/removeStudent/${studentId}`,
         {
-            id: course?._id
+          id: course?._id,
         },
         {
           headers: {
             Authorization: "Bearer " + token.refreshToken,
-          }
+          },
         }
-      )
+      );
     } catch (error) {
       console.error("Remove student failed:", error);
       toast.error("Remove student failed");
     }
-  }
+  };
   const { id } = useParams();
 
   const handleToggle = (item) => {
     const currentIndex = selectedItems.indexOf(item);
     const newSelectedItems = [...selectedItems];
-   
+
     if (currentIndex === -1) {
       newSelectedItems.push(item);
     } else {
@@ -160,18 +153,11 @@ const Section = ({ title, data, icon, sendMailAction, createLink, course }) => {
 
   const { user } = useAuth();
 
-  // const currentRole = useIsTeacher(id);
-
-  // console.log("currentClass")
-  const currentClass = user?.classes.filter(
-    (classObject) => classObject.classId._id == id
-  );
-  const currentRole = currentClass[0].role;
+  const currentRole = useIsTeacher(id);
 
   const getSelectedAll = () => {
     setSelectAll(!selectAll);
     if (selectAll) {
-     
       setSelectedItems([]);
     } else {
       setSelectedItems([...data]);
@@ -181,17 +167,21 @@ const Section = ({ title, data, icon, sendMailAction, createLink, course }) => {
   return (
     <Box sx={{ mb: 4 }}>
       <Box display="flex" justifyContent="space-between">
-      {currentRole == "3000" && (
+        {currentRole == "3000" && (
           <Checkbox
-          edge="start"
-          tabIndex={-1}
-          disableRipple
-          onChange={getSelectedAll}
-          checked={selectAll}
-            />
-            )}
-        
-        <Typography variant="h5" component="div" sx={{ flexGrow: 1, display: "flex", alignItems: "center" }}>
+            edge="start"
+            tabIndex={-1}
+            disableRipple
+            onChange={getSelectedAll}
+            checked={selectAll}
+          />
+        )}
+
+        <Typography
+          variant="h5"
+          component="div"
+          sx={{ flexGrow: 1, display: "flex", alignItems: "center" }}
+        >
           {title}
         </Typography>
         {currentRole && (
@@ -201,7 +191,9 @@ const Section = ({ title, data, icon, sendMailAction, createLink, course }) => {
                 {data?.length} student {data?.length > 1 && "s"}
               </Typography>
             )} */}
-            <IconButton ><PersonRemoveAlt1Outlined/></IconButton>
+            <IconButton>
+              <PersonRemoveAlt1Outlined />
+            </IconButton>
             <IconButton onClick={sendMailAction}>{icon}</IconButton>
           </>
         )}
@@ -209,6 +201,7 @@ const Section = ({ title, data, icon, sendMailAction, createLink, course }) => {
       <Divider
         sx={{
           height: "4px",
+          color: 'black'
         }}
       />
       <List>
@@ -226,10 +219,14 @@ const Section = ({ title, data, icon, sendMailAction, createLink, course }) => {
               user?._id !== item._id &&
               currentRole && (
                 <OptionMenu
-                  options={studentOptions(item._id) ?? [{
-                    label: '',
-                    action: ()=>{}
-                  }]}
+                  options={
+                    studentOptions(item._id) ?? [
+                      {
+                        label: "",
+                        action: () => {},
+                      },
+                    ]
+                  }
                   actionIcon={<MoreVert />}
                   key={item._id}
                 />
@@ -237,7 +234,7 @@ const Section = ({ title, data, icon, sendMailAction, createLink, course }) => {
             }
           >
             <ListItemButton onClick={() => handleToggle(item)} dense>
-              {user?._id !== item._id && currentRole  && (
+              {user?._id !== item._id && currentRole && (
                 <ListItemIcon>
                   <Checkbox
                     edge="start"
@@ -250,45 +247,61 @@ const Section = ({ title, data, icon, sendMailAction, createLink, course }) => {
                   />
                 </ListItemIcon>
               )}
-              {(item.email ==='' || !item.email) ?
-              (<IconButton
-              size="medium"
-              edge="start"
-              aria-label="account of current user"
-              color="gray"
-            >
-              <AccountCircle
-                sx={{
-                    width: "45px",
-                    height: "45px"
-                  }}
-              />
-            </IconButton>)
-            : 
-              (<Avatar
-                {...stringAvatar(
-                  item
-                    ? `${item?.firstName} ${item?.lastName}`
-                    : "Default Name",
-                  { mr: 2 }
-                )}
-                size="medium"
-                edge="end"
-                aria-label="account of current user"
-                color="inherit"
-              />)
-                }
+              {item.email === "" || !item.email ? (
+                <IconButton
+                  size="medium"
+                  edge="start"
+                  aria-label="account of current user"
+                  color="gray"
+                >
+                  <AccountCircle
+                    sx={{
+                      width: "45px",
+                      height: "45px",
+                    }}
+                  />
+                </IconButton>
+              ) : (
+                <Avatar
+                  {...stringAvatar(
+                    item
+                      ? `${item?.firstName} ${item?.lastName}`
+                      : "Default Name",
+                    { mr: 2 }
+                  )}
+                  size="medium"
+                  edge="end"
+                  aria-label="account of current user"
+                  color="inherit"
+                />
+              )}
               <ListItemText
-                primary={(item.email ==='' || !item.email)? item.studentId : item.firstName + " " + item.lastName}
-                sx={{ flexGrow: 1, fontWeight: "bold", ml: 2,  color: (item.email ==='' || !item.email) ? "gray" : "inherit", }}
-
+                primary={
+                  item.email === "" || !item.email
+                    ? item.studentId
+                    : item.firstName + " " + item.lastName
+                }
+                sx={{
+                  flexGrow: 1,
+                  fontWeight: "bold",
+                  ml: 2,
+                  color: item.email === "" || !item.email ? "gray" : "inherit",
+                }}
               />
 
-                { (item.email ==='' || !item.email) && (<Button onClick={()=>createLink(item.studentId)} variant="contained" color="primary" elevation={0} sx={{
-                "textTransform": "none"
-            }}>
-           Create an Invite Link
-          </Button>)}
+              {currentRole && (item.email === "" || !item.email) && (
+                <Button
+                  onClick={() => createLink(item.studentId)}
+                  variant="contained"
+                  color="primary"
+                  elevation={0}
+                  sx={{
+                    textTransform: "none",
+                  }}
+                >
+                  Create an Invite Link
+                </Button>
+              )}
             </ListItemButton>
           </ListItem>
         ))}

@@ -9,7 +9,7 @@ import {
   Divider,
 } from "@mui/material";
 import React, { useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useParams } from "react-router-dom";
 import styled from "styled-components";
 
 const SidebarLink = styled(Link)`
@@ -36,6 +36,7 @@ const DropdownLink = styled(Link)`
 const SubMenu = ({ item, open }) => {
   const [subnav, setSubnav] = useState(true); // Dropdown is always open by default
   const location = useLocation();
+  const {id} = useParams()
 
   const showSubnav = () => setSubnav(!subnav);
 

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { IconButton } from "@mui/material";
+import { IconButton, Tooltip, Zoom, useTheme } from "@mui/material";
 import ExcelJS from "exceljs";
 import { UploadOutlined } from "@mui/icons-material";
 
@@ -21,6 +21,8 @@ const ExcelUploadButton = ({ onUpload }) => {
     document.getElementById("fileInput").click();
   };
 
+  const theme = useTheme();
+
   return (
     <div>
       <input
@@ -30,9 +32,27 @@ const ExcelUploadButton = ({ onUpload }) => {
         style={{ display: "none" }}
         onChange={handleFileChange}
       />
-      <IconButton onClick={handleButtonClick}>
-        <UploadOutlined />
-      </IconButton>
+      <Tooltip
+        title={<h3>Upload class members</h3>}
+        TransitionComponent={Zoom}
+        sx={{ fontSize: "20px" }}
+        slotProps={{
+          popper: {
+            modifiers: [
+              {
+                name: "offset",
+                options: {
+                  offset: [0, -14],
+                },
+              },
+            ],
+          },
+        }}
+      >
+        <IconButton onClick={handleButtonClick}>
+          <UploadOutlined sx={{ color: theme.palette.common.main }} />
+        </IconButton>
+      </Tooltip>
     </div>
   );
 };
