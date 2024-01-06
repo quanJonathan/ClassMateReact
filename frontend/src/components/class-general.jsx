@@ -159,6 +159,11 @@ export const ClassGeneral = ({ course, user }) => {
             >
               {course?.className}
             </Typography>
+            <Typography
+            variant="h5"
+            style={{
+             fontStyle: "italic"
+        }}>{course?.description ?? ""}</Typography>
           </Box>
           <Stack
             flexDirection="row"

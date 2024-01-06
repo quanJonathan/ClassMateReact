@@ -119,7 +119,7 @@ export class UserService {
     const find = await this.userModel.findOne({email: email, provider: provider})
     .populate({
       path: 'classes.classId classes.role',
-      select: 'className _id classId'
+      select: 'className _id classId description'
     })
     .lean()
     .exec();

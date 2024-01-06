@@ -26,6 +26,8 @@ export class Class {
  @Prop({ type: mongoose.Schema.Types.ObjectId, auto: true })
  _id: mongoose.Types.ObjectId;
  @Prop()
+ description?: string;
+ @Prop()
  state?: string; // active and inactive
 }
 
