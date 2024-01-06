@@ -24,8 +24,11 @@ import axios from "axios";
         const data = new FormData(event.currentTarget);
     
         const form = {
+            class: {
           className: data.get("className"),
           description: data.get("description")
+            },
+          user: user._id
         };
         if (form.className==""){
           toast.warning('Class Name is Required');
