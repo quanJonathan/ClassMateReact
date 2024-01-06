@@ -75,12 +75,24 @@ const navigate = useNavigate();
   const handleJoinClass = () => {
 
    
+   
     if (role === 'teacher'){
-      navigate(`/c/t/join/verify/${result?.classId}`)
+      // navigate(`/c/t/join/verify/${classId}`)
+      axios.post(`http://localhost:3001/class/joinClassAsTeacher/${result?.classId}`, user, {
+        headers: {
+          Authorization: "Bearer " + token?.refreshToken,
+        },
+      });
+      navigate("/dashboard", { replace: true });
     }
     else {
       if (user?.studentId){
-        navigate(`/c/join/verify/${result?.classId}`)
+        axios.post(`http://localhost:3001/class/joinClass/${result?.classId}`, user, {
+        headers: {
+          Authorization: "Bearer " + token?.refreshToken,
+        },
+      });
+      navigate("/dashboard", { replace: true });
       }
       else {
         toast.warning("Student ID required! Please go to profile and update your student ID.")

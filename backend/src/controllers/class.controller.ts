@@ -91,7 +91,7 @@ export class ClassController {
   }
 
   @Post('/joinClass/:classId')
-  // @UseGuards(RefreshTokenGuard)
+  @UseGuards(RefreshTokenGuard)
   async joinClass(@Body() body, @Param() params: any) {
     // console.log("joining class")
     const user = body;
