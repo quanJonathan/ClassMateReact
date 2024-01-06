@@ -43,8 +43,34 @@ const  url  = useLocation();
 const role = url.pathname.split('/')[2] === 't' ? 'teacher' : 'student'
 const navigate = useNavigate();
   const [result, setResult] = useState(null);
+  const { user, setJoining, setCurrentJoiningLink, token } = useAuth();
 
-  const {user} = useAuth();
+
+
+  useEffect(() => {
+   
+    if (user === null) {
+      setJoining(true);
+      setCurrentJoiningLink( url.pathname);
+      navigate("/sign-in", { replace: true });
+    } else {
+      setJoining(false);
+      setCurrentJoiningLink(null);
+      const fetchData = async () => {
+        try {
+          const classData = await getClass(classId);
+          setResult(classData);
+        } catch (error) {
+          console.error("Error fetching class:", error);
+          // Handle error as needed
+        }
+      };
+  
+      fetchData();
+    }
+  }, [user?._id, navigate, setJoining, setCurrentJoiningLink, classId]);
+
+
 
   const handleJoinClass = () => {
 
@@ -63,19 +89,7 @@ const navigate = useNavigate();
    
   }
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const classData = await getClass(classId);
-        setResult(classData);
-      } catch (error) {
-        console.error("Error fetching class:", error);
-        // Handle error as needed
-      }
-    };
 
-    fetchData();
-  }, [classId]);
   return (
     <Box
     sx={{
