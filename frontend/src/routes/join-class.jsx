@@ -51,11 +51,9 @@ const navigate = useNavigate();
    
     if (user === null) {
       setJoining(true);
-      setCurrentJoiningLink( url.pathname);
+      setCurrentJoiningLink(url);
       navigate("/sign-in", { replace: true });
     } else {
-      setJoining(false);
-      setCurrentJoiningLink(null);
       const fetchData = async () => {
         try {
           const classData = await getClass(classId);
@@ -84,6 +82,8 @@ const navigate = useNavigate();
         },
       });
       navigate("/dashboard", { replace: true });
+      setJoining(false);
+      setCurrentJoiningLink(null);
     }
     else {
       if (user?.studentId){
@@ -93,6 +93,8 @@ const navigate = useNavigate();
         },
       });
       navigate("/dashboard", { replace: true });
+      setJoining(false);
+      setCurrentJoiningLink(null);
       }
       else {
         toast.warning("Student ID required! Please go to profile and update your student ID.")
