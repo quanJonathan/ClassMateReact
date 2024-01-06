@@ -23,7 +23,7 @@ import { toast } from "react-toastify";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import YesNoDialog from "./yesNoDialog";
-import DraggableList from "react-draggable-list"; 
+import DraggableList from "react-draggable-list";
 
 const Transition = forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -282,7 +282,6 @@ function SettingDialog({ open, handleClose, compositions, defaultValue }) {
         onClose={handleClose}
         TransitionComponent={Transition}
         scroll="paper"
-        sx={{}}
       >
         <YesNoDialog
           open={openYesNo}
@@ -291,9 +290,11 @@ function SettingDialog({ open, handleClose, compositions, defaultValue }) {
           title={currentComposition?.name}
         />
         <AppBar
+          elevation={0}
           sx={{
             position: "relative",
             backgroundColor: "rgba(255, 255, 255, 0.1)",
+            borderBottom: "1px solid #ccc",
           }}
         >
           <Toolbar>
@@ -324,20 +325,22 @@ function SettingDialog({ open, handleClose, compositions, defaultValue }) {
         </AppBar>
         <DialogContent
           sx={{
+            display: 'flex',
             height: "100%",
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            justifyContent: "center",
-            overflowY: "auto",
+            justifyContent: 'center',
+            alignContent: 'center',
+            mt: 3,
+            p: 1
           }}
         >
           <Card
             sx={{
-              width: 700,
-              height: "100%",
+              width: '60%',
               p: 4,
               overflowY: "auto",
+              "@media screen and (max-width: 500px)": {
+                p: 0
+              },
             }}
           >
             <CardContent sx={{ minHeight: 0 }}>
@@ -366,13 +369,14 @@ function SettingDialog({ open, handleClose, compositions, defaultValue }) {
                 Grade composition must have the total of 100%
               </Typography>
 
-              <List>
+              <List sx={{minWidth: '100%'}}>
                 {gradeCompositions.map((composition, index) => (
                   <ListItem
                     key={composition?._id}
                     onMouseEnter={() => setCurrentComposition(composition)}
+                    sx={{ minWidth: "100%" }}
                   >
-                    <Stack spacing={2} direction="row">
+                    <Stack spacing={2} direction="row" sx={{minWidth: '80%'}}>
                       <TextField
                         required
                         label="Grade composition"
@@ -388,7 +392,8 @@ function SettingDialog({ open, handleClose, compositions, defaultValue }) {
                         }
                       />
                       <TextField
-                        label="gradeScale*"
+                        label="Grade Scale"
+                        required
                         value={composition?.gradeScale}
                         type="number"
                         variant="filled"
