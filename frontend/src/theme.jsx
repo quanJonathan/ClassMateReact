@@ -43,6 +43,7 @@ const theme  = responsiveFontSizes(createTheme({
       main: '#f0f1f2'
     }
   },
+  drawerWidth: 280,
 }));
 
 export default theme;

@@ -2,14 +2,16 @@
 import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { User, UserDocument } from './model/user.schema';
-import { Model } from 'mongoose';
+import { Model, ObjectId } from 'mongoose';
 import { UserRoles } from '../enum/userRole.enum';
 import { authTypeEnum } from '../enum/authType.enum';
 import { hashData } from '../helpers/hash-data';
 import { userStateEnum } from 'src/enum/userState.enum';
+import { validateHashedData } from 'src/helpers/validate-hash-data';
 
 @Injectable()
 export class UserService {
+  
   constructor(@InjectModel(User.name) private userModel: Model<UserDocument>) {}
 
   async createNewLocalUser(user: User): Promise<User> {
@@ -43,7 +45,7 @@ export class UserService {
     if (!user) {
       throw new NotFoundException('user not found');
     }
-    console.log(`user ${email} has activated`);
+    //console.log(`user ${email} has activated`);
     return this.updateState(user[0], userStateEnum.activated); 
   }
 
@@ -58,8 +60,8 @@ export class UserService {
 
     const defaultUserRoles = [UserRoles.student];
 
-    console.log(googleUser.firstName)
-    console.log(googleUser.lastName)
+    //console.log(googleUser.firstName)
+    //console.log(googleUser.lastName)
 
     // Create new User
     const user = this.userModel.create({
@@ -80,8 +82,8 @@ export class UserService {
 
     const defaultUserRoles = [UserRoles.student];
 
-    console.log(facebookUser.firstName)
-    console.log(facebookUser.lastName)
+    //console.log(facebookUser.firstName)
+    //console.log(facebookUser.lastName)
 
     // Create new User
     const user = this.userModel.create({
@@ -94,33 +96,6 @@ export class UserService {
     return (await user).save();
   }
 
-  // async signin(user: User, jwt: JwtService): Promise<any> {
-  //   const foundUser = await this.userModel
-  //     .findOne({ email: user.email })
-  //     .exec();
-  //   if (foundUser) {
-  //     const { password } = foundUser;
-  //     if (bcrypt.compare(user?.password, password)) {
-  //       const payload = { email: user.email };
-  //       return {
-  //         token: jwt.sign(payload),
-  //         firstName: foundUser.firstName,
-  //         lastName: foundUser.lastName,
-  //         email: foundUser.email,
-  //         phoneNumber: foundUser.phoneNumber,
-  //         address: foundUser.address
-  //       };
-  //     }
-  //     return new HttpException(
-  //       'Incorrect username or password',
-  //       HttpStatus.UNAUTHORIZED,
-  //     );
-  //   }
-  //   return new HttpException(
-  //     'Incorrect username or password',
-  //     HttpStatus.UNAUTHORIZED,
-  //   );
-  // }
 
   async findByEmail(email: string): Promise<User[]> {
     const find = await this.userModel.find({email: email}).lean().exec();
@@ -128,17 +103,27 @@ export class UserService {
     return find;
   }
 
-
+  async findByStudentID(id: string): Promise<User[]> {
+    const find = await this.userModel.find({studentId: id}).lean().exec();
+    // console.log(find);
+    return find;
+  }
 
   async findByToken(token: string): Promise<User[]> {
     const find = await this.userModel.find({refreshToken: token}).lean().exec();
-    console.log(find);
+    //console.log(find);
     return find;
   }
 
   async findOneByEmailAndProvider(email: string, provider: authTypeEnum): Promise<User>{
-    const find = await this.userModel.findOne({email: email, provider: provider}).lean().exec();
-    // console.log(find);
+    const find = await this.userModel.findOne({email: email, provider: provider})
+    .populate({
+      path: 'classes.classId classes.role',
+      select: 'className _id classId description'
+    })
+    .lean()
+    .exec();
+    console.log(find);
     return find;
   }
 
@@ -160,7 +145,7 @@ export class UserService {
   }
 
   async findAll(): Promise<User[]> {
-    const allUsers: User[] = await this.userModel.find({});
+    const allUsers: User[] = await this.userModel.find({}).sort({createdDate: -1});
     return allUsers;
   }
 
@@ -181,9 +166,81 @@ export class UserService {
     }})
   }
 
+  async setUserStudentId(student: Student) {
+    const acc = await this.userModel.findById(student._id)
+    if(!acc){
+      throw new NotFoundException("User not found")
+    }
+
+    acc.studentId = student.studentId
+    return await acc.save()
+  }
+
+  async adminUpdate(user) {
+    const u = await this.findOneById(user._id);
+    if (!u)       
+    {
+      console.log('User not found')
+      return;
+      throw new BadRequestException('user not found');
+    }
+    let pass= null;
+
+    if (user.studentId) {
+    const userExists = await this.userModel.findOne(
+      {studentId: user.studentId} ).exec();
+    if (userExists) {
+      throw new BadRequestException(`StudentId ${user.studentId} already in-use`)
+    }
+  }
+    
+    if (user.oldPassword) {
+      const passwordValidation = true;
+      if (!passwordValidation) {
+        console.log('Password Incorrect')
+        return await this.userModel.findOneAndUpdate({_id: user._id}, {$set: {
+          firstName: user.firstName,
+          lastName: user.lastName,
+          address: user.address,
+          phoneNumber: user.phoneNumber,
+        }})
+      }
+      pass = await hashData(user.newPassword);
+      console.log(pass)
+      return await this.userModel.findOneAndUpdate({_id: user._id}, {$set: {
+        firstName: user.firstName,
+        lastName: user.lastName,
+        address: user.address,
+        phoneNumber: user.phoneNumber,
+        email: user.email,
+        studentId: user.studentId,
+        password: pass
+      }})
+    }
+    return await this.userModel.findOneAndUpdate({_id: user._id}, {$set: {
+      firstName: user.firstName,
+      lastName: user.lastName,
+      address: user.address,
+      phoneNumber: user.phoneNumber,
+      email: user.email,
+      studentId: user.studentId,
+    }})
+  }
+
   async updateState(user: User, state: string) {
     return await this.userModel.findOneAndUpdate({email: user.email}, {$set: {
       state: state,
+    }})
+  }
+
+  async updateStudentId(user: User) {
+    const userExists = await this.userModel.findOne(
+      {studentId: user.studentId} ).exec();
+    if (userExists) {
+      throw new BadRequestException(`StudentId ${user.studentId} already in-use`)
+    }
+    return await this.userModel.findOneAndUpdate({email: user.email}, {$set: {
+      studentId: user.studentId,
     }})
   }
 
@@ -194,7 +251,39 @@ export class UserService {
     }})
   }
 
-  async getOne(email: string): Promise<User> {
+  async getOneByEmail(email: string): Promise<User> {
     return await this.userModel.findOne({email: email}, {password: 0}).exec()
+  }
+
+  async getOneEmail(id: ObjectId): Promise<string> {
+    return (await this.userModel.findById(id)).email
+  }
+
+  async createUserByAdmin(user: User): Promise<User> {
+
+    const userExists = await this.userModel.findOne(
+      user.email ? {email: user.email} : {studentId: user.studentId}).exec();
+
+    if(userExists){
+      throw new BadRequestException('User already exists')
+    }
+    
+    const defaultUserRoles = [UserRoles.student]
+    const password = await hashData(user.password)
+    
+    const newUser = new this.userModel({
+      firstName: user.firstName,
+      lastName: user.lastName,
+      email: user.email,
+      password: password,
+      roles: defaultUserRoles,
+      provider: authTypeEnum.local,
+      address: user.address,
+      phoneNumber: user.phoneNumber,
+      photo: user.photo,
+      state: userStateEnum.activated,
+      studentId: user.studentId
+    })
+    return await newUser.save();
   }
 }

@@ -15,7 +15,7 @@ export const ProtectedLayout = () => {
       console.log("expired!")
     }
     if (user && user.state !== 'activated') {
-      toast.error("Please Check Verification Email!");
+      // toast.error("Please Check Verification Email!");
       navigate("/confirm-email/send",  { replace: true });
       console.log("unactivated")
     }

@@ -18,6 +18,11 @@ import ConfirmEmailRecieve from "./src/routes/confirm-email-recieve";
 import ForgotPassword from "./src/routes/forgot-password";
 import ResetPassword from "./src/routes/reset-password";
 import FacebookOAuthSuccessRedirect from "./src/components/FacebookOAuthSuccessRedirect";
+import MainPageCourse from "./src/routes/main-page-course";
+import JoinClassVerify from "./src/routes/join-class-verify";
+import JoinClass from "./src/routes/join-class";
+import AssignmentViewingDetails from "./src/routes/assignment-viewing-details";
+import AssignmentViewingAll from "./src/routes/assignment-viewing-all";
 
 export const router = createBrowserRouter(
   createRoutesFromElements(
@@ -25,35 +30,54 @@ export const router = createBrowserRouter(
       <Route path="/" element={<HomeLayout />}>
         <Route path="" element={<Root />} />
         <Route path="sign-in" element={<SignIn />} />
+
         <Route path="sign-up" element={<SignUp />} />
         <Route path="forgot-password" element={<ForgotPassword />} />
-       
       </Route>
-      <Route path="/google-oauth-success-redirect" >
+      <Route path="/google-oauth-success-redirect">
         <Route
           path=":accessToken/:refreshToken"
-          element={<GoogleOAuthSuccessRedirect />}/>
+          element={<GoogleOAuthSuccessRedirect />}
+        />
       </Route>
       <Route path="/reset-password">
-        <Route path=":token"  element={<ResetPassword/>}/>
+        <Route path=":token" element={<ResetPassword />} />
       </Route>
-      <Route path="/facebook-oauth-success-redirect" >
+      <Route path="/facebook-oauth-success-redirect">
         <Route
           path=":accessToken/:refreshToken"
-          element={<FacebookOAuthSuccessRedirect />}/>
+          element={<FacebookOAuthSuccessRedirect />}
+        />
       </Route>
       <Route element={<ProtectedLayout />}>
         <Route path="/dashboard" element={<Dashboard />} />
-      </Route> 
-      <Route path="/confirm-email">
-        <Route path="send/" element={<ConfirmEmail/>} />
-        <Route path="receive/:refreshToken" element={<ConfirmEmailRecieve/>} />
+        <Route path="/user">
+          <Route path="profile" element={<ProfilePage />} />
+        </Route>
+
+        <Route path="/confirm-email">
+          <Route path="send/" element={<ConfirmEmail />} />
+          <Route
+            path="receive/:refreshToken"
+            element={<ConfirmEmailRecieve />}
+          />
+        </Route>
       </Route>
 
-     
-    
-      <Route path="/user" element={<ProtectedLayout />}>
-        <Route path="profile" element={<ProfilePage />} />
+      <Route path="/c">
+        <Route path=":id" element={<MainPageCourse />} />
+        <Route
+          path=":id/a/:homeworkId/details"
+          element={<AssignmentViewingDetails />}
+        />
+        <Route path=":id/a/all" element={<AssignmentViewingAll />} />
+      </Route>
+
+      <Route path="/c">
+        <Route path="join/:classId" element={<JoinClass />} />
+        <Route path="join/verify/:classId" element={<JoinClassVerify />} />
+        <Route path="t/join/:classId" element={<JoinClass />} />
+        <Route path="t/join/verify/:classId" element={<JoinClassVerify />} />
       </Route>
     </Route>
   )

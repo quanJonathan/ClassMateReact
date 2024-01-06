@@ -22,7 +22,7 @@ const FacebookOAuthSuccessRedirect = ({props}) => {
             }
             setToken(token)
             localStorage.setItem('token', JSON.stringify(token));
-            navigate('/' , { replace: true })     
+            navigate('/dashboard' , { replace: true })     
         }
     }, [accessToken, from, navigate, refreshToken, setToken])
 
