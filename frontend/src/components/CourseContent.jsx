@@ -174,6 +174,7 @@ const CourseContent = () => {
               members={students}
               homeworks={course?.homeworks}
               compositions={course?.compositions}
+              course={course}
             />
           </TabPanel>
         )}

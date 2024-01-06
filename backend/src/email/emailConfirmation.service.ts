@@ -13,6 +13,7 @@ import { Homework } from 'src/model/homework.schema';
 
 @Injectable()
 export class EmailConfirmationService {
+
   constructor(
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
@@ -213,6 +214,14 @@ export class EmailConfirmationService {
     //console.log(emailTemplate) 
   }
 
+
+  async sendMultipleReturnHomeworkLink(className: string, homework: MailHomework, users: MailUser[]) {
+    users.forEach((u) => {
+      this.sendReturnHomeworkLink(u, className, homework)
+    })
+  }
+
+  
   public async sendJoinClassLink(user: Partial<User>, url: string, classId: ObjectId) {
     try {
      
