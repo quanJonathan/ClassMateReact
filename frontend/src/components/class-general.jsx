@@ -41,18 +41,27 @@ export const ClassGeneral = ({ course, user }) => {
 
   const copyTextAction = (text) => {
     console.log("copying...");
-    if (textareaRef.current) {
-      textareaRef.current.value = text;
-      textareaRef.current.select();
-
-      try {
-        // Copy the text to the clipboard
-        document.execCommand("copy");
-        console.log("Text copied to clipboard:", text);
-      } catch (err) {
-        console.error("Unable to copy to clipboard:", err);
-      }
+    try {
+      // Copy the text to the clipboard
+      navigator.clipboard.writeText(text)
+      console.log('Text copied to clipboard:', text);
+    } catch (err) {
+      console.error('Unable to copy to clipboard:', err);
     }
+    // if (textareaRef.current) {
+    //   textareaRef.current.value = text;
+    //   textareaRef.current.select();
+
+    //   try {
+    //     // Copy the text to the clipboard
+    //     document.execCommand("copy");
+    //     console.log("Text copied to clipboard:", text);
+    //   } catch (err) {
+    //     console.error("Unable to copy to clipboard:", err);
+    //   }
+
+     
+    // }
   };
 
   const resetCodeAction = () => {
