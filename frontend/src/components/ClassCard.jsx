@@ -1,13 +1,54 @@
 import { Box, styled, Typography, Avatar } from "@mui/material";
+import axios from "axios";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 function ClassCard({ item, user }) {
   // console.log(item)
+
+  async function getClass(classId) {
+    try {
+  const response =  await axios
+  .get(`http://localhost:3001/class/getClass/${classId}`, {
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+      "Access-Control-Allow-Origin": "*",
+    },
+  });
+
+  return response.data;
+    }
+  catch(error) {
+    // Handle errors here
+    console.error("Error fetching class:", error);
+    throw error; // Rethrow the error or handle it as needed
+  }
+}
+
   const navigate = useNavigate();
 
   const goToClass = () => {
     navigate(`/c/${item?.classId?._id}`);
   };
+
+  const [result, setResult]= useState(null);
+  useEffect(() => {
+   
+   
+      const fetchData = async () => {
+        try {
+          const classData = await getClass(item?.classId?._id);
+          console.log(classData);
+          setResult(classData);
+        } catch (error) {
+          console.error("Error fetching class:", error);
+          // Handle error as needed
+        }
+      };
+  
+      fetchData();
+    
+  }, [item?._classId]);
 
   const ClassBox = styled(Box)(({ theme }) => ({
     width: "300px",
@@ -78,7 +119,7 @@ function ClassCard({ item, user }) {
                 <Avatar
                     {...stringAvatar(
                       user
-                        ? `${user.firstName} ${user.lastName}`
+                        ? `${result?.members[0]?.firstName} ${result?.members[0]?.lastName}`
                         : "Default Name"
                     )}
                   
