@@ -4,25 +4,28 @@ import {
   Home,
   KeyboardArrowDown,
   KeyboardArrowUp,
-  School
+  School,
 } from "@mui/icons-material";
-import SupervisedUserCircleRoundedIcon from '@mui/icons-material/SupervisedUserCircleRounded';
+import SupervisedUserCircleRoundedIcon from "@mui/icons-material/SupervisedUserCircleRounded";
 import { useAuth } from "../hook/useAuth";
 
 export function useSideNavGenerator() {
-  const {user} = useAuth()
-  const classes = user?.classes
+  const { user } = useAuth();
+  const classes = user?.classes;
 
   // console.log(user)
 
-
-  const teaching = classes?.filter((classObject) => classObject.role === "3000");
-  const attended = classes?.filter((classObject) => classObject.role === "1000");
+  const teaching = classes?.filter(
+    (classObject) => classObject.role === "3000"
+  );
+  const attended = classes?.filter(
+    (classObject) => classObject.role === "1000"
+  );
 
   const sideNav = [
     {
       title: "Home",
-      icon: <Home/>,
+      icon: <Home />,
       path: "/dashboard",
     },
     {
@@ -30,14 +33,10 @@ export function useSideNavGenerator() {
       path: "",
       icon: <SupervisedUserCircleRoundedIcon />,
       iconClosed: (
-        <ArrowDropUp
-          sx={{ display: "flex", alignItems: "center" }}
-        />
+        <ArrowDropUp sx={{ display: "flex", alignItems: "center" }} />
       ),
       iconOpened: (
-        <ArrowDropDown
-          sx={{ display: "flex", alignItems: "center" }}
-        />
+        <ArrowDropDown sx={{ display: "flex", alignItems: "center" }} />
       ),
     },
     {
@@ -45,16 +44,12 @@ export function useSideNavGenerator() {
       path: "",
       icon: <School />,
       iconClosed: (
-        <ArrowDropUp
-          sx={{ display: "flex", alignItems: "center" }}
-        />
+        <ArrowDropUp sx={{ display: "flex", alignItems: "center" }} />
       ),
       iconOpened: (
-        <ArrowDropDown
-          sx={{ display: "flex", alignItems: "center" }}
-        />
+        <ArrowDropDown sx={{ display: "flex", alignItems: "center" }} />
       ),
-    }
+    },
   ];
 
   let teachingData = [];
@@ -78,9 +73,17 @@ export function useSideNavGenerator() {
     attendedData.push(aObject);
   });
 
-  sideNav[1] = { ...sideNav[1], subNav: teachingData };
-  sideNav[2] = { ...sideNav[2], subNav: attendedData };
+  if (attendedData.length === 0) {
+    sideNav.splice(2, 1);
+    sideNav[1] = { ...sideNav[1], subNav: teachingData };
+  } else if (teachingData.length === 0) {
+    sideNav.splice(1, 1);
+    sideNav[1] = { ...sideNav[1], subNav: attendedData };
+  } else {
+    sideNav[1] = { ...sideNav[1], subNav: teachingData };
+    sideNav[2] = { ...sideNav[2], subNav: attendedData };
+  }
 
   // console.log(sideNav)
-  return sideNav
+  return sideNav;
 }

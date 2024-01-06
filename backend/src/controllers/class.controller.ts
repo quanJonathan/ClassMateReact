@@ -52,10 +52,16 @@ export class ClassController {
 
   @Post('/addClass')
   @UseGuards()
-  async addClass(@Body() body) {
-    const classObject = body;
-    // console.log(body)
-    return this.classService.addClass(classObject);
+  async addClass(@Res() res: any, @Body() body) {
+    const classObject = body.class;
+    const user = body.user;
+    const result = await this.classService.addClass(classObject, user);
+
+    if (result) {
+      return res.status(HttpStatus.OK).json(result);
+    } else {
+      return res.status(HttpStatus.BAD_REQUEST).json('Create failed');
+    }
   }
 
   @Get('/getOne/:id')
@@ -95,11 +101,11 @@ export class ClassController {
 
   @Post('/joinClassAsTeacher/:classId')
   @UseGuards(RefreshTokenGuard)
-  async joinClassAsTeacher(@Req() req, @Param() params : any){
-    console.log("joining class")
+  async joinClassAsTeacher(@Req() req, @Param() params: any) {
+    console.log('joining class');
     const user = req.user;
-    const classId = params.classId
-    console.log(classId)
+    const classId = params.classId;
+    console.log(classId);
     return this.classService.addTeacher(classId, user._id);
   }
 
@@ -125,7 +131,11 @@ export class ClassController {
   @Post('/removeStudent/:studentId')
   // @UseGuards(RefreshTokenGuard, RolesGuard)
   // @Roles(UserRoles.admin, UserRoles.teacher)
-  async removeStudent(@Req() req, @Body() body: { id: string}, @Param() params: any) {
+  async removeStudent(
+    @Req() req,
+    @Body() body: { id: string },
+    @Param() params: any,
+  ) {
     console.log(body.id);
     return this.classService.removeStudent(body.id, params.studentId);
   }
@@ -207,7 +217,7 @@ export class ClassController {
     const _id = params.id;
     const homeworkId = params.homeworkId;
     console.log(_id);
-    console.log(homeworkId)
+    console.log(homeworkId);
 
     const result = await this.classService.returnHomeworks(_id, homeworkId);
 

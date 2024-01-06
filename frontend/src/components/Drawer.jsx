@@ -13,10 +13,7 @@ import {
   Container,
   Breadcrumbs,
   Avatar,
-  ListItemText,
-  Menu,
-  ListItemIcon,
-  useMediaQuery
+  useMediaQuery,
 } from "@mui/material";
 import MuiDrawer from "@mui/material/Drawer";
 import MuiAppBar from "@mui/material/AppBar";
@@ -28,7 +25,6 @@ import {
   ChevronRight,
   AccountCircle,
   Add,
-  Assignment,
 } from "@mui/icons-material";
 import AppName from "./WebName";
 import { useAuth } from "../hook/useAuth.jsx";
@@ -40,9 +36,8 @@ import CourseContent from "../components/CourseContent.jsx";
 import OptionMenu from "./OptionMenu.jsx";
 import FullScreenDialog from "./FullScreenDialog.jsx";
 import { stringAvatar } from "../helpers/stringAvator";
-import axios from "axios";
-import AssignmentViewingDetails from "../routes/assignment-viewing-details.jsx";
-import AssignmentViewingAll, { AssignmentViewingAllMain } from "../routes/assignment-viewing-all.jsx";
+import { AssignmentViewingDetailsMain } from "../routes/assignment-viewing-details.jsx";
+import { AssignmentViewingAllMain } from "../routes/assignment-viewing-all.jsx";
 
 const drawerWidth = 280;
 const openedMixin = (theme) => ({
@@ -66,10 +61,11 @@ const closedMixin = (theme) => ({
   },
 });
 
-const Drawer = styled(MuiDrawer, 
-//   {
-//   shouldForwardProp: (prop) => prop !== "open",
-// }
+const Drawer = styled(
+  MuiDrawer
+  //   {
+  //   shouldForwardProp: (prop) => prop !== "open",
+  // }
 )(({ theme, open }) => ({
   width: drawerWidth,
   flexShrink: 0,
@@ -84,7 +80,6 @@ const Drawer = styled(MuiDrawer,
     "& .MuiDrawer-paper": closedMixin(theme),
   }),
 }));
-
 
 const AppBar = styled(MuiAppBar, {
   shouldForwardProp: (prop) => prop !== "open",
@@ -104,18 +99,16 @@ const AppBar = styled(MuiAppBar, {
 }));
 
 const DrawerHeader = styled("div")(({ theme }) => ({
-display: "flex",
-alignItems: "center",
-justifyContent: "space-between",
-padding: theme.spacing(0, 1),
-// necessary for content to be below app bar
-...theme.mixins.toolbar,
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "space-between",
+  padding: theme.spacing(0, 1),
+  // necessary for content to be below app bar
+  ...theme.mixins.toolbar,
 }));
 
-
-
 export default function MiniDrawer({ children, page }) {
-  const lgUp = useMediaQuery((theme) => theme.breakpoints.up('lg'));
+  const lgUp = useMediaQuery((theme) => theme.breakpoints.up("lg"));
 
   const { logout, isAuthenticated, user } = useAuth();
   // console.log(user);
@@ -165,7 +158,7 @@ export default function MiniDrawer({ children, page }) {
   };
 
   const menuId = "primary-search-account-menu";
-  const renderMenu =(anchorEl) => (
+  const renderMenu = (anchorEl) => (
     <MenuComponent
       anchorEl={anchorEl}
       anchorOrigin={{
@@ -206,12 +199,13 @@ export default function MiniDrawer({ children, page }) {
       />
       <AppBar
         position={true ? "fixed" : "absolute"}
-        elevation={1}
+        elevation={0}
         open={open}
         sx={{
           height: "70px",
           bgcolor: "#FFF",
           color: "#2f2f2f",
+          borderBottom: "1px solid #ccc",
         }}
       >
         <Container maxWidth="xl">
@@ -231,21 +225,30 @@ export default function MiniDrawer({ children, page }) {
             </IconButton>
 
             <AppName />
-           
+
             <Stack spacing={2} sx={{ flexGrow: 1 }}>
               <Breadcrumbs
                 separator="›"
                 aria-label="breadcrumb"
                 sx={{ fontSize: "25px" }}
               >
-                   {children &&
-                <Link
-                  color="inherit"
-                  onClick={() => navigate(`/c/${children?.classId?._id}`)}
-                  sx={{ fontSize: "15px" }}
-                >
-                  {`> ${children?.className}`}
-                </Link>}
+                {children && (
+                  <Link
+                    color="inherit"
+                    onClick={() => navigate(`/c/${children?.classId?._id}`)}
+                    sx={{
+                      fontSize: "15px",
+                      textDecoration: "none", // Remove default underline
+                      color: "black", // Set the color in normal state
+                      "&:hover": {
+                        textDecoration: "underline", // Show underline on hover
+                        color: "blue", // Set the color on hover
+                      },
+                    }}
+                  >
+                    {`> ${children?.className}`}
+                  </Link>
+                )}
               </Breadcrumbs>
             </Stack>
 
@@ -290,9 +293,13 @@ export default function MiniDrawer({ children, page }) {
         </Container>
         {renderMenu(anchorEl)}
       </AppBar>
-      <Drawer variant={lgUp ? "permanent" : "temporary"} open={open} onClose={handleDrawerOpenClose}>
+      <Drawer
+        variant={lgUp ? "permanent" : "temporary"}
+        open={open}
+        onClose={handleDrawerOpenClose}
+      >
         <Toolbar />
-        <DrawerHeader sx={{paddingTop: '10%'}}>
+        <DrawerHeader sx={{ paddingTop: "10%" }}>
           {isAuthenticated() && open && (
             <IconButton
               size="large"
@@ -321,15 +328,19 @@ export default function MiniDrawer({ children, page }) {
         component="main"
         sx={{
           flexGrow: 1,
-          p: 3,
+          pt: 2,
+          pl: 0,
+          m: 0,
           transition: "margin-left 0.3s",
         }}
       >
         {page === "Dashboard" && <HomeContent />}
         {page === "Profile" && children}
         {page === "Course" && <CourseContent />}
-        {page === "AssignmentViewingDetails" && <AssignmentViewingDetails/>}
-        {page === "AssignmentViewingAll" && <AssignmentViewingAllMain/>}
+        {page === "AssignmentViewingDetails" && (
+          <AssignmentViewingDetailsMain />
+        )}
+        {page === "AssignmentViewingAll" && <AssignmentViewingAllMain />}
       </Box>
     </>
   );

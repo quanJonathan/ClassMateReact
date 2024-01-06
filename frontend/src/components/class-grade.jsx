@@ -146,7 +146,7 @@ const ExcelLikeTable = ({ headers, rows, course }) => {
   };
 
   return (
-    <TableContainer component={Paper}>
+    <TableContainer component={Paper} sx={{p: 0, m: 0, minWidth: '100%'}}>
       <Table aria-label="scoring-table" sx={{ width: "auto" }}>
         <CustomTableHeader
           data={headers}
@@ -319,12 +319,12 @@ const CustomTableHeader = ({
                 justifyContent: "space-between",
               }}
             >
-              <Stack flexDirection="row" spacing={2} sx={{ m: 0 }}>
+              <Stack flexDirection="row" spacing={2} sx={{ m: 0 }} alignSelf='flex-end'>
                 <DownloadExcelButton
                   defaultData={constructGradeData()}
                   name={`${course?.className}_grading.xlsx`}
+                  toolTipName={"Download grade board"}
                 />
-                <Typography sx={{ mt: 4 }}>Download all grade</Typography>
               </Stack>
 
               <Stack

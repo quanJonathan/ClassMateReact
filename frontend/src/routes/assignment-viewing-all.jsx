@@ -1,4 +1,4 @@
-import { Stack } from "@mui/system";
+import { Stack, width } from "@mui/system";
 import { useAuth } from "../hook/useAuth";
 import {
   Accordion,
@@ -9,33 +9,53 @@ import {
   Box,
   Button,
   Divider,
-  Icon,
-  List,
-  ListItem,
+  Tooltip,
   Typography,
+  Zoom,
 } from "@mui/material";
 import { stringAvatar } from "../helpers/stringAvator";
 import { useNavigate, useParams } from "react-router-dom";
-import { useHomeworks } from "../hook/useHomeworks";
-import { AssignmentOutlined } from "@mui/icons-material";
 import { useCalculate } from "../hook/useCalculate";
 import { format } from "date-fns";
 import { useClass } from "../hook/useClass";
 import MiniDrawer from "../components/Drawer";
+import Spinner from "../components/spinner";
+import { calculateTotalScore } from "../hook/useHomeworks";
+import { useState } from "react";
 
-export const AssignmentViewingAllMain = (course) => {
+export const AssignmentViewingAllMain = () => {
   const { user } = useAuth();
   const { id, homeworkId } = useParams();
 
-  const totalPercent = useCalculate();
+  const { course, members, teachers, isLoading, isError } = useClass();
+  // console.log(course);
+
+  const [expandedAccordion, setExpandedAccordion] = useState(null);
+
+  const handleAccordionChange = (panel) => (event, isExpanded) => {
+    setExpandedAccordion(isExpanded ? panel : null);
+  };
+
+  const totalPercent = calculateTotalScore(
+    user,
+    course.homeworks,
+    course?.compositions
+  );
   const homeworks = course?.homeworks;
 
   const navigate = useNavigate();
 
-  const showGradeScale = () => {};
+  const showGradeScale = () => {
+    // TODO document why this arrow function is empty
+  };
 
   const handleHomework = (homework) => {
-    const foundUser = homework.doneMembers?.find((m) => m.memberId == user._id);
+    const foundUser = homework.doneMembers?.find(
+      (m) => m.memberId === user._id
+    );
+    console.log("homework");
+    console.log(homework);
+    console.log(foundUser);
     if (foundUser && foundUser.state == "final") {
       return `${foundUser.score}/${homework.maxScore}`;
     } else {
@@ -43,83 +63,139 @@ export const AssignmentViewingAllMain = (course) => {
     }
   };
 
+  if (isError) return <div>{isError}</div>;
+
   return (
-    <Box
-      sx={{ display: "flex", flexDirection: "column", alignContent: "center" }}
-    >
-      <Stack>
-        <Box>
-          <Avatar
-            {...stringAvatar(
-              user ? `${user.firstName} ${user.lastName}` : "Default Name"
-            )}
-            size="medium"
-            edge="end"
-            aria-label="account of current user"
-            color="inherit"
-            sx={{ mr: 2 }}
-          />
-          <Typography variant="h2">
-            {user?.firstName + " " + user?.lastName}
-          </Typography>
-        </Box>
-        <Typography variant="button" onClick={showGradeScale}>
-          {totalPercent + "%"}
-        </Typography>
-      </Stack>
-      <Divider />
-      <Box>
-        {homeworks?.map((homework) => (
-          <Accordion disableGutters elevation={1} square key={homework._id}>
-            <AccordionSummary
-              aria-controls={`panel-${homework._id}-content`}
-              id={`panel-${homework._id}-header`}
-              sx={{ p: 1, mb: 0, backgroundColor: "#fff" }}
+    <>
+      {isLoading ? (
+        <Spinner />
+      ) : (
+        <Box
+          sx={{
+            position: 'fixed',
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: 'center',
+            minHeight: '95vh',
+            pl: 10,
+            pr: 20,
+            minWidth: '85%',
+          }}
+        >
+          <Stack flexDirection="row" >
+            <Box
+              sx={{
+                flexGrow: 1,
+                display: "flex",
+                alignContent: "flex-start",
+                justifyContent: "flex-start",
+              }}
             >
-              <div style={{ flexGrow: 1 }}>
-                <Typography
-                  sx={{ flexShrink: 0, width: "40%", fontWeight: "500" }}
-                >
-                  {homework?.name}
-                </Typography>
-                <Typography variant="body2" color="text.secondary">
-                  {() => handleHomework(homework)}
-                </Typography>
-              </div>
-              <Stack justifyContent="space-between">
-                <Typography
-                  variant="subtitle2"
-                  color="text.secondary"
-                  sx={{
-                    fontWeight: "400",
-                    flexGrow: 1,
-                    minHeight: 0,
-                    width: "80%",
-                  }}
-                >
-                  {homework?.deadline == ""
-                    ? "No deadline"
-                    : "Due at " +
-                      format(homework?.deadline, "HH:mm yyyy-MM-dd")}
-                  {" " + homework?.composition.name}
-                </Typography>
-              </Stack>
-            </AccordionSummary>
-            <AccordionDetails>
-              <Divider />
-            </AccordionDetails>
-            <AccordionActions sx={{ justifyContent: "flex-start" }}>
+              <Avatar
+                {...stringAvatar(
+                  user ? `${user.firstName} ${user.lastName}` : "Default Name",
+                  { width: 70, height: 70 }
+                )}
+                edge="end"
+                aria-label="account of current user"
+                color="inherit"
+              />
+              <Typography variant="h4" sx={{ mb: 1, ml: 4 }}>
+                {user?.firstName + " " + user?.lastName}
+              </Typography>
+            </Box>
+
+            <Tooltip
+              title={<h3>Show calculating methods</h3>}
+              TransitionComponent={Zoom}
+              sx={{ fontSize: "20px" }}
+              slotProps={{
+                popper: {
+                  modifiers: [
+                    {
+                      name: "offset",
+                      options: {
+                        offset: [0, -14],
+                      },
+                    },
+                  ],
+                },
+              }}
+            >
               <Button
                 variant="text"
-                onClick={() => navigate(`/c/${id}/a/${homework?._id}/details`)}
+                onClick={showGradeScale}
+                sx={{ fontSize: "35px", mb: 3 }}
               >
-                View details
+                {totalPercent.score.toFixed(2) + "%"}
               </Button>
-            </AccordionActions>
-          </Accordion>
-        ))}
-      </Box>
-    </Box>
+            </Tooltip>
+          </Stack>
+          <Divider />
+          <Box>
+            {homeworks?.map((homework) => (
+              <Accordion
+                disableGutters
+                elevation={1}
+                square
+                key={homework._id}
+                expanded={expandedAccordion === homework._id}
+                onChange={handleAccordionChange(homework._id)}
+              >
+                <AccordionSummary
+                  aria-controls={`panel-${homework._id}-content`}
+                  id={`panel-${homework._id}-header`}
+                  sx={{ backgroundColor: "#fff" }}
+                >
+                  <Box sx={{ width: "70%" }}>
+                    <Typography
+                      sx={{ flexShrink: 0, width: "30%", fontWeight: "500" }}
+                    >
+                      {homework?.name}
+                    </Typography>
+
+                    <Stack flexDirection="row" alignContent="flex-start">
+                      <Typography
+                        variant="subtitle2"
+                        color="text.secondary"
+                        sx={{
+                          fontWeight: "500",
+                        }}
+                      >
+                        {homework?.deadline == ""
+                          ? "No deadline"
+                          : "Due at " +
+                            format(homework?.deadline, "HH:mm yyyy-MM-dd")}
+                        {" " + homework?.composition.name}
+                      </Typography>
+                    </Stack>
+                  </Box>
+                  <Typography
+                    sx={{ pl: 5, fontSize: '15px', fontWeight: '600'}}
+                  >
+                    {handleHomework(homework)}
+                  </Typography>
+                  <Stack justifyContent="space-between"></Stack>
+                </AccordionSummary>
+                <AccordionDetails>
+                  <Divider />
+                </AccordionDetails>
+                <AccordionActions sx={{ justifyContent: "flex-start" }}>
+                  <Button
+                    variant="text"
+                    onClick={() =>
+                      navigate(`/c/${id}/a/${homework?._id}/details`)
+                    }
+                  >
+                    View details
+                  </Button>
+                </AccordionActions>
+              </Accordion>
+            ))}
+          </Box>
+        </Box>
+      )}
+    </>
   );
 };
 
@@ -137,7 +213,7 @@ const AssignmentViewingAll = () => {
         minHeight: "100vh",
       }}
     >
-      <MiniDrawer page="AssignmentViewingAll" children={course} />
+      <MiniDrawer page="AssignmentViewingAll" children={course}/>
     </Box>
   );
 };

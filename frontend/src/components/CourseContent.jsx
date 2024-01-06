@@ -81,7 +81,7 @@ const CourseContent = () => {
 
   const getGradeScaleLeft = () => {
     let finalValue = 100;
-    course.compositions.map((c) => {
+    course?.compositions.map((c) => {
       finalValue = finalValue - parseInt(c.gradeScale);
     });
     return finalValue == 0 ? 0 : finalValue;
@@ -95,7 +95,7 @@ const CourseContent = () => {
         <SettingDialog
           open={isDialogOpen}
           handleClose={() => setDialogOpen(false)}
-          compositions={course.compositions}
+          compositions={course?.compositions}
           defaultValue={getGradeScaleLeft()}
         />
       )}
@@ -122,7 +122,8 @@ const CourseContent = () => {
               backdropFilter: "blur(6px)",
               borderBottom: "0px solid rgba(0,0,0,0.3)",
               display: "flex",
-              justifyContent: "space-between",
+              justifyContent: "flex-start",
+              alignContent: "flex-start",
             }}
           >
             <Tabs
@@ -132,6 +133,8 @@ const CourseContent = () => {
                 "& button:focus": {
                   outline: "none",
                 },
+                flexShrink: 0,
+                width: "95%",
               }}
               variant="scrollable"
               scrollButtons="auto"
@@ -145,8 +148,14 @@ const CourseContent = () => {
               ))}
             </Tabs>
             {isTeacher && (
-              <IconButton edge="start" sx={{ p: 0 }} onClick={openModal}>
-                <Settings />
+              <IconButton
+                edge="end"
+                sx={{ width: 20, height: 20, mt: 2}}
+                onClick={openModal}
+                aria-label="settings"
+                id="long-button"
+              >
+                <Settings sx={{width: 30, height: 30}}/>
               </IconButton>
             )}
           </Box>

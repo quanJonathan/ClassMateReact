@@ -30,7 +30,7 @@ export const router = createBrowserRouter(
       <Route path="/" element={<HomeLayout />}>
         <Route path="" element={<Root />} />
         <Route path="sign-in" element={<SignIn />} />
-     
+
         <Route path="sign-up" element={<SignUp />} />
         <Route path="forgot-password" element={<ForgotPassword />} />
       </Route>
@@ -55,27 +55,30 @@ export const router = createBrowserRouter(
           <Route path="profile" element={<ProfilePage />} />
         </Route>
 
-       
-      <Route path="/confirm-email">
-        <Route path="send/" element={<ConfirmEmail />} />
-        <Route path="receive/:refreshToken" element={<ConfirmEmailRecieve />} />
-      </Route>
+        <Route path="/confirm-email">
+          <Route path="send/" element={<ConfirmEmail />} />
+          <Route
+            path="receive/:refreshToken"
+            element={<ConfirmEmailRecieve />}
+          />
+        </Route>
       </Route>
 
       <Route path="/c">
-          <Route path=":id" element={<MainPageCourse />} />
-          <Route path=":id/a/:homeworkId" element={<AssignmentViewingDetails />} />
-          <Route path=":id/a/all" element={<AssignmentViewingAll />} />
-        </Route>
+        <Route path=":id" element={<MainPageCourse />} />
+        <Route
+          path=":id/a/:homeworkId/details"
+          element={<AssignmentViewingDetails />}
+        />
+        <Route path=":id/a/all" element={<AssignmentViewingAll />} />
+      </Route>
 
-        <Route path="/c">
+      <Route path="/c">
         <Route path="join/:classId" element={<JoinClass />} />
         <Route path="join/verify/:classId" element={<JoinClassVerify />} />
         <Route path="t/join/:classId" element={<JoinClass />} />
         <Route path="t/join/verify/:classId" element={<JoinClassVerify />} />
       </Route>
-
-     
     </Route>
   )
 );
