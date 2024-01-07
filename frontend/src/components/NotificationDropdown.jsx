@@ -11,7 +11,7 @@ const NotificationDropdown = (props) => {
           <p style={{fontWeight: 'bolder'}}>Notification</p>
         </div>
         <div style={{ height: '85%', overflowY: 'scroll', padding: '10px' }}>
-          {notifications.map((content, index) => {
+          {notifications?.map((content, index) => {
             return <div key={index}>
               <NotificationItem content={content}/>
             </div>

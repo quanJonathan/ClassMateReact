@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Box,
   styled,
@@ -126,7 +126,7 @@ const DrawerHeader = styled("div")(({ theme }) => ({
 export default function MiniDrawer({ children, page }) {
   const lgUp = useMediaQuery((theme) => theme.breakpoints.up("md"));
 
-  const { logout, isAuthenticated, user } = useAuth();
+  const { logout, isAuthenticated, user, token } = useAuth();
   // console.log(user);
   const theme = useTheme();
   const [open, setOpen] = useState(true);
@@ -142,6 +142,38 @@ export default function MiniDrawer({ children, page }) {
 
   const location = useLocation();
   // console.log(location)
+  const navigate = useNavigate();
+  const [isNotificationClick, setNotificationClick] = useState(false);
+  const [notifications, setNotifications] = useState([
+    'Welcome to Classmate!',
+  ])
+
+
+  const handleNotiMouseClick = () => {
+    setNotificationClick(!isNotificationClick);
+    
+  }
+
+  const handleOutsideNotiClick = () => {
+    setNotificationClick(false);
+  };
+  useEffect(() => {
+    if (user?._id) {
+      axios.get(`http://localhost:3001/notification/u/${user._id}`, {
+        headers: {
+          Authorization: "Bearer " + token?.refreshToken,
+        },
+      })
+      .then(function (res) {
+        console.log(res);
+        setNotifications(res.data.reverse());
+      // Assuming the actual data is in `res.data`
+      })
+      .catch(function (error) {
+        console.log(error.message);
+      });
+    }
+  }, [notifications]);
 
   const handleProfileMenuOpen = (event) => {
     setAnchorEl(event.target);
@@ -222,19 +254,7 @@ export default function MiniDrawer({ children, page }) {
     </MenuComponent>
   );
 
-  const navigate = useNavigate();
-  const [isNotificationClick, setNotificationClick] = useState(false);
-  const [notifications, setNotifications] = useState([
-    'Welcome to Classmate!',
-  ])
-
-  const handleNotiMouseClick = () => {
-    setNotificationClick(!isNotificationClick);
-  }
-
-  const handleOutsideNotiClick = () => {
-    setNotificationClick(false);
-  };
+ 
 
   return (
     <>
