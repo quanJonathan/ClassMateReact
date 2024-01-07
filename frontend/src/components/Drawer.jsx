@@ -54,6 +54,7 @@ import { useIsTeacher } from "../helpers/getCurrentRole.jsx";
 import SettingDialog from "./SettingDialog.jsx";
 import OutsideClickHandler from "react-outside-click-handler";
 import NotificationDropdown from "./NotificationDropdown.jsx";
+import { useNotification } from "../hook/useNotification.jsx";
 
 const drawerWidth = 330;
 const openedMixin = (theme) => ({
@@ -141,39 +142,18 @@ export default function MiniDrawer({ children, page }) {
   const isTeacher = useIsTeacher(id);
 
   const location = useLocation();
+  const { notifications, isLoading, error } = useNotification();
   // console.log(location)
   const navigate = useNavigate();
   const [isNotificationClick, setNotificationClick] = useState(false);
-  const [notifications, setNotifications] = useState([
-    'Welcome to Classmate!',
-  ])
-
-
+  
   const handleNotiMouseClick = () => {
     setNotificationClick(!isNotificationClick);
-    
-  }
+  };
 
   const handleOutsideNotiClick = () => {
     setNotificationClick(false);
   };
-  useEffect(() => {
-    if (user?._id) {
-      axios.get(`http://localhost:3001/notification/u/${user._id}`, {
-        headers: {
-          Authorization: "Bearer " + token?.refreshToken,
-        },
-      })
-      .then(function (res) {
-        console.log(res);
-        setNotifications(res.data.reverse());
-      // Assuming the actual data is in `res.data`
-      })
-      .catch(function (error) {
-        console.log(error.message);
-      });
-    }
-  }, [notifications]);
 
   const handleProfileMenuOpen = (event) => {
     setAnchorEl(event.target);
@@ -253,8 +233,6 @@ export default function MiniDrawer({ children, page }) {
       </MenuItem>
     </MenuComponent>
   );
-
- 
 
   return (
     <>
@@ -343,7 +321,7 @@ export default function MiniDrawer({ children, page }) {
                       cursor: "pointer",
                       "@media screen and (max-width: 500px)": {
                         fontSize: "15px",
-                        mb: 2
+                        mb: 2,
                       },
                     }}
                   >
@@ -366,24 +344,35 @@ export default function MiniDrawer({ children, page }) {
                 <>
                   {location.pathname === "/dashboard" && (
                     <>
-                    <OptionMenu
-                      options={options}
-                      actionIcon={<Add sx={{ width: 30, height: 30 }} />}
-                    />
+                      <OptionMenu
+                        options={options}
+                        actionIcon={<Add sx={{ width: 30, height: 30 }} />}
+                      />
                     </>
                   )}
-                   <Badge
-                badgeContent={notifications.length}
-                color='primary'
-                sx={{ width: 35, height: 35, color: "gray", padding: "5px" }}
-               
-              >
-                <OutsideClickHandler onOutsideClick={handleOutsideNotiClick}>
-                  <NotificationsNone sx={{ position: "relative" }} onClick={handleNotiMouseClick} />
-                  <div>
-                    {isNotificationClick && <NotificationDropdown noti={notifications} />}
-                  </div>
-                </OutsideClickHandler>
+                  <Badge
+                    badgeContent={notifications?.length}
+                    color="primary"
+                    sx={{
+                      width: 35,
+                      height: 35,
+                      color: "gray",
+                      padding: "5px",
+                    }}
+                  >
+                    <OutsideClickHandler
+                      onOutsideClick={handleOutsideNotiClick}
+                    >
+                      <NotificationsNone
+                        sx={{ position: "relative" }}
+                        onClick={handleNotiMouseClick}
+                      />
+                      <div>
+                        {isNotificationClick && (
+                          <NotificationDropdown noti={notifications} />
+                        )}
+                      </div>
+                    </OutsideClickHandler>
                   </Badge>
                   <Avatar
                     {...stringAvatar(

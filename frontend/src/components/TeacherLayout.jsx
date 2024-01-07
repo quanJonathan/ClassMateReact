@@ -72,23 +72,25 @@ const StudentHomeworkPage = ({ course, homeworkId }) => {
   const [isAll, setIsAll] = useState(true);
 
   const [currentStudent, setCurrentStudent] = useState(null);
-  const { gradeReviews, isLoading, isError } = useGradeReview(homeworkId);
+  const { gradeReviews, isLoading, isError } = useGradeReview();
 
   const [currentGradeReview, setCurrentGradeReview] = useState(null);
 
+  console.log(gradeReviews)
+
   const getData = () => {
-    console.log(gradeReviews);
-    console.log(currentStudent);
+    // console.log(gradeReviews);
+    // console.log(currentStudent);
 
     setCurrentGradeReview(null);
 
     const foundGradeReview = gradeReviews?.find((g) =>
-      g.user.find((u) => u._id == currentStudent._id)
+      g?.user?.find((u) => u?._id == currentStudent?._id)
     );
     console.log(foundGradeReview);
     setCurrentGradeReview(foundGradeReview);
 
-    const foundMember = doneMembers?.find((m) => m._id == currentStudent._id);
+    const foundMember = doneMembers?.find((m) => m?._id == currentStudent?._id);
     setScore(foundMember?.score?.toString());
   };
 
@@ -239,10 +241,10 @@ const StudentHomeworkPage = ({ course, homeworkId }) => {
             flexDirection="column"
             sx={{
               flex: 1.5,
-              maxHeight: '80%',
+              maxHeight: "80%",
               height: "70%",
               p: 4,
-              borderBottom: "1px solid #ddd"
+              borderBottom: "1px solid #ddd",
             }}
           >
             {isLoading ? (
@@ -283,45 +285,42 @@ const StudentHomeworkPage = ({ course, homeworkId }) => {
                     </ListItem>
                   ))}
                 </List>
-
-                <Box sx={{ position: "absolute", bottom: 200, width: '43%'}}>
-                  <div
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      margin: "10px",
-                      padding: "20px",
-                      boxShadow: "0px 1px 6px -2px black",
-                      justifyContent: "space-between",
-                      borderRadius: "15px",
-                    }}
-                  >
-                    <Avatar
-                      {...stringAvatar(
-                        user
-                          ? `${user.firstName} ${user.lastName}`
-                          : "Default Name"
-                      )}
-                    ></Avatar>
-                    <input
-                      type="text"
-                      placeholder="Give feedback"
-                      style={{
-                        border: "none",
-                        padding: "15px 20px",
-                        width: "100%",
-                        mx: "20px",
-                        fontSize: "17px",
-                        outline: "none",
-                      }}
-                    />
-                    <IconButton>
-                      <SendOutlined />
-                    </IconButton>
-                  </div>
-                </Box>
               </>
-            )}
+            )}{" "}
+            <Box sx={{ position: "absolute", bottom: 200, width: "43%" }}>
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  margin: "10px",
+                  padding: "20px",
+                  boxShadow: "0px 1px 6px -2px black",
+                  justifyContent: "space-between",
+                  borderRadius: "15px",
+                }}
+              >
+                <Avatar
+                  {...stringAvatar(
+                    user ? `${user.firstName} ${user.lastName}` : "Default Name"
+                  )}
+                ></Avatar>
+                <input
+                  type="text"
+                  placeholder="Give feedback"
+                  style={{
+                    border: "none",
+                    padding: "15px 20px",
+                    width: "100%",
+                    mx: "20px",
+                    fontSize: "17px",
+                    outline: "none",
+                  }}
+                />
+                <IconButton>
+                  <SendOutlined />
+                </IconButton>
+              </div>
+            </Box>
           </Box>
         )}
       </Box>

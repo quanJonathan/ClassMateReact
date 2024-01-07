@@ -222,7 +222,7 @@ export class ClassService {
       const findClass = user.classes.find(c => (c.classId as Class).classId == classId.toString())
       //console.log(user);
       //console.log(foundClass)
-      console.log(user.classes)
+     // console.log(user.classes)
 
       if (findClass) {
         throw new ForbiddenException('User already in the class');
@@ -238,7 +238,7 @@ export class ClassService {
   }
 
   async addTeacher(classId: ObjectId, studentId: ObjectId) {
-    console.log(classId);
+    // console.log(classId);
     const foundClass = await this.classModel.findById(classId);
     //console.log(foundClass)
     if (!foundClass) {
@@ -252,7 +252,7 @@ export class ClassService {
       const findClass = user.classes.find(c => (c.classId as Class).classId == classId.toString())
       //console.log(user);
       //console.log(foundClass)
-      console.log(user.classes)
+     // console.log(user.classes)
 
       if (findClass) {
         throw new ForbiddenException('User already in the class');
@@ -283,7 +283,7 @@ export class ClassService {
         },
       });
 
-      console.log(user);
+      // console.log(user);
       if (user.classes.length > 0) {
         user.classes = user.classes.filter((c) => {
           c.classId.toString() !== foundClass.classId;
@@ -311,11 +311,11 @@ export class ClassService {
         throw new NotFoundException('Class is not existed or deleted');
       }
 
-      console.log(foundClass);
+      // console.log(foundClass);
 
       if (!gradeCompositions) return;
 
-      console.log(gradeCompositions);
+     // console.log(gradeCompositions);
 
       for (const gradeComposition of gradeCompositions) {
         const existingComposition = foundClass.compositions.find((comp) =>

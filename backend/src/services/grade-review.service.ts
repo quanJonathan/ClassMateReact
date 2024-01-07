@@ -10,7 +10,6 @@ import { Homework, HomeworkDocument } from 'src/model/homework.schema';
 import { User, UserDocument } from 'src/user/model/user.schema';
 
 export class GradeReviewService {
-
   constructor(
     @InjectModel(User.name) private userModel: Model<UserDocument>,
     @InjectModel(Homework.name) private homeworkModel: Model<HomeworkDocument>,
@@ -18,7 +17,11 @@ export class GradeReviewService {
     private gradeReviewModel: Model<GradeReviewDocument>,
   ) {}
 
-  async addNewGradeReview(homeworkId: ObjectId, studentId: ObjectId, gradeReview: GradeReview) {
+  async addNewGradeReview(
+    homeworkId: ObjectId,
+    studentId: ObjectId,
+    gradeReview: GradeReview,
+  ) {
     const foundHomework = await this.homeworkModel.findById(homeworkId);
     if (!foundHomework) {
       throw new NotFoundException('Homework not found');
@@ -35,23 +38,29 @@ export class GradeReviewService {
       const newGradeReview = new this.gradeReviewModel({
         ...gradeReview,
         homeWorkId: foundHomework,
-        state: 'pending'
-      })
+        state: 'pending',
+      });
 
-      await newGradeReview.save()
+      await newGradeReview.save();
 
-      return newGradeReview
+      return newGradeReview;
     }
   }
 
   async getGradeReviews(homeworkId: any) {
-    return await this.gradeReviewModel.find({homeWorkId: homeworkId}).populate({
-      path: 'user',
-      select: 'email _id studentId'
-    }).populate({
-      path: 'teacherComment.teacherId teacherComment.comment',
-      select: 'email _id'
-    }).exec()
+    const foundGradeReview = await this.gradeReviewModel
+      .find({ homeWorkId: homeworkId })
+      .populate({
+        path: 'user',
+        select: 'email _id studentId',
+      })
+      .populate({
+        path: 'teacherComment.teacherId teacherComment.comment',
+        select: 'email _id',
+      }).exec()
+
+    // console.log(foundGradeReview);
+    return foundGradeReview;
   }
 
   async getGradeReview(homeworkId: ObjectId, studentId: ObjectId) {

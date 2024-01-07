@@ -1,24 +1,20 @@
-import axios from 'axios';
-import useSWR from 'swr'
-import { useAuth } from './useAuth';
+import axios from "axios";
+import { useParams } from "react-router-dom";
+import useSWR from "swr";
 
-export function useGradeReview(homeworkId){
+export function useGradeReview() {
+  const { homeworkId } = useParams();
+  console.log(homeworkId)
 
-    const {token} = useAuth();
+  const fetcher = (url) => axios.get(url).then((res) => res.data);
+  const { data, isLoading, error } = useSWR(
+    `http://localhost:3001/gradeReview/h/${homeworkId}`,
+    fetcher
+  );
 
-    const fetcher = (url) => axios.get(url, {
-        headers: {
-            Authorization: "Bearer " + token?.refreshToken
-        }
-    }).then((res) => res.data);
-    const {data, isLoading, error} = useSWR(`http://localhost:3001/gradeReview/h/${homeworkId}`, {
-        fetcher
-    })
-
-    console.log(data)
-    return {
-        gradeReviews: data,
-        isLoading: isLoading,
-        error: error
-    }
+  return {
+    gradeReviews: data,
+    isLoading: isLoading,
+    error: error,
+  };
 }

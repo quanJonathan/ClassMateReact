@@ -11,10 +11,12 @@ export class GradeReviewController {
   ) {}
 
   @Get('/h/:homeworkId')
-  async getAllGradeReviewForHomework(@Res() res: any, @Req() req: any, @Param() params: any ){
+  async getAllGradeReviewForHomework(@Param() params: any ){
     const homeworkId = params.homeworkId
-
-    return this.gradeReviewService.getGradeReviews(homeworkId)
+    console.log(homeworkId)
+    const result = await this.gradeReviewService.getGradeReviews(homeworkId)
+    console.log(result)
+    return result
   }
 
   @Post('/add/h/:homeworkId')

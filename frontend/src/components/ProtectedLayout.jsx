@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import { toast } from "react-toastify";
 
 export const ProtectedLayout = () => {
-  const { token, user, joining, currentJoiningLink } = useAuth();
+  const { token, user, joining, currentJoiningLink, isLoading } = useAuth();
   const outlet = useOutlet();
   const navigate = useNavigate();
 
@@ -17,7 +17,7 @@ export const ProtectedLayout = () => {
     if (user && joining) {
       navigate(currentJoiningLink);
     } else {
-      if (user?.state !== "activated") {
+      if (!isLoading && user?.state !== "activated") {
         // toast.error("Please Check Verification Email!");
         navigate("/confirm-email/send", { replace: true });
         // console.log("unactivated");
