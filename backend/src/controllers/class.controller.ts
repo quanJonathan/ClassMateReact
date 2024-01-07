@@ -16,7 +16,6 @@ import { Roles } from 'src/authorization/roles.decorator';
 import { RolesGuard } from 'src/authorization/roles.guard';
 import { EmailConfirmationService } from 'src/email/emailConfirmation.service';
 import { UserRoles } from 'src/enum/userRole.enum';
-import { AccessTokenGuard } from 'src/guards/access-token.guard';
 import { RefreshTokenGuard } from 'src/guards/refresh-token.guard';
 import { ClassService } from 'src/services/class.service';
 

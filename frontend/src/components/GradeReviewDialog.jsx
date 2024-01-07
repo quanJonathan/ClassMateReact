@@ -8,12 +8,6 @@ import {
   DialogContent,
   Divider,
   IconButton,
-  InputAdornment,
-  List,
-  ListItem,
-  ListItemIcon,
-  ListItemText,
-  MenuItem,
   Slide,
   TextField,
   Toolbar,
@@ -21,7 +15,7 @@ import {
   useMediaQuery,
 } from "@mui/material";
 import { forwardRef, useState } from "react";
-import { Close, ContentCopy, InsertLink } from "@mui/icons-material";
+import { Close } from "@mui/icons-material";
 import { Box, Stack } from "@mui/system";
 import { useAuth } from "../hook/useAuth";
 import { stringAvatar } from "../helpers/stringAvator";
