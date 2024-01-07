@@ -165,7 +165,7 @@ export default function MiniDrawer({ children, page }) {
 
   const getGradeScaleLeft = () => {
     let finalValue = 100;
-    children?.compositions.map((c) => {
+    children?.compositions?.map((c) => {
       finalValue = finalValue - parseInt(c.gradeScale);
     });
     return finalValue == 0 ? 0 : finalValue;
@@ -277,7 +277,7 @@ export default function MiniDrawer({ children, page }) {
               />
             </IconButton>
 
-            <AppName children={children}/>
+            <AppName children={children} />
 
             {children && (
               <div
@@ -296,7 +296,6 @@ export default function MiniDrawer({ children, page }) {
                 <Breadcrumbs
                   separator={<NavigateNext />}
                   aria-label="breadcrumb"
-                  sx={{ fontSize: "25px" }}
                 >
                   <Link
                     underline="hover"
@@ -308,6 +307,7 @@ export default function MiniDrawer({ children, page }) {
                       cursor: "pointer",
                       "@media screen and (max-width: 500px)": {
                         fontSize: "15px",
+                        mb: 2
                       },
                     }}
                   >
@@ -342,7 +342,7 @@ export default function MiniDrawer({ children, page }) {
                       {
                         ml: 2,
                         "@media screen and (max-width: 500px)": {
-                          display: "none" ,
+                          display: "none",
                           ml: 2,
                         },
                       }
@@ -379,7 +379,16 @@ export default function MiniDrawer({ children, page }) {
                 aria-label="settings"
                 id="long-button"
               >
-                <Settings sx={{ width: 30, height: 30 }} />
+                <Settings
+                  sx={{
+                    width: 30,
+                    height: 30,
+                    "@media screen and (max-width: 500px)": {
+                      height: 20,
+                      width: 20,
+                    },
+                  }}
+                />
               </IconButton>
             )}
           </Toolbar>

@@ -4,7 +4,9 @@ import { useLocalStorage } from "./useLocalStorage";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { Email } from "@mui/icons-material";
-import { set } from "lodash";
+import { replace, set } from "lodash";
+import useFetchProfile from "./useUserProfile";
+import useSWR from "swr";
 
 const AuthContext = createContext();
 
@@ -15,6 +17,22 @@ export const AuthProvider = ({ children }) => {
     localStorage.getItem("token")
   );
 
+  const [isLoading, setIsLoading] = useState(false)
+
+  const fetcher = (url) =>
+    axios
+      .get(url, {
+        headers: {
+          Authorization: "Bearer " + token?.refreshToken,
+        },
+      })
+      .then((res) => {
+        setUser(res.data);
+        setIsLoading(false)
+      });
+
+  useSWR("http://localhost:3001/auth/profile", fetcher);
+
   const [tempEmail, setTempEmail] = useLocalStorage(
     "tempEmail",
     localStorage.getItem("tempEmail")
@@ -22,9 +40,10 @@ export const AuthProvider = ({ children }) => {
 
   const [joining, setJoining] = useLocalStorage("joining", false);
 
-  const [currentJoiningLink, setCurrentJoiningLink] = useLocalStorage("currentJoiningLink", null);
-
-  const [hasDataChange, setHasDataChange] = useState(false)
+  const [currentJoiningLink, setCurrentJoiningLink] = useLocalStorage(
+    "currentJoiningLink",
+    null
+  );
 
   const navigate = useNavigate();
 
@@ -33,8 +52,7 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     // Check if the token is expired or not present
-    //console.log(JSON.stringify(token));
-    //console.log(user);
+
     const isTokenValid = (token1) => {
       let decodedAccessToken = "";
       if (!token1) {
@@ -60,42 +78,15 @@ export const AuthProvider = ({ children }) => {
       }
     };
 
-    const fetchData = async () => {
-      console.log(token);
-      try {
-        const { data } = await axios.get("http://localhost:3001/auth/profile", {
-          headers: {
-            Authorization: "Bearer " + token.refreshToken,
-          },
-        });
-        console.log("update \n" + Object.values(data));
-        if (data) {
-          setUser(data);
-          setHasDataChange(false)
-          // navigate(0);
-        }
-      } catch (exception) {
-        console.log(exception);
-      }
-    };
-
     if (user) {
       if (!isTokenValid(token)) {
-        setToken(null);
         setUser(null);
-        navigate("/", { replace: true });
-      }
-    } else {
-      if (isTokenValid(token) || hasDataChange) {
-        console.log("fetch data");
-        fetchData();
+        setToken(null);
+        localStorage.setItem("user", null);
+        localStorage.setItem("token", null);
       }
     }
-    // setUser(null)
-    // localStorage.setItem('user', null)
-    // setToken(null)
-    // localStorage.setItem('token', null)
-  }, [navigate, setToken, setUser, token, user]);
+  }, [navigate, setToken, setUser, token?.refreshToken, user?._id]);
 
   const login = async (form) => {
     try {
@@ -104,23 +95,19 @@ export const AuthProvider = ({ children }) => {
         form
       );
       const token = response.data;
-      // console.log(response);
+      console.log(response);
       // console.log(Object.values(token));
+      console.log(token);
       if (token) {
         setToken(token);
         localStorage.setItem("token", JSON.stringify(token));
-        //console.log(user);
-        if (joining) {
-          navigate(currentJoiningLink);
-        } else {
-          if (user && user.status !== "activated") {
-            toast.error("Please Check Verification Email!");
-            navigate("/confirm-email/send", { replace: true });
-            console.log("unactivated");
-          } else {
-            toast.success("Successfully Login");
-            navigate("/dashboard", { replace: true });
-          }
+        console.log(user);
+        setIsLoading(true)
+
+        if(joining){
+          navigate(currentJoiningLink)
+        }else{
+          navigate("/dashboard", { replace: true });
         }
       } else {
         toast.error("Login Failed");
@@ -156,7 +143,6 @@ export const AuthProvider = ({ children }) => {
     () => ({
       token,
       setToken,
-      setHasDataChange,
       user,
       login,
       logout,
@@ -166,12 +152,14 @@ export const AuthProvider = ({ children }) => {
       setTempEmail,
       tempEmail,
       joining,
+      isLoading,
       setJoining,
       currentJoiningLink,
       setCurrentJoiningLink,
     }),
     [
       token,
+      isLoading,
       setToken,
       joining,
       setJoining,

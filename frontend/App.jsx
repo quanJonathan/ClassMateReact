@@ -74,10 +74,10 @@ export const router = createBrowserRouter(
       </Route>
 
       <Route path="/c">
-        <Route path="join/:classId" element={<JoinClass />} />
-        <Route path="join/verify/:classId" element={<JoinClassVerify />} />
-        <Route path="t/join/:classId" element={<JoinClass />} />
-        <Route path="t/join/verify/:classId" element={<JoinClassVerify />} />
+        <Route path="join/:id" element={<JoinClass />} />
+        <Route path="join/verify/:id" element={<JoinClassVerify />} />
+        <Route path="t/join/:id" element={<JoinClass />} />
+        <Route path="t/join/verify/:id" element={<JoinClassVerify />} />
       </Route>
     </Route>
   )

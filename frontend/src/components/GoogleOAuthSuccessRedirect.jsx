@@ -29,7 +29,7 @@ const GoogleOAuthSuccessRedirect = ({ props }) => {
       if (joining) {
         axios.post(`http://localhost:3001/class/joinClass/${array[3]}`, user, {
           headers: {
-            Authorization: "Bearer " + token.refreshToken,
+            Authorization: "Bearer " + token?.refreshToken,
           },
         });
       }

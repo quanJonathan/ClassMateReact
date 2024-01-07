@@ -74,7 +74,7 @@ export const ClassGeneral = ({ course, user }) => {
       icon: <InsertLink />,
       label: "Sao chép đường liên kết mã lớp",
       action: () => {
-        copyTextAction(`http://localhost:5173/c/join/${course?.classId}`);
+        copyTextAction(`http://localhost:5173/c/join/${course?._id}`);
       },
     },
     {
@@ -134,8 +134,8 @@ export const ClassGeneral = ({ course, user }) => {
     <div
       style={{
         paddingBottom: "50px",
-        paddingLeft: "10px",
-        paddingRight: "10px",
+        paddingLeft: "30px",
+        paddingRight: "30px",
         justifyContent: "center",
         alignContent: "center",
         position: "relative",

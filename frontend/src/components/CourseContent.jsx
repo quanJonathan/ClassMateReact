@@ -33,7 +33,7 @@ function TabPanel(props) {
       {...other}
     >
       {value === index && (
-        <Box sx={{ p: 3 }}>
+        <Box sx={{ pb: 2 }}>
           <Paper elevation={0}>{children}</Paper>
         </Box>
       )}
@@ -129,7 +129,7 @@ const CourseContent = () => {
                 display: 'flex',
                 justifyContent: "center",
                 alignContent: "center",
-                ml: 3
+                pl: 5
               },
             }}
           >
