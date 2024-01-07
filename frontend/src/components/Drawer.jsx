@@ -366,7 +366,13 @@ export default function MiniDrawer({ children, page }) {
                 <>
                   {location.pathname === "/dashboard" && (
                     <>
-                     <Badge
+                    <OptionMenu
+                      options={options}
+                      actionIcon={<Add sx={{ width: 30, height: 30 }} />}
+                    />
+                    </>
+                  )}
+                   <Badge
                 badgeContent={notifications.length}
                 color='primary'
                 sx={{ width: 35, height: 35, color: "gray", padding: "5px" }}
@@ -379,12 +385,6 @@ export default function MiniDrawer({ children, page }) {
                   </div>
                 </OutsideClickHandler>
                   </Badge>
-                    <OptionMenu
-                      options={options}
-                      actionIcon={<Add sx={{ width: 30, height: 30 }} />}
-                    />
-                    </>
-                  )}
                   <Avatar
                     {...stringAvatar(
                       user

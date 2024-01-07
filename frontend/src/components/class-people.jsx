@@ -85,7 +85,7 @@ export const ClassPeople = (props) => {
             icon={<PersonAddAlt1OutlinedIcon />}
             sendMailAction={() => sendMailForTeacher()}
           />
-          {students?.length >= 1 && (
+          { (
             <Section
               title="Students"
               data={students}
