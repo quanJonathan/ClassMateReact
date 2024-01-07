@@ -16,7 +16,7 @@ import { mutate } from "swr";
 
 export default function CreateClassDialog({ isOpen, handleClose }) {
   const { id } = useParams();
-  const { token, user, setHasDataChange} = useAuth();
+  const { token, user } = useAuth();
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (event) => {
@@ -43,7 +43,6 @@ export default function CreateClassDialog({ isOpen, handleClose }) {
         .then(function (res) {
           console.log(res);
           setLoading(false);
-          setHasDataChange(true)
           toast.success("Create Class Successfully!");
           handleClose();
           // mutate("http://localhost:3001/auth/profile");

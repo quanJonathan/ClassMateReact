@@ -89,23 +89,49 @@ export class ClassController {
     return this.classService.generateAccessLink(params.id);
   }
 
-  @Post('/joinClass/:classId')
+  @Post('/joinClass/:id')
   @UseGuards(RefreshTokenGuard)
-  async joinClass(@Body() body, @Param() params: any) {
+  async joinClass(@Body() body, @Param() params: any, @Res() res: any) {
+    // console.log("joining class")
+    const user = body;
+    console.log(params)
+    const classId = params.id;
+    console.log(classId)
+    const response = await this.classService.addStudent(classId, user._id);
+    if(response){
+      return res.status(HttpStatus.ACCEPTED).json(response)
+    }
+    return res.status(HttpStatus.BAD_REQUEST).json()
+  }
+
+  @Post('/joinClassWithId/:classId')
+  async joinClassWithId(@Body() body, @Param() params: any, @Res() res: any) {
     // console.log("joining class")
     const user = body;
     const classId = params.classId;
-    return this.classService.addStudent(classId, user._id);
+    console.log(classId)
+    const response = await this.classService.addStudentWithClassId(classId, user._id);
+    if(response){
+      console.log(response)
+      return res.status(HttpStatus.ACCEPTED).json(response)
+    }
+    return res.status(HttpStatus.BAD_REQUEST).json()
   }
 
-  @Post('/joinClassAsTeacher/:classId')
+
+  @Post('/joinClassAsTeacher/:id')
   @UseGuards(RefreshTokenGuard)
-  async joinClassAsTeacher(@Req() req, @Param() params: any) {
+  async joinClassAsTeacher(@Req() req, @Param() params: any, @Res() res: any) {
     console.log('joining class');
     const user = req.user;
-    const classId = params.classId;
+    const classId = params.id;
     console.log(classId);
-    return this.classService.addTeacher(classId, user._id);
+    const response = await this.classService.addTeacher(classId, user._id);
+
+    if(response){
+      return res.status(HttpStatus.ACCEPTED).json(response)
+    }
+    return res.status(HttpStatus.BAD_REQUEST).json()
   }
 
   @Put('/addStudent/:classId')

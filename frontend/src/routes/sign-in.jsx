@@ -24,41 +24,13 @@ import { useState } from "react";
 import { useAuth } from "../hook/useAuth.jsx";
 import AppName from "../components/WebName.jsx";
 
-function Copyright(props) {
-  return (
-    <Typography
-      variant="body2"
-      color="text.secondary"
-      align="center"
-      {...props}
-    >
-      {"Copyright © "}
-      <Link color="inherit" href="https://mui.com/">
-        Your Website
-      </Link>{" "}
-      {new Date().getFullYear()}
-      {"."}
-    </Typography>
-  );
-}
-
 export default function SignIn() {
-
-  const CustomBox = styled(Box)(({ theme }) => ({
-    display: "flex",
-    justifyContent: "center",
-    gap: theme.spacing(5),
-    height: "100vh",
-    [theme.breakpoints.down("md")]: {
-      flexDirection: "column",
-      alignItems: "center",
-    },
-  }));
 
   const [errorMessage, setErrorMessage] = useState("");
   const location = useLocation();
   const from = (location.state?.from?.pathname === '/auth' ? '/' : location.state?.from?.pathname) || '/';
-  const { login } = useAuth();
+  const { login, setUser } = useAuth();
+
   const handleSubmit = async (event) => {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
@@ -69,12 +41,6 @@ export default function SignIn() {
     };
 
     login(form);
-
-    // console.log({
-    //     email: data.get("email"),
-    //     password: data.get("password"),
-    //     save: data.get("remember-me")
-    // });
 
   };
 

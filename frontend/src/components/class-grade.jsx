@@ -618,7 +618,7 @@ const CustomTableBody = ({ data, rowHeaderOptions }) => {
           },
         }
       );
-      if (response.status == 202) {
+      if (response.status == 202 || response.status === HttpStatusCode.Ok) {
         toast.success("Changed successful");
         const updateEdit = [...editableStates];
         updateEdit[rowIndex] = true;
@@ -718,7 +718,7 @@ const CustomTableBody = ({ data, rowHeaderOptions }) => {
                   justifyContent: "start",
                 }}
               >
-                {row?.totalScore.score}%
+                {row?.totalScore.score.toFixed(2)}%
               </Typography>
             </Stack>
           </TableCell>
