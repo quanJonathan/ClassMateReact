@@ -13,13 +13,9 @@ import {
   Divider,
   Avatar,
   ListItemButton,
-  ListItemAvatar,
   Button,
 } from "@mui/material";
 import {
-  AccountCircle,
-  AccountCircleOutlined,
-  More as MoreIcon,
   MoreVert,
   PersonRemoveAlt1Outlined,
   PersonRounded,
@@ -29,9 +25,6 @@ import { useAuth } from "../hook/useAuth";
 import { stringAvatar } from "../helpers/stringAvator";
 import OptionMenu from "./OptionMenu";
 import { useParams } from "react-router-dom";
-import FullScreenDialog from "./FullScreenDialog";
-import FormDialog from "./FormDialog";
-import SendMailDialog from "./SendMailDialog";
 import AddPeopleDialog from "./AddPeopleDialog";
 import axios from "axios";
 import { toast } from "react-toastify";

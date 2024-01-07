@@ -1,4 +1,4 @@
-import { Stack, width } from "@mui/system";
+import { Stack } from "@mui/system";
 import { useAuth } from "../hook/useAuth";
 import {
   Accordion,
@@ -15,7 +15,6 @@ import {
 } from "@mui/material";
 import { stringAvatar } from "../helpers/stringAvator";
 import { useNavigate, useParams } from "react-router-dom";
-import { useCalculate } from "../hook/useCalculate";
 import { format } from "date-fns";
 import { useClass } from "../hook/useClass";
 import MiniDrawer from "../components/Drawer";

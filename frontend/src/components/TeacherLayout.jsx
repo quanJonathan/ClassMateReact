@@ -2,29 +2,22 @@ import {
   Box,
   Button,
   Typography,
-  styled,
   Tab,
   Tabs,
   Paper,
   Divider,
-  TableRow,
-  ListItemButton,
   ListItem,
   ListItemText,
   List,
   Checkbox,
-  TableCell,
   Select,
   Avatar,
   Link,
-  TextField,
   MenuItem,
   IconButton,
 } from "@mui/material";
 import {
-  CheckBox,
   Close,
-  MoreVert,
   PeopleAltRounded,
   SendOutlined,
   Settings,
@@ -32,10 +25,8 @@ import {
 import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined";
 import { alpha } from "@mui/material/styles";
 import PropTypes from "prop-types";
-import React, { useEffect, useState } from "react";
-import CourseCard from "./CourseCard";
+import { useState } from "react";
 import { useAuth } from "../hook/useAuth";
-import ClassCard from "./ClassCard";
 import StudentLayout from "./StudentLayout";
 import { useNavigate, useParams } from "react-router-dom";
 import OptionMenu from "./OptionMenu";

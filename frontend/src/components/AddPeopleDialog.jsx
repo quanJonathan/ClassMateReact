@@ -7,12 +7,11 @@ import {
     List,
     ListItem,
     ListItemText,
-    IconButton,
     TextField,
     Avatar,
     ListItemButton,
   } from "@mui/material";
-  import { useRef, useState } from "react";
+  import { useState } from "react";
 import { SearchBar } from "./SearchBar";
 import { useAuth } from "../hook/useAuth";
 import { stringAvatar } from "../helpers/stringAvator";
