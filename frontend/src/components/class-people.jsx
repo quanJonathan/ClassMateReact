@@ -22,6 +22,7 @@ import {
   More as MoreIcon,
   MoreVert,
   PersonRemoveAlt1Outlined,
+  PersonRounded,
 } from "@mui/icons-material";
 import PersonAddAlt1OutlinedIcon from "@mui/icons-material/PersonAddAlt1Outlined";
 import { useAuth } from "../hook/useAuth";
@@ -250,19 +251,16 @@ const Section = ({ title, data, icon, sendMailAction, createLink, course }) => {
                 </ListItemIcon>
               )}
               {item.email === "" || !item.email ? (
-                <IconButton
+                <Avatar
                   size="medium"
                   edge="start"
                   aria-label="account of current user"
                   color="gray"
+                  sx={{mr:2}}
                 >
-                  <AccountCircle
-                    sx={{
-                      width: "45px",
-                      height: "45px",
-                    }}
+                  <PersonRounded
                   />
-                </IconButton>
+                </Avatar>
               ) : (
                 <Avatar
                   {...stringAvatar(
