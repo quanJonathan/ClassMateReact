@@ -51,7 +51,7 @@ import { AssignmentViewingDetailsMain } from "../routes/assignment-viewing-detai
 import { useIsTeacher } from "../helpers/getCurrentRole.jsx";
 import SettingDialog from "./SettingDialog.jsx";
 
-const drawerWidth = 350;
+const drawerWidth = 330;
 const openedMixin = (theme) => ({
   width: drawerWidth,
   transition: theme.transitions.create("width", {

@@ -60,6 +60,10 @@ export class ClassService {
     return classObject;
   }
 
+  async getClassByHomework(homeworkId: ObjectId) {
+    return await this.classModel.findOne({homeworks: {$elmMatch: {$eq: homeworkId}}}).populate("members");
+  }
+
   async getMember(classId: string): Promise<User | any> {
     const classObject = await this.classModel
       .findOne({ classId: classId })
@@ -438,8 +442,8 @@ export class ClassService {
         (c.classId as Class)._id.equals(foundClass._id),
       ).role;
       if (role == '3000') return;
-      const user = foundHomework.doneMembers.find((d) =>
-        u?._id.equals((d.memberId as User)?._id),
+      const user = foundHomework.doneMembers.find(
+        (d) => u?._id.equals((d.memberId as User)?._id),
       );
       if (!user) {
         foundHomework.doneMembers.push({

@@ -74,7 +74,7 @@ export const ClassPeople = (props) => {
   };
 
   return (
-    <Box sx={{ px: 10 }}>
+    <Box sx={{ px: 10, pt: 3 }}>
       <AddPeopleDialog
         isOpen={open}
         title={title}
@@ -83,7 +83,7 @@ export const ClassPeople = (props) => {
         course={course}
         url={url}
       />
-      <Card>
+      <Card sx={{backdropFilter: 'none'}}>
         <Container style={{ marginTop: 20, justifyContent: "center" }}>
           <Section
             title="Teachers"
@@ -297,6 +297,9 @@ const Section = ({ title, data, icon, sendMailAction, createLink, course }) => {
                   elevation={0}
                   sx={{
                     textTransform: "none",
+                    "@media screen and (max-width: 500px)": {
+                      display: 'none',
+                    },
                   }}
                 >
                   Create an Invite Link

@@ -120,7 +120,7 @@ export const ClassHomeWork = ({ homeworks }) => {
   if (!homeworks) return <Typography>No homeworks</Typography>;
   else
     return (
-      <Box sx={{ px: 15 }}>
+      <Box sx={{ px: 15, pt: 3}}>
         {isTeacher ? (
           <Button variant="contained">Create homework</Button>
         ) : (
@@ -135,13 +135,13 @@ export const ClassHomeWork = ({ homeworks }) => {
             View your homeworks
           </Button>
         )}
-        <Box sx={{ py: 4 }}>
+        <Box sx={{ py: 2 }}>
           {homeworks?.map((homework, index) => (
             <Accordion
               elevation={1}
               square
               key={homework._id}
-              sx={{ borderRadius: 2 }}
+              sx={{ borderRadius: 2, minWidth: 'calc(100vh-200px)'}}
               expanded={expandedAccordion === homework._id}
               onChange={handleAccordionChange(homework._id)}
             >
@@ -150,11 +150,11 @@ export const ClassHomeWork = ({ homeworks }) => {
                 id={`panel-${homework._id}-header`}
                 sx={{ p: 1, mb: 0, backgroundColor: "#fff" }}
               >
-                <Icon sx={{ ml: 3, mr: 2 }}>
+                <Icon sx={{ ml: 1, mr: 1 }}>
                   <AssignmentOutlined />
                 </Icon>
                 <Typography
-                  sx={{ flexShrink: 0, width: "40%", fontWeight: "500" }}
+                  sx={{ flexShrink: 0, width: "30%", fontWeight: "500" }}
                 >
                   {homework?.name}
                 </Typography>
@@ -162,8 +162,7 @@ export const ClassHomeWork = ({ homeworks }) => {
                   variant="subtitle2"
                   color="text.secondary"
                   sx={{
-                    flexShrink: 0,
-                    width: "25%",
+                    width: "20%",
                     fontWeight: "400",
                     flexGrow: 1,
                   }}

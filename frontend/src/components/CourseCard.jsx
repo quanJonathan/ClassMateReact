@@ -8,7 +8,7 @@ function CourseCard({ item, courseWidth, courseHeight }) {
     backgroundColor: "#fff",
     borderTopLeftRadius: "20px",
     borderTopRightRadius: "20px",
-    fontSize: courseWidth ? "1rem" : "1.5rem",
+    fontSize: courseWidth ? "0.5rem" : "1rem",
     boxShadow:
       "0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)",
     margin: theme.spacing(5, 2, 4, 2),

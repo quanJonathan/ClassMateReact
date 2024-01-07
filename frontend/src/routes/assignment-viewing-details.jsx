@@ -14,7 +14,7 @@ export const AssignmentViewingDetailsMain = ({ course }) => {
   const { user } = useAuth();
   const { id, homeworkId } = useParams();
 
-  console.log(course);
+  // console.log(course);
 
   const isTeacher = useIsTeacher(id);
 
@@ -26,7 +26,7 @@ export const AssignmentViewingDetailsMain = ({ course }) => {
 
   return (
     <>
-      {isTeacher ? <TeacherLayout  /> : <StudentLayout course={course} homework={homeworkId} />}
+      {isTeacher ? <TeacherLayout course={course}  /> : <StudentLayout course={course} homework={homeworkId} />}
     </>
   );
 };

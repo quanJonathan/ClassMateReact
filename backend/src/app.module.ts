@@ -16,6 +16,8 @@ import { JwtModule } from '@nestjs/jwt';
 import { ClassesModule } from './modules/class.module';
 import { ClassController } from './controllers/class.controller';
 import { ClassService } from './services/class.service';
+import { GradeReviewController } from './controllers/grade-review.controller';
+import { GradeReviewModule } from './modules/grade-review.module';
 
 @Module({
   imports: [
@@ -36,9 +38,10 @@ import { ClassService } from './services/class.service';
     UsersModule,
     EmailModule,
     ClassesModule,
+    GradeReviewModule,
     JwtModule.register({}),
   ],
-  controllers: [UserController, EmailConfirmationController, ClassController],
+  controllers: [UserController, EmailConfirmationController, ClassController, GradeReviewController],
   providers: [AppService, EmailConfirmationService, EmailService],
 })
 export class AppModule {}

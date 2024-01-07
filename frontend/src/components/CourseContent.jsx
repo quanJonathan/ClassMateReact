@@ -6,7 +6,6 @@ import {
   Tab,
   Tabs,
   Box,
-  useMediaQuery,
 } from "@mui/material";
 import { ClassGeneral } from "../components/class-general";
 import { ClassGrade } from "../components/class-grade";
@@ -116,15 +115,16 @@ const CourseContent = () => {
               position: "sticky",
               width: "96%",
               bgcolor: "white",
-              zIndex: 1,
+              zIndex: 1000,
               backgroundColor: (theme) =>
                 alpha(theme.palette.background.default, 0.6),
-              backdropFilter: "blur(6px)",
+              backdropFilter: "blur(10px)",
               borderBottom: "0px solid rgba(0,0,0,0.3)",
               display: "flex",
               justifyContent: "flex-start",
               alignContent: "flex-start",
               ml: 1,
+              top: '64px',
               "@media screen and (max-width: 500px)": {
                 display: 'flex',
                 justifyContent: "center",
