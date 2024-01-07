@@ -16,6 +16,7 @@ import {
   useMediaQuery,
   Link,
   Typography,
+  Badge,
 } from "@mui/material";
 import MuiDrawer from "@mui/material/Drawer";
 import MuiAppBar from "@mui/material/AppBar";
@@ -29,6 +30,7 @@ import {
   Add,
   NavigateNext,
   Settings,
+  NotificationsNone,
 } from "@mui/icons-material";
 import AppName from "./WebName";
 import { useAuth } from "../hook/useAuth.jsx";
@@ -50,6 +52,8 @@ import CreateClassDialog from "./CreateClassDialog.jsx";
 import { AssignmentViewingDetailsMain } from "../routes/assignment-viewing-details.jsx";
 import { useIsTeacher } from "../helpers/getCurrentRole.jsx";
 import SettingDialog from "./SettingDialog.jsx";
+import OutsideClickHandler from "react-outside-click-handler";
+import NotificationDropdown from "./NotificationDropdown.jsx";
 
 const drawerWidth = 330;
 const openedMixin = (theme) => ({
@@ -219,6 +223,18 @@ export default function MiniDrawer({ children, page }) {
   );
 
   const navigate = useNavigate();
+  const [isNotificationClick, setNotificationClick] = useState(false);
+  const [notifications, setNotifications] = useState([
+    'Welcome to Classmate!',
+  ])
+
+  const handleNotiMouseClick = () => {
+    setNotificationClick(!isNotificationClick);
+  }
+
+  const handleOutsideNotiClick = () => {
+    setNotificationClick(false);
+  };
 
   return (
     <>
@@ -329,10 +345,25 @@ export default function MiniDrawer({ children, page }) {
               {isAuthenticated() && (
                 <>
                   {location.pathname === "/dashboard" && (
+                    <>
+                     <Badge
+                badgeContent={notifications.length}
+                color='primary'
+                sx={{ width: 35, height: 35, color: "gray", padding: "5px" }}
+               
+              >
+                <OutsideClickHandler onOutsideClick={handleOutsideNotiClick}>
+                  <NotificationsNone sx={{ position: "relative" }} onClick={handleNotiMouseClick} />
+                  <div>
+                    {isNotificationClick && <NotificationDropdown noti={notifications} />}
+                  </div>
+                </OutsideClickHandler>
+                  </Badge>
                     <OptionMenu
                       options={options}
                       actionIcon={<Add sx={{ width: 30, height: 30 }} />}
                     />
+                    </>
                   )}
                   <Avatar
                     {...stringAvatar(
