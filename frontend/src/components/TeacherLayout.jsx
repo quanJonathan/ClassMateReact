@@ -299,7 +299,8 @@ const StudentHomeworkPage = ({ course, homeworkId }) => {
                   </Box>
                 )}
                    <Divider sx={{m:2}}/>
-                <List>
+                   { currentGradeReview && <List>
+                
                   <ListItem key={currentGradeReview?._id} sx={{ width: "100%"}}>
                   <Card sx={{display: "flex", flexDirection: "column", justifyContent: "center", px:2, pt: 2,  width: "100%"}}>
                     <CardContent>
@@ -317,7 +318,7 @@ const StudentHomeworkPage = ({ course, homeworkId }) => {
                       <Typography>{c?.comment}</Typography>
                     </ListItem>
                   ))}
-                </List>
+                </List>}
               </>
             )}{" "}
             <Box sx={{ position: "fixed", bottom: 10, right: 10, width: "60%" }}>
