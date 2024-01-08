@@ -25,6 +25,7 @@ export default function ProfilePage() {
   const [lastName, setLastName] = useState(user?.lastName || "")
   const [phoneNumber, setPhoneNumber] = useState(user?.phoneNumber || "")
   const [address, setAddress] = useState(user?.address || "")
+  const [studentId, setStudentId] = useState(user?.studentId || "")
 
   const handleForm = async (event) => {
     event.preventDefault();
@@ -39,6 +40,7 @@ export default function ProfilePage() {
         lastName: formData.get("lastName").trim(),
         phoneNumber: formData.get("phoneNumber"),
         address: formData.get("address"),
+        studentId: formData.get("studentId"),
       };
       // console.log(form)
 
@@ -230,6 +232,27 @@ export default function ProfilePage() {
                 onChange={(e) => setAddress(e.target.value)}
                 value={address}
                 disabled={isView}
+                InputLabelProps={{
+                  style: { marginLeft: "5px", marginRight: "5px" },
+                }}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                InputProps={{ sx: { borderRadius: 10,
+                  paddingLeft: "20px",
+                  paddingRight: "20px",
+                } }}
+                margin="normal"
+                fullWidth
+                id="studentId"
+                label="Student ID"
+                name="studentId"
+                autoComplete="studentId"
+                autoFocus
+                onChange={(e) => setStudentId(e.target.value)}
+                value={studentId}
+                disabled={user?.studentId ? (false && !isView) : (true && isView)}
                 InputLabelProps={{
                   style: { marginLeft: "5px", marginRight: "5px" },
                 }}

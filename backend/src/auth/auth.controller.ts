@@ -103,6 +103,16 @@ export class AuthController {
     });
   }
 
+  @Post('activateEmptyAccount/update')
+  async activateEmptyAccount(@Res() response, @Body() user: User) {
+    const newUSer = this.authService.localSignUp(user);
+    await this.emailConfirmationService.sendVerificationLink(user);
+    return response.status(HttpStatus.CREATED).json({
+      token: newUSer,
+      email: user.email
+    });
+  }
+
   @Post('signIn')
   @UseGuards(LocalAuthGuard)
   async SignIn(@Req() req) {

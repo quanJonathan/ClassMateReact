@@ -162,7 +162,8 @@ export class UserService {
       firstName: user.firstName,
       lastName: user.lastName,
       address: user.address,
-      phoneNumber: user.phoneNumber
+      phoneNumber: user.phoneNumber,
+      studentId: user.studentId
     }})
   }
 
@@ -186,7 +187,7 @@ export class UserService {
     }
     let pass= null;
 
-    if (user.studentId) {
+    if (user.studentId && user.studentId != u.studentId) {
     const userExists = await this.userModel.findOne(
       {studentId: user.studentId} ).exec();
     if (userExists) {
@@ -228,9 +229,15 @@ export class UserService {
   }
 
   async updateState(user: User, state: string) {
+    if (user.email)
     return await this.userModel.findOneAndUpdate({email: user.email}, {$set: {
       state: state,
     }})
+    else {
+      return await this.userModel.findOneAndUpdate({_id: user._id}, {$set: {
+        state: state,
+      }})
+    }
   }
 
   async updateStudentId(user: User) {
