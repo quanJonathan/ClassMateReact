@@ -364,11 +364,73 @@ export class EmailConfirmationService {
       if (!course) {
         throw new BadRequestException('Course not found');
       }
-      const text = `Welcome to ClassMate website.\n To join ${course.className}, click here: \n${url}`;
+      const text = `
+      <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            border: 1px solid #000;
+            padding: 20px;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        h5 {
+            color: gray;
+            align-content: start;
+            margin: 0; 
+        }
+        hr {
+            color: black;
+            width: 100%;
+            margin: 10px 0; 
+        }
+        
+        h3 {
+          padding: 0;
+          margin: 0;
+        }
+  
+        a {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #B6A5FF;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+        
+        .container{
+          margin: 10px;
+          width: 90%;
+        }
+    </style>
+</head>
+<body>
+
+  
+    <div class="container">
+   
+      <h3><string>Welcome to ClassMate website.\n 
+      <h5><strong>To join ${course.className} class, click here: \n</strong></h5>
+    </div>
+
+    <a href="${url}">Join</a>
+
+</body>
+</html>
+      
+      `;
       const emailTemplate = {
         to: user.email,
         subject: 'Join Classroom',
-        text,
+        html: text,
       };
       await this.emailService.sendMail(emailTemplate);
     } catch (error) {

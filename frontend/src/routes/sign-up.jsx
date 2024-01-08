@@ -124,6 +124,8 @@ export default function SignUp() {
   };
   const [valid,setValid] = useState(true);
   const [email,setEmail] = useState(null);
+  const [checkFirstName, setCheckFirstName] = useState("");
+  const [checkLastName, setCheckLastName] = useState("");
 
   const handleValidation = (e) => {
     let regEmail = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -147,6 +149,27 @@ export default function SignUp() {
       console.log(error)
     }
   }
+
+  const handleChange = (e) => {
+    const inputValue = e.target.value;
+    if (e.target.id == "firstName"){
+    if (inputValue.length <=30) {
+      setCheckFirstName("");
+    } else {
+      setCheckFirstName(
+        "The First Name can't be over 30 characters"
+      );
+    }
+  } else if (e.target.id=="lastName"){
+    if (inputValue.length <=30) {
+      setCheckLastName("");
+    } else {
+      setCheckLastName(
+        "Last Name can't be over 30 characters"
+      );
+    }
+  }
+  };
 
   return (
     <Box
@@ -244,6 +267,7 @@ export default function SignUp() {
                     InputProps={{ sx: { borderRadius: 10,
                       paddingLeft: "20px",
                       paddingRight: "20px",
+                      maxLength: 30,
                     } }}
                     margin="normal"
                     autoComplete="given-name"
@@ -251,6 +275,9 @@ export default function SignUp() {
                     fullWidth
                     id="firstName"
                     label="First Name"
+                    error={!!checkFirstName}
+                    helperText={checkFirstName}
+                    onChange={handleChange}
                     autoFocus
                     InputLabelProps={{
                       style: { marginLeft: "5px", marginRight: "5px" },
@@ -265,6 +292,7 @@ export default function SignUp() {
                     InputProps={{ sx: { borderRadius: 10,
                       paddingLeft: "20px",
                       paddingRight: "20px",
+                      maxLength: 30
                     } }}
                     margin="normal"
                     required
@@ -272,6 +300,9 @@ export default function SignUp() {
                     id="lastName"
                     label="Last Name"
                     name="lastName"
+                    error={!!checkLastName}
+                    helperText={checkLastName}
+                    onChange={handleChange}
                     autoComplete="family-name"
                     InputLabelProps={{
                       style: { marginLeft: "5px", marginRight: "5px" },

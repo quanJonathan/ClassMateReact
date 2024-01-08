@@ -18,7 +18,8 @@ export default function CreateClassDialog({ isOpen, handleClose }) {
   const { id } = useParams();
   const { token, user } = useAuth();
   const [loading, setLoading] = useState(false);
-
+  const [checkClassName, setCheckClassName] = useState("");
+  const [checkDescription, setCheckDescription] = useState("");
   const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -66,6 +67,27 @@ export default function CreateClassDialog({ isOpen, handleClose }) {
     }
   };
 
+  const handleChange = (e) => {
+    const inputValue = e.target.value;
+    if (e.target.id == "className"){
+    if (inputValue.length <=30) {
+      setCheckClassName("");
+    } else {
+      setCheckClassName(
+        "The Class Name can't be over 30 characters"
+      );
+    }
+  } else if (e.target.id=="description"){
+    if (inputValue.length <=120) {
+      setCheckDescription("");
+    } else {
+      setCheckDescription(
+        "Description can't be over 120 characters"
+      );
+    }
+  }
+  };
+
   return (
     <div>
       <Dialog open={isOpen} onClose={handleClose}>
@@ -83,8 +105,13 @@ export default function CreateClassDialog({ isOpen, handleClose }) {
                 sx: {
                   paddingLeft: "20px",
                   paddingRight: "20px",
+                  maxLength: 30,
                 },
               }}
+
+              error={!!checkClassName}
+              helperText={checkClassName}
+              onChange={handleChange}
               margin="normal"
               fullWidth
               id="className"
@@ -101,8 +128,12 @@ export default function CreateClassDialog({ isOpen, handleClose }) {
                 sx: {
                   paddingLeft: "20px",
                   paddingRight: "20px",
+                  maxLength: 120
                 },
               }}
+              error={!!checkDescription}
+              helperText={checkDescription}
+              onChange={handleChange}
               margin="normal"
               fullWidth
               id="description"
