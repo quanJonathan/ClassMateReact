@@ -123,8 +123,15 @@ export const AuthProvider = ({ children }) => {
   };
 
   const updateUser = async (data) => {
-    setUser(JSON.stringify({ ...user, data }));
-    localStorage.setItem("user", JSON.stringify({ ...user, data }));
+    console.log(JSON.stringify({ data }))
+    user.firstName = data.firstName;
+    user.lastName = data.lastName;
+    user.address = data.address;
+    user.phoneNumber = data.phoneNumber;
+    user.studentId = data.studentId;
+    setUser(user);
+    localStorage.setItem("user", JSON.stringify({ ...user}));
+    console.log(user)
   };
 
   const logout = async () => {

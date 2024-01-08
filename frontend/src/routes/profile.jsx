@@ -28,6 +28,8 @@ export default function ProfilePage() {
   const [studentId, setStudentId] = useState(user?.studentId || "")
 
   const handleForm = async (event) => {
+    console.log(user)
+
     event.preventDefault();
     if (isView) {
       setIsView(false);
@@ -40,9 +42,9 @@ export default function ProfilePage() {
         lastName: formData.get("lastName").trim(),
         phoneNumber: formData.get("phoneNumber"),
         address: formData.get("address"),
-        studentId: formData.get("studentId"),
+        studentId: user?.studentId ? user?.studentId : studentId,
       };
-      // console.log(form)
+      console.log(form)
 
       if (form.firstName==""){
         toast.warning('First Name is Required');
@@ -251,8 +253,8 @@ export default function ProfilePage() {
                 autoComplete="studentId"
                 autoFocus
                 onChange={(e) => setStudentId(e.target.value)}
-                value={studentId}
-                disabled={user?.studentId ? (false && !isView) : (true && isView)}
+                value={user?.studentId ? user?.studentId : studentId}
+                disabled={isView || (user?.studentId !== '' && user?.studentId !== null )}
                 InputLabelProps={{
                   style: { marginLeft: "5px", marginRight: "5px" },
                 }}
