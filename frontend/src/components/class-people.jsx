@@ -13,24 +13,18 @@ import {
   Divider,
   Avatar,
   ListItemButton,
-  ListItemAvatar,
   Button,
 } from "@mui/material";
 import {
-  AccountCircle,
-  AccountCircleOutlined,
-  More as MoreIcon,
   MoreVert,
   PersonRemoveAlt1Outlined,
+  PersonRounded,
 } from "@mui/icons-material";
 import PersonAddAlt1OutlinedIcon from "@mui/icons-material/PersonAddAlt1Outlined";
 import { useAuth } from "../hook/useAuth";
 import { stringAvatar } from "../helpers/stringAvator";
 import OptionMenu from "./OptionMenu";
 import { useParams } from "react-router-dom";
-import FullScreenDialog from "./FullScreenDialog";
-import FormDialog from "./FormDialog";
-import SendMailDialog from "./SendMailDialog";
 import AddPeopleDialog from "./AddPeopleDialog";
 import axios from "axios";
 import { toast } from "react-toastify";
@@ -73,7 +67,7 @@ export const ClassPeople = (props) => {
   };
 
   return (
-    <Box sx={{px: 10}}>
+    <Box sx={{ px: 10, pt: 3 }}>
       <AddPeopleDialog
         isOpen={open}
         title={title}
@@ -82,7 +76,7 @@ export const ClassPeople = (props) => {
         course={course}
         url={url}
       />
-      <Card>
+      <Card sx={{backdropFilter: 'none'}}>
         <Container style={{ marginTop: 20, justifyContent: "center" }}>
           <Section
             title="Teachers"
@@ -91,14 +85,16 @@ export const ClassPeople = (props) => {
             icon={<PersonAddAlt1OutlinedIcon />}
             sendMailAction={() => sendMailForTeacher()}
           />
-          <Section
-            title="Students"
-            data={students}
-            course={course}
-            createLink={openCreateLinkForEmptyUser}
-            icon={<PersonAddAlt1OutlinedIcon />}
-            sendMailAction={() => sendMailForStudent()}
-          />
+          { (
+            <Section
+              title="Students"
+              data={students}
+              course={course}
+              createLink={openCreateLinkForEmptyUser}
+              icon={<PersonAddAlt1OutlinedIcon />}
+              sendMailAction={() => sendMailForStudent()}
+            />
+          )}
         </Container>
       </Card>
     </Box>
@@ -201,7 +197,7 @@ const Section = ({ title, data, icon, sendMailAction, createLink, course }) => {
       <Divider
         sx={{
           height: "4px",
-          color: 'black'
+          color: "black",
         }}
       />
       <List>
@@ -248,19 +244,16 @@ const Section = ({ title, data, icon, sendMailAction, createLink, course }) => {
                 </ListItemIcon>
               )}
               {item.email === "" || !item.email ? (
-                <IconButton
+                <Avatar
                   size="medium"
                   edge="start"
                   aria-label="account of current user"
                   color="gray"
+                  sx={{mr:2}}
                 >
-                  <AccountCircle
-                    sx={{
-                      width: "45px",
-                      height: "45px",
-                    }}
+                  <PersonRounded
                   />
-                </IconButton>
+                </Avatar>
               ) : (
                 <Avatar
                   {...stringAvatar(
@@ -297,6 +290,9 @@ const Section = ({ title, data, icon, sendMailAction, createLink, course }) => {
                   elevation={0}
                   sx={{
                     textTransform: "none",
+                    "@media screen and (max-width: 500px)": {
+                      display: 'none',
+                    },
                   }}
                 >
                   Create an Invite Link

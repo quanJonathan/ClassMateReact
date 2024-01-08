@@ -1,7 +1,7 @@
 /* eslint-disable prettier/prettier */
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose, { Document} from 'mongoose';
-import { User, UserSchema } from 'src/user/model/user.schema';
+import { User } from 'src/user/model/user.schema';
 import { Homework } from './homework.schema';
 import { GradeComposition } from './grade-composition.schema';
 export type ClassDocument = Class & Document;

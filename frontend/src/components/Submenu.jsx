@@ -34,9 +34,9 @@ const DropdownLink = styled(Link)`
 `;
 
 const SubMenu = ({ item, open }) => {
-  const [subnav, setSubnav] = useState(true); // Dropdown is always open by default
+  const [subnav, setSubnav] = useState(open);
   const location = useLocation();
-  const {id} = useParams()
+  const { id } = useParams();
 
   const showSubnav = () => setSubnav(!subnav);
 
@@ -87,14 +87,14 @@ const SubMenu = ({ item, open }) => {
           )}
         </SidebarLink>
       </ListItemButton>
-      
+
       {subnav &&
         item.subNav?.map((item, index) => {
           return (
             <DropdownLink
               to={item.path}
-              onClick={item.subNav && showSubnav}
-              selected={location.pathname === item.path}
+              onClick={showSubnav}
+              selected={item.path.includes(id)}
               sx={{
                 alignItems: "center",
                 display: "flex",

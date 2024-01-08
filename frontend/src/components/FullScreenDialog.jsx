@@ -20,11 +20,11 @@ import {
   useMediaQuery,
 } from "@mui/material";
 import { forwardRef, useState } from "react";
-import { Close, ContentCopy, InsertLink } from "@mui/icons-material";
+import { Close, ContentCopy, Http, InsertLink } from "@mui/icons-material";
 import { Box, Stack } from "@mui/system";
 import { useAuth } from "../hook/useAuth";
 import { stringAvatar } from "../helpers/stringAvator";
-import axios from "axios";
+import axios, { HttpStatusCode } from "axios";
 import { toast } from "react-toastify";
 
 const Transition = forwardRef(function Transition(props, ref) {
@@ -40,17 +40,20 @@ export default function FullScreenDialog({ open, handleClose }) {
   const handleSave = async () => {
     try {
       const response = await axios.post(
-        `http://localhost:3001/class/joinClass/${classId}`,
+        `http://localhost:3001/class/joinClassWithId/${classId}`,
         user,
         {
           headers: {
             Authorization: "Bearer " + token.refreshToken,
-          }
+          },
         }
       );
-      
-      if(response){
-        handleClose()
+
+      if (
+        response.status === HttpStatusCode.Accepted ||
+        response.status === HttpStatusCode.Ok
+      ) {
+        handleClose();
       }
     } catch (error) {
       console.error("Join class failed:", error);

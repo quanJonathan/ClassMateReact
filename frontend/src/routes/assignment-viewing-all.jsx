@@ -1,4 +1,4 @@
-import { Stack, width } from "@mui/system";
+import { Stack } from "@mui/system";
 import { useAuth } from "../hook/useAuth";
 import {
   Accordion,
@@ -15,7 +15,6 @@ import {
 } from "@mui/material";
 import { stringAvatar } from "../helpers/stringAvator";
 import { useNavigate, useParams } from "react-router-dom";
-import { useCalculate } from "../hook/useCalculate";
 import { format } from "date-fns";
 import { useClass } from "../hook/useClass";
 import MiniDrawer from "../components/Drawer";
@@ -72,23 +71,27 @@ export const AssignmentViewingAllMain = () => {
       ) : (
         <Box
           sx={{
-            position: 'fixed',
+            position: "fixed",
             display: "flex",
             flexDirection: "column",
-            justifyContent: 'center',
-            minHeight: '95vh',
+            justifyContent: "center",
+            width: "calc(100vh - 100px)",
+            height: "auto",
+            minHeight: "100vh",
             pl: 10,
             pr: 20,
-            minWidth: '85%',
+            minWidth: "80%",
+            overflowY: "auto",
           }}
         >
-          <Stack flexDirection="row" >
+          <Stack flexDirection="row">
             <Box
               sx={{
-                flexGrow: 1,
+                flexGrow: 0.9,
                 display: "flex",
                 alignContent: "flex-start",
                 justifyContent: "flex-start",
+                width: 'calc(100vh - 60px)'
               }}
             >
               <Avatar
@@ -125,13 +128,19 @@ export const AssignmentViewingAllMain = () => {
               <Button
                 variant="text"
                 onClick={showGradeScale}
-                sx={{ fontSize: "35px", mb: 3 }}
+                sx={{ fontSize: "35px" }}
               >
                 {totalPercent.score.toFixed(2) + "%"}
               </Button>
             </Tooltip>
           </Stack>
-          <Divider />
+          <Divider
+            sx={{
+              backgroundColor: "rgba(0, 0, 0, 0.5)",
+              height: 1,
+              margin: "5px 10px",
+            }}
+          />
           <Box>
             {homeworks?.map((homework) => (
               <Accordion
@@ -171,7 +180,7 @@ export const AssignmentViewingAllMain = () => {
                     </Stack>
                   </Box>
                   <Typography
-                    sx={{ pl: 5, fontSize: '15px', fontWeight: '600'}}
+                    sx={{ pl: 5, fontSize: "15px", fontWeight: "600" }}
                   >
                     {handleHomework(homework)}
                   </Typography>
@@ -213,7 +222,7 @@ const AssignmentViewingAll = () => {
         minHeight: "100vh",
       }}
     >
-      <MiniDrawer page="AssignmentViewingAll" children={course}/>
+      <MiniDrawer page="AssignmentViewingAll" children={course} />
     </Box>
   );
 };

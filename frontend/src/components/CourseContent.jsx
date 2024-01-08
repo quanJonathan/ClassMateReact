@@ -6,7 +6,6 @@ import {
   Tab,
   Tabs,
   Box,
-  useMediaQuery,
 } from "@mui/material";
 import { ClassGeneral } from "../components/class-general";
 import { ClassGrade } from "../components/class-grade";
@@ -34,7 +33,7 @@ function TabPanel(props) {
       {...other}
     >
       {value === index && (
-        <Box sx={{ p: 3 }}>
+        <Box sx={{ pb: 2 }}>
           <Paper elevation={0}>{children}</Paper>
         </Box>
       )}
@@ -69,7 +68,7 @@ const CourseContent = () => {
     setDialogOpen(true);
   };
 
-  const tabLabels = ["General Information", "HomeWork", "People"];
+  const tabLabels = ["General", "HomeWork", "People"];
 
   if (isTeacher) {
     tabLabels.push("Grade");
@@ -114,16 +113,24 @@ const CourseContent = () => {
           <Box
             sx={{
               position: "sticky",
-              width: "100%",
+              width: "96%",
               bgcolor: "white",
-              zIndex: 1,
+              zIndex: 1000,
               backgroundColor: (theme) =>
                 alpha(theme.palette.background.default, 0.6),
-              backdropFilter: "blur(6px)",
+              backdropFilter: "blur(10px)",
               borderBottom: "0px solid rgba(0,0,0,0.3)",
               display: "flex",
               justifyContent: "flex-start",
               alignContent: "flex-start",
+              ml: 1,
+              top: '64px',
+              "@media screen and (max-width: 500px)": {
+                display: 'flex',
+                justifyContent: "center",
+                alignContent: "center",
+                pl: 5
+              },
             }}
           >
             <Tabs
@@ -134,7 +141,7 @@ const CourseContent = () => {
                   outline: "none",
                 },
                 flexShrink: 0,
-                width: "95%",
+                flexGrow: 1
               }}
               variant="scrollable"
               scrollButtons="auto"
@@ -143,19 +150,26 @@ const CourseContent = () => {
                 <Tab
                   key={`tab-${label}`}
                   label={label}
-                  style={{ minWidth: `${maxTabWidth}ch` }}
+                  style={{ minWidth: `${maxTabWidth}px` }}
                 />
               ))}
             </Tabs>
             {isTeacher && (
               <IconButton
                 edge="end"
-                sx={{ width: 20, height: 20, mt: 2}}
+                sx={{
+                  width: 20,
+                  height: 20,
+                  mt: 2,
+                  "@media screen and (max-width: 500px)": {
+                    display: "none",
+                  },
+                }}
                 onClick={openModal}
                 aria-label="settings"
                 id="long-button"
               >
-                <Settings sx={{width: 30, height: 30}}/>
+                <Settings sx={{ width: 30, height: 30 }} />
               </IconButton>
             )}
           </Box>

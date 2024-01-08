@@ -7,12 +7,11 @@ import {
     List,
     ListItem,
     ListItemText,
-    IconButton,
     TextField,
     Avatar,
     ListItemButton,
   } from "@mui/material";
-  import { useRef, useState } from "react";
+  import { useState } from "react";
 import { SearchBar } from "./SearchBar";
 import { useAuth } from "../hook/useAuth";
 import { stringAvatar } from "../helpers/stringAvator";
@@ -154,13 +153,13 @@ import axios from "axios";
             <ListItemButton dense>
               <Avatar
                 {...stringAvatar(
-                  item ? `${item.firstName} ${item.lastName}` : "Default Name"
+                  item ? `${item.firstName} ${item.lastName}` : "Default Name",
+                  {mr: 2}
                 )}
                 size="medium"
                 edge="end"
                 aria-label="account of current user"
                 color="inherit"
-                sx={{ mr: 2 }}
               />
 
               <ListItemText

@@ -16,7 +16,6 @@ import { Roles } from 'src/authorization/roles.decorator';
 import { RolesGuard } from 'src/authorization/roles.guard';
 import { EmailConfirmationService } from 'src/email/emailConfirmation.service';
 import { UserRoles } from 'src/enum/userRole.enum';
-import { AccessTokenGuard } from 'src/guards/access-token.guard';
 import { RefreshTokenGuard } from 'src/guards/refresh-token.guard';
 import { ClassService } from 'src/services/class.service';
 
@@ -55,7 +54,7 @@ export class ClassController {
   async addClass(@Res() res: any, @Body() body) {
     const classObject = body.class;
     const user = body.user;
-    const result = await this.classService.addClass(classObject, user._id);
+    const result = await this.classService.addClass(classObject, user);
 
     if (result) {
       return res.status(HttpStatus.OK).json(result);
@@ -73,7 +72,7 @@ export class ClassController {
 
   @Post('/updateState/')
   async updateState(@Body() body) {
-    console.log(body);
+    // console.log(body);
     return await this.classService.updateState(body);
   }
 
@@ -90,23 +89,49 @@ export class ClassController {
     return this.classService.generateAccessLink(params.id);
   }
 
-  @Post('/joinClass/:classId')
+  @Post('/joinClass/:id')
   @UseGuards(RefreshTokenGuard)
-  async joinClass(@Body() body, @Param() params: any) {
+  async joinClass(@Body() body, @Param() params: any, @Res() res: any) {
+    // console.log("joining class")
+    const user = body;
+    // console.log(params)
+    const classId = params.id;
+    // console.log(classId)
+    const response = await this.classService.addStudent(classId, user._id);
+    if(response){
+      return res.status(HttpStatus.ACCEPTED).json(response)
+    }
+    return res.status(HttpStatus.BAD_REQUEST).json()
+  }
+
+  @Post('/joinClassWithId/:classId')
+  async joinClassWithId(@Body() body, @Param() params: any, @Res() res: any) {
     // console.log("joining class")
     const user = body;
     const classId = params.classId;
-    return this.classService.addStudent(classId, user._id);
+    // console.log(classId)
+    const response = await this.classService.addStudentWithClassId(classId, user._id);
+    if(response){
+      // console.log(response)
+      return res.status(HttpStatus.ACCEPTED).json(response)
+    }
+    return res.status(HttpStatus.BAD_REQUEST).json()
   }
 
-  @Post('/joinClassAsTeacher/:classId')
+
+  @Post('/joinClassAsTeacher/:id')
   @UseGuards(RefreshTokenGuard)
-  async joinClassAsTeacher(@Req() req, @Param() params: any) {
+  async joinClassAsTeacher(@Req() req, @Param() params: any, @Res() res: any) {
     console.log('joining class');
     const user = req.user;
-    const classId = params.classId;
-    console.log(classId);
-    return this.classService.addTeacher(classId, user._id);
+    const classId = params.id;
+    // console.log(classId);
+    const response = await this.classService.addTeacher(classId, user._id);
+
+    if(response){
+      return res.status(HttpStatus.ACCEPTED).json(response)
+    }
+    return res.status(HttpStatus.BAD_REQUEST).json()
   }
 
   @Put('/addStudent/:classId')
@@ -123,7 +148,7 @@ export class ClassController {
   async addStudentsToClass(@Body() body, @Param() params: any) {
     console.log('adding multiple user');
     const students = body;
-    console.log(students);
+    // console.log(students);
     const classId = params.classId;
     return this.classService.addStudentViaDocument(classId, students);
   }
@@ -136,7 +161,7 @@ export class ClassController {
     @Body() body: { id: string },
     @Param() params: any,
   ) {
-    console.log(body.id);
+    // console.log(body.id);
     return this.classService.removeStudent(body.id, params.studentId);
   }
 
@@ -190,9 +215,9 @@ export class ClassController {
     const userId = body.userId;
     const homeworkId = params.homeworkId;
 
-    console.log(_id);
-    console.log(userId);
-    console.log(homeworkId);
+    // console.log(_id);
+    // console.log(userId);
+    // console.log(homeworkId);
 
     const result = await this.classService.returnHomework(
       _id,
@@ -216,8 +241,8 @@ export class ClassController {
     console.log('Returning multiple');
     const _id = params.id;
     const homeworkId = params.homeworkId;
-    console.log(_id);
-    console.log(homeworkId);
+    // console.log(_id);
+    // console.log(homeworkId);
 
     const result = await this.classService.returnHomeworks(_id, homeworkId);
 

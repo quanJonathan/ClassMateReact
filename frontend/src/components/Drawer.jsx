@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Box,
   styled,
@@ -14,6 +14,9 @@ import {
   Breadcrumbs,
   Avatar,
   useMediaQuery,
+  Link,
+  Typography,
+  Badge,
 } from "@mui/material";
 import MuiDrawer from "@mui/material/Drawer";
 import MuiAppBar from "@mui/material/AppBar";
@@ -25,10 +28,13 @@ import {
   ChevronRight,
   AccountCircle,
   Add,
+  NavigateNext,
+  Settings,
+  NotificationsNone,
 } from "@mui/icons-material";
 import AppName from "./WebName";
 import { useAuth } from "../hook/useAuth.jsx";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import SubMenu from "./Submenu.jsx";
 import { useSideNavGenerator } from "../helpers/sideNavGenerator";
 import { Stack } from "@mui/system";
@@ -38,12 +44,19 @@ import FullScreenDialog from "./FullScreenDialog.jsx";
 import { stringAvatar } from "../helpers/stringAvator";
 import axios from "axios";
 import AssignmentViewingDetails from "../routes/assignment-viewing-details.jsx";
-import AssignmentViewingAll, { AssignmentViewingAllMain } from "../routes/assignment-viewing-all.jsx";
+import AssignmentViewingAll, {
+  AssignmentViewingAllMain,
+} from "../routes/assignment-viewing-all.jsx";
 import AddPeopleDialog from "./AddPeopleDialog.jsx";
 import CreateClassDialog from "./CreateClassDialog.jsx";
 import { AssignmentViewingDetailsMain } from "../routes/assignment-viewing-details.jsx";
+import { useIsTeacher } from "../helpers/getCurrentRole.jsx";
+import SettingDialog from "./SettingDialog.jsx";
+import OutsideClickHandler from "react-outside-click-handler";
+import NotificationDropdown from "./NotificationDropdown.jsx";
+import { useNotification } from "../hook/useNotification.jsx";
 
-const drawerWidth = 280;
+const drawerWidth = 330;
 const openedMixin = (theme) => ({
   width: drawerWidth,
   transition: theme.transitions.create("width", {
@@ -112,18 +125,35 @@ const DrawerHeader = styled("div")(({ theme }) => ({
 }));
 
 export default function MiniDrawer({ children, page }) {
-  const lgUp = useMediaQuery((theme) => theme.breakpoints.up("lg"));
+  const lgUp = useMediaQuery((theme) => theme.breakpoints.up("md"));
 
-  const { logout, isAuthenticated, user } = useAuth();
+  const { logout, isAuthenticated, user, token } = useAuth();
   // console.log(user);
   const theme = useTheme();
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(true);
   const [anchorEl, setAnchorEl] = useState(null);
   const [isDialogAddOpen, setDialogAddOpen] = useState(false);
   const [isDialogJoinOpen, setDialogJoinOpen] = useState(false);
 
+  const [isDialogOpen, setDialogOpen] = useState(false);
+
+  const { id } = useParams();
+
+  const isTeacher = useIsTeacher(id);
+
   const location = useLocation();
+  const { notifications, isLoading, error } = useNotification();
   // console.log(location)
+  const navigate = useNavigate();
+  const [isNotificationClick, setNotificationClick] = useState(false);
+  
+  const handleNotiMouseClick = () => {
+    setNotificationClick(!isNotificationClick);
+  };
+
+  const handleOutsideNotiClick = () => {
+    setNotificationClick(false);
+  };
 
   const handleProfileMenuOpen = (event) => {
     setAnchorEl(event.target);
@@ -132,6 +162,10 @@ export default function MiniDrawer({ children, page }) {
 
   const handleDrawerOpenClose = () => {
     setOpen(!open);
+  };
+
+  const openModal = () => {
+    setDialogOpen(true);
   };
 
   const options = [
@@ -144,6 +178,14 @@ export default function MiniDrawer({ children, page }) {
       action: () => handleOpenAddModal(),
     },
   ];
+
+  const getGradeScaleLeft = () => {
+    let finalValue = 100;
+    children?.compositions?.map((c) => {
+      finalValue = finalValue - parseInt(c.gradeScale);
+    });
+    return finalValue == 0 ? 0 : finalValue;
+  };
 
   const handleOpenAddModal = () => {
     setDialogAddOpen(true);
@@ -192,8 +234,6 @@ export default function MiniDrawer({ children, page }) {
     </MenuComponent>
   );
 
-  const navigate = useNavigate();
-
   return (
     <>
       <CssBaseline />
@@ -202,8 +242,14 @@ export default function MiniDrawer({ children, page }) {
         handleClose={() => setDialogJoinOpen(false)}
       />
       <CreateClassDialog
-       isOpen={isDialogAddOpen}
-       handleClose={() => setDialogAddOpen(false)}
+        isOpen={isDialogAddOpen}
+        handleClose={() => setDialogAddOpen(false)}
+      />
+      <SettingDialog
+        open={isDialogOpen}
+        handleClose={() => setDialogOpen(false)}
+        compositions={children?.compositions}
+        defaultValue={getGradeScaleLeft()}
       />
       <AppBar
         position={true ? "fixed" : "absolute"}
@@ -220,7 +266,7 @@ export default function MiniDrawer({ children, page }) {
           <Toolbar
             sx={{
               height: { xs: "12vh", md: "10vh" },
-              justifyContent: "space-between",
+              justifyContent: "flex-start",
             }}
           >
             <IconButton
@@ -228,61 +274,117 @@ export default function MiniDrawer({ children, page }) {
               aria-label="open drawer"
               onClick={handleDrawerOpenClose}
               edge="start"
+              sx={{
+                "@media screen and (max-width: 500px)": {
+                  height: 20,
+                  width: 20,
+                },
+              }}
             >
-              <MenuIcon />
+              <MenuIcon
+                sx={{
+                  "@media screen and (max-width: 500px)": {
+                    height: 20,
+                    width: 20,
+                  },
+                }}
+              />
             </IconButton>
 
-            <AppName />
+            <AppName children={children} />
 
-            <Stack spacing={2} sx={{ flexGrow: 1 }}>
-              <Breadcrumbs
-                separator="›"
-                aria-label="breadcrumb"
-                sx={{ fontSize: "25px" }}
+            {children && (
+              <div
+                role="presentation"
+                style={{ display: "flex", flexDirection: "row" }}
               >
-                {children && (
+                <NavigateNext
+                  fontSize="large"
+                  sx={{
+                    mr: 1,
+                    "@media screen and (max-width: 500px)": {
+                      display: "none",
+                    },
+                  }}
+                />
+                <Breadcrumbs
+                  separator={<NavigateNext />}
+                  aria-label="breadcrumb"
+                >
                   <Link
+                    underline="hover"
+                    key="1"
                     color="inherit"
-                    onClick={() => navigate(`/c/${children?.classId?._id}`)}
+                    onClick={() => navigate(`/c/${children?._id}`)}
                     sx={{
-                      fontSize: "15px",
-                      textDecoration: "none", // Remove default underline
-                      color: "black", // Set the color in normal state
-                      "&:hover": {
-                        textDecoration: "underline", // Show underline on hover
-                        color: "blue", // Set the color on hover
+                      fontSize: "25px",
+                      cursor: "pointer",
+                      "@media screen and (max-width: 500px)": {
+                        fontSize: "15px",
+                        mb: 2,
                       },
                     }}
                   >
-                    {`> ${children?.className}`}
+                    {children?.className}
                   </Link>
-                )}
-              </Breadcrumbs>
-            </Stack>
+                </Breadcrumbs>
+              </div>
+            )}
 
             <Box
               sx={{
-                display: {
-                  xs: "none",
-                  ml: "auto",
-                  alignItems: "center",
-                  justifyContent: "space-evenly",
-                  md: "flex",
-                },
+                alignItems: "center",
+                justifyContent: "space-evenly",
+                position: "absolute",
+                right: 0,
+                display: "flex",
               }}
             >
               {isAuthenticated() && (
                 <>
                   {location.pathname === "/dashboard" && (
-                    <OptionMenu options={options} actionIcon={<Add />} />
+                    <>
+                      <OptionMenu
+                        options={options}
+                        actionIcon={<Add sx={{ width: 30, height: 30 }} />}
+                      />
+                    </>
                   )}
+                  <Badge
+                    badgeContent={notifications?.length}
+                    color="primary"
+                    sx={{
+                      width: 35,
+                      height: 35,
+                      color: "gray",
+                      padding: "5px",
+                    }}
+                  >
+                    <OutsideClickHandler
+                      onOutsideClick={handleOutsideNotiClick}
+                    >
+                      <NotificationsNone
+                        sx={{ position: "relative" }}
+                        onClick={handleNotiMouseClick}
+                      />
+                      <div>
+                        {isNotificationClick && (
+                          <NotificationDropdown noti={notifications} />
+                        )}
+                      </div>
+                    </OutsideClickHandler>
+                  </Badge>
                   <Avatar
                     {...stringAvatar(
                       user
-                        ? `${user.firstName} ${user.lastName}`
+                        ? `${user?.firstName} ${user?.lastName}`
                         : "Default Name",
                       {
                         ml: 2,
+                        "@media screen and (max-width: 500px)": {
+                          display: "none",
+                          ml: 2,
+                        },
                       }
                     )}
                     size="large"
@@ -297,6 +399,38 @@ export default function MiniDrawer({ children, page }) {
                 </>
               )}
             </Box>
+
+            {isTeacher && children && (
+              <IconButton
+                edge="end"
+                sx={{
+                  width: 30,
+                  height: 30,
+                  mt: 2,
+                  display: "none",
+                  "@media screen and (max-width: 500px)": {
+                    display: "flex",
+                    position: "absolute",
+                    right: 0,
+                    mt: 0,
+                  },
+                }}
+                onClick={openModal}
+                aria-label="settings"
+                id="long-button"
+              >
+                <Settings
+                  sx={{
+                    width: 30,
+                    height: 30,
+                    "@media screen and (max-width: 500px)": {
+                      height: 20,
+                      width: 20,
+                    },
+                  }}
+                />
+              </IconButton>
+            )}
           </Toolbar>
         </Container>
         {renderMenu(anchorEl)}
@@ -307,17 +441,34 @@ export default function MiniDrawer({ children, page }) {
         onClose={handleDrawerOpenClose}
       >
         <Toolbar />
-        <DrawerHeader sx={{ paddingTop: "10%" }}>
+        <DrawerHeader
+          sx={{
+            display: "none",
+            "@media screen and (max-width: 500px)": {
+              display: "flex",
+              mt: 4,
+            },
+          }}
+        >
           {isAuthenticated() && open && (
-            <IconButton
+            <Avatar
+              {...stringAvatar(
+                user ? `${user?.firstName} ${user?.lastName}` : "Default Name",
+                {
+                  ml: 2,
+                }
+              )}
               size="large"
-              edge="start"
+              edge="end"
+              aria-label="account of current user"
+              aria-controls={menuId}
+              aria-haspopup="true"
               onClick={handleProfileMenuOpen}
-              color="inherit"
-            >
-              <AccountCircle sx={{ width: "70px", height: "70px" }} />
-            </IconButton>
+            />
           )}
+          <Typography>
+            {user?.firstName} {user?.lastName}
+          </Typography>
           <IconButton onClick={handleDrawerOpenClose}>
             {!open ? <ChevronRight /> : <ChevronLeft />}
           </IconButton>
@@ -346,7 +497,7 @@ export default function MiniDrawer({ children, page }) {
         {page === "Profile" && children}
         {page === "Course" && <CourseContent />}
         {page === "AssignmentViewingDetails" && (
-           <AssignmentViewingDetailsMain course={children} />
+          <AssignmentViewingDetailsMain course={children} />
         )}
         {page === "AssignmentViewingAll" && <AssignmentViewingAllMain />}
       </Box>

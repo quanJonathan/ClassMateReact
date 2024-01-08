@@ -37,7 +37,7 @@ function OptionMenu({ options, actionIcon, onClick }) {
         aria-haspopup="true"
         onClick={handleClick}
         disableFocusRipple
-        sx={{p: 0}}
+        sx={{p: '5px'}}
       >
         {actionIcon}
       </IconButton>

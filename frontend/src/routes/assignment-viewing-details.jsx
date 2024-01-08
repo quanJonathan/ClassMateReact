@@ -7,12 +7,14 @@ import { Tab, Tabs, Typography } from "@mui/material";
 import Spinner from "../components/spinner";
 import { countBy } from "lodash";
 import { useIsTeacher } from "../helpers/getCurrentRole";
+import StudentLayout from "../components/StudentLayout";
+import TeacherLayout from "../components/TeacherLayout";
 
 export const AssignmentViewingDetailsMain = ({ course }) => {
   const { user } = useAuth();
   const { id, homeworkId } = useParams();
 
-  console.log(course);
+  // console.log(course);
 
   const isTeacher = useIsTeacher(id);
 
@@ -23,27 +25,12 @@ export const AssignmentViewingDetailsMain = ({ course }) => {
   }
 
   return (
-    <Box
-      sx={{
-        position: "fixed",
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "center",
-        minHeight: "95vh",
-        pl: 10,
-        pr: 20,
-        minWidth: "85%",
-        backgroundColor: "gray",
-      }}
-    >
-      {isTeacher ? <TeacherLayout /> : <StudentLayout />}
-    </Box>
+    <>
+      {isTeacher ? <TeacherLayout course={course}  /> : <StudentLayout course={course} homework={homeworkId} />}
+    </>
   );
 };
 
-const TeacherLayout = () => {};
-
-const StudentLayout = () => {};
 
 const AssignmentViewingDetails = () => {
   const { course, isLoading, isError, ...other } = useClass();
@@ -55,7 +42,7 @@ const AssignmentViewingDetails = () => {
         top: 0,
         right: 0,
         left: 0,
-        minHeight: "90vh",
+        minHeight: "100vh",
       }}
     >
       <MiniDrawer page="AssignmentViewingDetails" children={course} />

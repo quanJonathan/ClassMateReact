@@ -16,6 +16,7 @@ import { Homework, HomeworkDocument } from 'src/model/homework.schema';
 import { User, UserDocument } from 'src/user/model/user.schema';
 
 export class ClassService {
+  
   constructor(
     @InjectModel(Class.name) private classModel: Model<ClassDocument>,
     @InjectModel(User.name) private userModel: Model<UserDocument>,
@@ -58,6 +59,10 @@ export class ClassService {
 
     // console.log(classObject);
     return classObject;
+  }
+
+  async getClassByHomework(homeworkId: ObjectId) {
+    return await this.classModel.findOne({homeworks: {$elmMatch: {$eq: homeworkId}}}).populate("members");
   }
 
   async getMember(classId: string): Promise<User | any> {
@@ -178,58 +183,86 @@ export class ClassService {
     return await this.userModel.insertMany(saveStudents);
   }
 
-  async addStudent(classId: string, studentId: ObjectId) {
+  async addStudent(classId: ObjectId, studentId: ObjectId) {
     console.log(classId);
-    const foundClass = await this.classModel.findOne({ classId: classId });
+    const foundClass = await this.classModel.findById(classId);
     //console.log(foundClass)
     if (!foundClass) {
       throw new NotFoundException('Class not existed');
     } else {
       await foundClass.populate('members');
-      const user = await this.userModel.findById(studentId).populate({
-        path: 'classes.classId',
-        match: {
-          classId: classId,
-        },
-      });
-      // console.log(user);
-      //console.log(foundClass)
+      const user = await this.userModel.findById(studentId)
+      
+      const findClass = user.classes.find(c => (c.classId as ObjectId).toString() == classId.toString())
 
-      if (user.classes.length > 0) {
+      if (findClass) {
         throw new ForbiddenException('User already in the class');
       } else {
         foundClass.members.push(user);
         user.classes.push({ classId: foundClass._id, role: '1000' });
         await user.save();
         await foundClass.save();
+        return "Joined class successfully";
       }
     }
   }
 
-  async addTeacher(classId: string, studentId: ObjectId) {
-    console.log(classId);
+  async addStudentWithClassId(classId: string, studentId: ObjectId) {
+    // console.log(classId);
     const foundClass = await this.classModel.findOne({ classId: classId });
+    // console.log(foundClass)
+    if (!foundClass) {
+      throw new NotFoundException('Class not existed');
+    } else {
+      await foundClass.populate('members');
+      const user = await this.userModel.findById(studentId).populate({
+        path: 'classes.classId classes.role',
+        select: 'classId',
+      });
+      const findClass = user.classes.find(c => (c.classId as Class).classId == classId.toString())
+      //console.log(user);
+      //console.log(foundClass)
+     // console.log(user.classes)
+
+      if (findClass) {
+        throw new ForbiddenException('User already in the class');
+      } else {
+        console.log("saving")
+        foundClass.members.push(user);
+        user.classes.push({ classId: foundClass, role: '1000' });
+        await user.save();
+        await foundClass.save();
+        return "Joined class successfully";
+      }
+    }
+  }
+
+  async addTeacher(classId: ObjectId, studentId: ObjectId) {
+    // console.log(classId);
+    const foundClass = await this.classModel.findById(classId);
     //console.log(foundClass)
     if (!foundClass) {
       throw new NotFoundException('Class not existed');
     } else {
       await foundClass.populate('members');
       const user = await this.userModel.findById(studentId).populate({
-        path: 'classes.classId',
-        match: {
-          classId: classId,
-        },
+        path: 'classes.classId classes.role',
+        select: 'classId',
       });
-      console.log(user);
+      const findClass = user.classes.find(c => (c.classId as Class).classId == classId.toString())
+      //console.log(user);
       //console.log(foundClass)
+     // console.log(user.classes)
 
-      if (user.classes.length > 0) {
+      if (findClass) {
         throw new ForbiddenException('User already in the class');
       } else {
         foundClass.members.push(user);
-        user.classes.push({ classId: foundClass._id, role: '3000' });
+        user.classes.push({ classId: foundClass, role: '3000' });
         await user.save();
         await foundClass.save();
+
+        return "Joined in successfully"
       }
     }
   }
@@ -250,7 +283,7 @@ export class ClassService {
         },
       });
 
-      console.log(user);
+      // console.log(user);
       if (user.classes.length > 0) {
         user.classes = user.classes.filter((c) => {
           c.classId.toString() !== foundClass.classId;
@@ -278,11 +311,11 @@ export class ClassService {
         throw new NotFoundException('Class is not existed or deleted');
       }
 
-      console.log(foundClass);
+      // console.log(foundClass);
 
       if (!gradeCompositions) return;
 
-      console.log(gradeCompositions);
+     // console.log(gradeCompositions);
 
       for (const gradeComposition of gradeCompositions) {
         const existingComposition = foundClass.compositions.find((comp) =>
@@ -398,7 +431,7 @@ export class ClassService {
     const updateUser = foundHomework.doneMembers.find((member) => {
       // console.log(member.memberId);
       return (
-        (member.memberId as User)._id.toString() == foundUser._id.toString()
+        (member.memberId as User)?._id.toString() == foundUser?._id.toString()
       );
     });
     // console.log(foundHomework);
@@ -438,8 +471,8 @@ export class ClassService {
         (c.classId as Class)._id.equals(foundClass._id),
       ).role;
       if (role == '3000') return;
-      const user = foundHomework.doneMembers.find((d) =>
-        u._id.equals((d.memberId as User)._id),
+      const user = foundHomework.doneMembers.find(
+        (d) => u?._id.equals((d.memberId as User)?._id),
       );
       if (!user) {
         foundHomework.doneMembers.push({
@@ -550,7 +583,7 @@ export class ClassService {
     const updateUser = foundHomework.doneMembers.find((member) => {
       // console.log(member.memberId);
       return (
-        (member.memberId as ObjectId).toString() == foundUser._id.toString()
+        (member.memberId as ObjectId)?.toString() == foundUser?._id?.toString()
       );
     });
     // console.log(foundHomework);
