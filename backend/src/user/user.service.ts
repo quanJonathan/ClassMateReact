@@ -228,6 +228,32 @@ export class UserService {
     }})
   }
 
+  async updateEmptyAccount(user) {
+    console.log(user);
+    const u = await this.findOneById(user._id);
+    if (!u)       
+    {
+      console.log('User not found')
+      return;
+      throw new BadRequestException('user not found');
+    }
+    let pass = user.password;
+
+      pass = await hashData(user.password);
+      console.log(pass)
+      return await this.userModel.findOneAndUpdate({_id: user._id}, {$set: {
+        firstName: user.firstName,
+        lastName: user.lastName,
+        address: user.address,
+        phoneNumber: user.phoneNumber,
+        email: user.email,
+        studentId: user.studentId,
+        password: pass
+      }})
+  }
+    
+  
+
   async updateState(user: User, state: string) {
     if (user.email)
     return await this.userModel.findOneAndUpdate({email: user.email}, {$set: {

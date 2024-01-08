@@ -94,6 +94,16 @@ export class UserController {
     return response.status(HttpStatus.BAD_REQUEST).json();
   }
 
+  @Post('mergeEmptyAccount')
+  async mergeEmptyAccount(@Res() response, @Body() user) {
+    const result = await this.userService.updateEmptyAccount(user);
+    console.log(result);
+    if(result)
+      {return response.status(HttpStatus.OK).json(result);
+      }
+    return response.status(HttpStatus.BAD_REQUEST).json();
+  }
+
   @Post('mapIdWithEmail')
   async MapStudentId(@Res() response, @Body() user) {
     const result = await this.userService.updateStudentId(user);
