@@ -321,7 +321,7 @@ const StudentHomeworkPage = ({ course, homeworkId }) => {
                 </List>}
               </>
             )}{" "}
-            <Box sx={{ position: "fixed", bottom: 10, right: 10, width: "60%" }}>
+            <Box sx={{ position: "fixed", bottom: 10, right: 10, width: "43%" }}>
               <div
                 style={{
                   display: "flex",
