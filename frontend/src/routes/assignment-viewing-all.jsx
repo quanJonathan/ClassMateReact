@@ -21,10 +21,12 @@ import MiniDrawer from "../components/Drawer";
 import Spinner from "../components/spinner";
 import { calculateTotalScore } from "../hook/useHomeworks";
 import { useState } from "react";
+import GradeScaleDialog from "../components/GradeScaleDialog";
 
 export const AssignmentViewingAllMain = () => {
   const { user } = useAuth();
   const { id, homeworkId } = useParams();
+  const [open, setOpen] = useState(false);
 
   const { course, members, teachers, isLoading, isError } = useClass();
   // console.log(course);
@@ -46,6 +48,7 @@ export const AssignmentViewingAllMain = () => {
 
   const showGradeScale = () => {
     // TODO document why this arrow function is empty
+    setOpen(true);
   };
 
   const handleHomework = (homework) => {
@@ -84,6 +87,11 @@ export const AssignmentViewingAllMain = () => {
             overflowY: "auto",
           }}
         >
+          <GradeScaleDialog
+            open={open}
+            onClose={() => setOpen(false)}
+            compositions={course?.compositions}
+          />
           <Stack flexDirection="row">
             <Box
               sx={{
@@ -91,7 +99,7 @@ export const AssignmentViewingAllMain = () => {
                 display: "flex",
                 alignContent: "flex-start",
                 justifyContent: "flex-start",
-                width: 'calc(100vh - 60px)'
+                width: "calc(100vh - 60px)",
               }}
             >
               <Avatar

@@ -6,7 +6,7 @@ import { join } from "lodash";
 
 const GoogleOAuthSuccessRedirect = ({ props }) => {
   let { accessToken, refreshToken, from } = useParams();
-  const { setToken, currentJoiningLink, user, joining } = useAuth();
+  const { setToken, currentJoiningLink, user, joining, setIsLoading } = useAuth();
   const navigate = useNavigate();
   //const dispatch = useAppDispatch()
 
@@ -33,6 +33,7 @@ const GoogleOAuthSuccessRedirect = ({ props }) => {
           },
         });
       }
+      setIsLoading(true)
       navigate("/dashboard", { replace: true });
     }
   }, [accessToken, from, navigate, refreshToken, setToken]);

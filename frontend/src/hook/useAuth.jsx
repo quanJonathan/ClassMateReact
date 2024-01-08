@@ -144,6 +144,7 @@ export const AuthProvider = ({ children }) => {
       token,
       setToken,
       user,
+      setIsLoading,
       login,
       logout,
       updateUser,
@@ -169,6 +170,7 @@ export const AuthProvider = ({ children }) => {
       tempEmail,
       currentJoiningLink,
       setCurrentJoiningLink,
+      setIsLoading
     ]
   );
 

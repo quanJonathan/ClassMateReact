@@ -29,7 +29,7 @@ export default function SignIn() {
   const [errorMessage, setErrorMessage] = useState("");
   const location = useLocation();
   const from = (location.state?.from?.pathname === '/auth' ? '/' : location.state?.from?.pathname) || '/';
-  const { login, setUser } = useAuth();
+  const { login, setUser, setIsLoading } = useAuth();
   const [valid,setValid] = useState(true);
   const [email,setEmail] = useState(null);
 
@@ -54,6 +54,7 @@ export default function SignIn() {
   const loginWithGoogle = async() =>{
     console.log('click')
     try{
+      setIsLoading(true)
       window.open(`http://localhost:3001/auth/google/${from.replaceAll('/', '@')}`, "_self");
     }catch(error) {
       console.log(error)
@@ -62,6 +63,7 @@ export default function SignIn() {
 
   const loginWithFaceBook = async() => {
     try{
+      setIsLoading(true)
       window.open(`http://localhost:3001/auth/facebook`, "_self");
     }catch(error) {
       console.log(error)
