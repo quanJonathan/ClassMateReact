@@ -232,9 +232,13 @@ function SettingDialog({ open, handleClose, compositions, defaultValue }) {
   };
 
   const deleteGradeComposition = (index) => {
+
+    setGradeScaleLeft((prev) => prev + parseInt(gradeCompositions[index].gradeScale));
     const updatedCompositions = [...gradeCompositions];
     updatedCompositions.splice(index, 1);
+    
     setGradeCompositions(updatedCompositions);
+  
 
     // calculateGradeScale(currentComposition?.gradeScale, index)
   };
