@@ -15,6 +15,8 @@ import {
   Link,
   MenuItem,
   IconButton,
+  Card,
+  CardContent,
 } from "@mui/material";
 import {
   Close,
@@ -78,25 +80,29 @@ const StudentHomeworkPage = ({ course, homeworkId }) => {
 
   console.log(gradeReviews)
 
+  
+  const homework = course?.homeworks?.find((h) => (h._id = homeworkId));
+  console.log(homework);
+  const doneMembers = homework?.doneMembers;
+  console.log(doneMembers);
   const getData = () => {
-    // console.log(gradeReviews);
-    // console.log(currentStudent);
-
+  
     setCurrentGradeReview(null);
 
     const foundGradeReview = gradeReviews?.find((g) =>
       g?.user?.find((u) => u?._id == currentStudent?._id)
-    );
+      );
     console.log(foundGradeReview);
     setCurrentGradeReview(foundGradeReview);
-
-    const foundMember = doneMembers?.find((m) => m?._id == currentStudent?._id);
+    
+    
+    const foundMember = doneMembers?.find((m) => m?.memberId == currentStudent?._id);
+    console.log("member",foundMember);
     setScore(foundMember?.score?.toString());
+    console.log(score);
   };
 
-  const homework = course?.homeworks?.find((h) => (h._id = homeworkId));
 
-  const doneMembers = homework?.doneMembers;
 
   const navigate = useNavigate();
   const { id } = useParams();
@@ -108,8 +114,6 @@ const StudentHomeworkPage = ({ course, homeworkId }) => {
         alignContent="flex-start"
         justifyContent="space-between"
         sx={{
-          width: "100%",
-          height: "auto",
           minWidth: 20,
           top: "64px",
           ml: 3,
@@ -207,8 +211,8 @@ const StudentHomeworkPage = ({ course, homeworkId }) => {
                       fontSize: "15px",
                     }}
                     onClick={() => {
-                      setCurrentStudent(m);
-                      setIsAll(false);
+                        setCurrentStudent(m);
+                        setIsAll(false);
                       getData();
                     }}
                   >
@@ -240,7 +244,7 @@ const StudentHomeworkPage = ({ course, homeworkId }) => {
             display="flex"
             flexDirection="column"
             sx={{
-              flex: 1.5,
+              flex: 2,
               maxHeight: "80%",
               height: "70%",
               p: 4,
@@ -254,29 +258,58 @@ const StudentHomeworkPage = ({ course, homeworkId }) => {
                 <IconButton sx={{ right: 0, top: 0, position: "absolute" }}>
                   <Close />
                 </IconButton>
+
+                <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "flex-start",
+              }}
+            >
+                <Avatar
+                {...stringAvatar(
+                    currentStudent ? `${currentStudent?.firstName} ${currentStudent?.lastName}` : "Default Name",
+                  { width: 40, height: 40 }
+                )}
+                edge="end"
+                aria-label="account of current user"
+                color="inherit"
+              />
                 <Link
                   underline="hover"
                   color="black"
-                  sx={{ ":hover": { color: "black" } }}
+                  sx={{ ":hover": { color: "black" }, pl: 2 }}
                   onClick={() => {
                     navigate(`${id}/a/${homework?._id}/details`);
                   }}
                 >
                   {currentStudent?.firstName} {currentStudent?.lastName}
                 </Link>
+                </Box>
+              
                 {score == "" ? (
                   <Typography>No score</Typography>
                 ) : (
-                  <Typography>
-                    {score}/{homework?.maxScore}
+                    <Box sx={{display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center", pt: 2}}>
+                  <Typography sx={{fontWeight:600}}>
+                    Grade: {score}/{homework?.maxScore}
                   </Typography>
+
+                  <Typography>{homework?.composition?.gradeScale/homework?.composition?.homeworks?.length}%</Typography>
+                  </Box>
                 )}
+                   <Divider sx={{m:2}}/>
                 <List>
-                  <ListItem key={currentGradeReview?._id}>
-                    <Typography>{currentGradeReview?.expectedGrade}</Typography>
+                  <ListItem key={currentGradeReview?._id} sx={{ width: "100%"}}>
+                  <Card sx={{display: "flex", flexDirection: "column", justifyContent: "center", px:2, pt: 2,  width: "100%"}}>
+                    <CardContent>
+                    <Typography sx={{fontWeight:600}}>Expected Grade: {currentGradeReview?.expectedGrade}</Typography>
+                    <Typography sx={{fontWeight: 600, pb: 2}}>Explanation</Typography>
                     <Typography>
                       {currentGradeReview?.studentExplanation}
                     </Typography>
+                    </CardContent>
+                    </Card>
                   </ListItem>
                   {currentGradeReview?.teacherComments?.map((c) => (
                     <ListItem key={c?.teacherId?._id}>
@@ -287,7 +320,7 @@ const StudentHomeworkPage = ({ course, homeworkId }) => {
                 </List>
               </>
             )}{" "}
-            <Box sx={{ position: "absolute", bottom: 200, width: "43%" }}>
+            <Box sx={{ position: "fixed", bottom: 10, right: 10, width: "60%" }}>
               <div
                 style={{
                   display: "flex",

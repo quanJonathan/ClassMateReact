@@ -5,6 +5,7 @@ import axios from "axios";
 export function useNotification() {
   const { user, token } = useAuth();
 
+
   const fetcher = (url) =>
     axios
       .get(url, {
