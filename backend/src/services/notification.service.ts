@@ -32,6 +32,10 @@ export class NotificationService {
   }
 
   async getAllUserNotification(userId: ObjectId): Promise<Notification[]> {
+    const foundUser = await this.userModel.findById(userId);
+    if (!foundUser) {
+      throw new NotFoundException('User not found');
+    }
     const notifications = await this.notificationModel
       .find({ user: userId })
       .sort({ createdDate: -1 }) // Sort by createdDate in descending order
