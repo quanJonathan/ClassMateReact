@@ -45,7 +45,7 @@ function Copyright(props) {
 
 async function post(refreshToken) {
   return await axios
-  .post("http://localhost:3001/email-confirmation/verify", {token: refreshToken}, {
+  .post("https://classmatebe-final.onrender.com/email-confirmation/verify", {token: refreshToken}, {
     headers: {
       "Content-Type": "application/x-www-form-urlencoded",
       "Access-Control-Allow-Origin": "*",

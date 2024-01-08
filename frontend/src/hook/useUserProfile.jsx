@@ -15,7 +15,7 @@ export default function useFetchProfile(token) {
       .then((res) => res.data);
       
   const { data, isLoading, error } = useSWR(
-    "http://localhost:3001/auth/profile",
+    "https://classmatebe-final.onrender.com/auth/profile",
     fetcher
   );
 

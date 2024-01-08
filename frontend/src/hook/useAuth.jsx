@@ -31,7 +31,7 @@ export const AuthProvider = ({ children }) => {
         setIsLoading(false)
       });
 
-  useSWR("http://localhost:3001/auth/profile", fetcher);
+  useSWR("https://classmatebe-final.onrender.com/auth/profile", fetcher);
 
   const [tempEmail, setTempEmail] = useLocalStorage(
     "tempEmail",
@@ -91,7 +91,7 @@ export const AuthProvider = ({ children }) => {
   const login = async (form) => {
     try {
       const response = await axios.post(
-        "http://localhost:3001/auth/signIn",
+        "https://classmatebe-final.onrender.com/auth/signIn",
         form
       );
       const token = response.data;

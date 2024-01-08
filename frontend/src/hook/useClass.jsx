@@ -6,7 +6,7 @@ import axios from "axios";
 export function useClass(){
     const fetcher = (url) => axios.get(url).then((res) => res.data);
     const {id} = useParams()
-    const {data, isLoading, error} = useSWR(`http://localhost:3001/class/getClass/${id}`, fetcher)
+    const {data, isLoading, error} = useSWR(`https://classmatebe-final.onrender.com/class/getClass/${id}`, fetcher)
 
     // console.log(data)
     //console.log(useParams())

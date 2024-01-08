@@ -55,7 +55,7 @@ import axios from "axios";
         };
        
         await axios
-        .post(`http://localhost:3001/auth/joinClassByEmail/${id}`, body, {
+        .post(`https://classmatebe-final.onrender.com/auth/joinClassByEmail/${id}`, body, {
           headers: {
             Authorization: "Bearer " + token?.refreshToken,
           },

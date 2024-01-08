@@ -169,7 +169,7 @@ function SettingDialog({ open, handleClose, compositions, defaultValue }) {
 
     try {
       const response = await axios.post(
-        `http://localhost:3001/class/updateOrAddGradeCompositions/${id}`,
+        `https://classmatebe-final.onrender.com/class/updateOrAddGradeCompositions/${id}`,
         modifiedGradeCompositions,
         {
           headers: {

@@ -36,7 +36,7 @@ export default function CreateClassDialog({ isOpen, handleClose }) {
     } else {
       setLoading(true);
       await axios
-        .post("http://localhost:3001/class/addClass", form, {
+        .post("https://classmatebe-final.onrender.com/class/addClass", form, {
           headers: {
             Authorization: "Bearer " + token?.refreshToken,
           },
@@ -46,7 +46,7 @@ export default function CreateClassDialog({ isOpen, handleClose }) {
           setLoading(false);
           toast.success("Create Class Successfully!");
           handleClose();
-          // mutate("http://localhost:3001/auth/profile");
+          // mutate("https://classmatebe-final.onrender.com/auth/profile");
         })
         .catch(function (error) {
           if (error.response) {

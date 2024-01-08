@@ -48,7 +48,7 @@ export default function GradeReviewDialog({ open, handleClose, assignment }) {
     } else {
       try {
         const response = await axios.post(
-          `http://localhost:3001/gradeReview/add/h/${assignment?._id}`,
+          `https://classmatebe-final.onrender.com/gradeReview/add/h/${assignment?._id}`,
           {
             gradeReview: {
               expectedGrade: expected,

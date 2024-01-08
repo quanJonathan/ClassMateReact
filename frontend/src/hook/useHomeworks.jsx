@@ -3,12 +3,12 @@ export const calculateTotalScore = (member, homeworks, compositions) => {
   // console.log(compositions)
   compositions?.map((c, index) => {
     let temp = 0;
-    const foundHomeworks = homeworks.filter((h) => h.composition._id == c._id);
+    const foundHomeworks = homeworks?.filter((h) => h?.composition?._id == c?._id);
     //console.log("homework of composition " + c.name + "for " +  member?.studentId)
     //console.log("grade scale " +  c.gradeScale)
     //console.log(foundHomeworks)
-    foundHomeworks.map((h) => {
-      const foundUser = h.doneMembers.find((h) => h.memberId == member._id);
+    foundHomeworks?.map((h) => {
+      const foundUser = h?.doneMembers?.find((h) => h?.memberId == member?._id);
       if (foundUser && foundUser.state == "final") {
         //console.log("score for homework " + foundUser.score)
         temp = temp + foundUser.score / h.maxScore;
@@ -46,7 +46,7 @@ export function useHomeworks(members, homeworks, compositions) {
   //     .then((res) => res.data);
   // const { id } = useParams();
   // const { data, isLoading, error } = useSWR(
-  //   `http://localhost:3001/class/getHomeworks/${id}`,
+  //   `https://classmatebe-final.onrender.com/class/getHomeworks/${id}`,
   //   fetcher
   // );
 
@@ -72,11 +72,11 @@ export function useHomeworks(members, homeworks, compositions) {
   homeworks?.map((homework) => {
     const header = {
       sortingField: false,
-      id: homework._id,
-      label: homework.name,
-      deadline: homework.deadline,
-      totalScore: homework.maxScore,
-      composition: homework.composition,
+      id: homework?._id,
+      label: homework?.name,
+      deadline: homework?.deadline,
+      totalScore: homework?.maxScore,
+      composition: homework?.composition,
       minWidth: 170,
       align: "left",
     };
@@ -87,22 +87,22 @@ export function useHomeworks(members, homeworks, compositions) {
     const { doneHomework } = homeworks.reduce(
       (acc, homework) => {
         const doneMember = homework.doneMembers.find(
-          (doneMember) => doneMember.memberId === member._id
+          (doneMember) => doneMember?.memberId === member?._id
         );
 
         if (doneMember) {
           acc.doneHomework.push({
-            score: doneMember.score || 0,
-            state: doneMember.state || "pending",
-            maxScore: homework.maxScore,
-            _id: homework._id,
+            score: doneMember?.score || 0,
+            state: doneMember?.state || "pending",
+            maxScore: homework?.maxScore,
+            _id: homework?._id,
           });
         } else {
           acc.doneHomework.push({
             score: "",
             state: "pending",
-            maxScore: homework.maxScore,
-            _id: homework._id,
+            maxScore: homework?.maxScore,
+            _id: homework?._id,
           });
         }
 

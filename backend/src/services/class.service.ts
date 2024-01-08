@@ -506,7 +506,7 @@ export class ClassService {
 
   async updateHomeworkScore(
     classId: ObjectId,
-    newData: [UpdateHomework],
+    newData: UpdateHomework[],
     homeworkId: ObjectId,
   ) {
     const classObject = await this.classModel.findById(classId);
@@ -525,13 +525,13 @@ export class ClassService {
       path: 'members',
       select: '_id studentId',
     });
-    // console.log(classObject)
+    console.log(classObject)
 
     await foundHomework.populate({
       path: 'doneMembers.memberId doneMembers.state doneMembers.score',
     });
 
-    // console.log(foundHomework.doneMembers);
+    console.log(foundHomework.doneMembers);
 
     const newDoneMembers = newData?.map((h) => {
       const { score, studentId, ...other } = h;
@@ -541,15 +541,15 @@ export class ClassService {
         (m) => m?.studentId == studentId.toString(),
       );
 
-      // console.log(currentUser)
+      console.log(currentUser)
 
       const foundUserInHomework = foundHomework.doneMembers.find((m) => {
-        return ((m.memberId as User)?._id).equals(currentUser?._id);
+        return ((m?.memberId as User)?._id?.toString()) == (currentUser?._id?.toString());
       });
 
-      // console.log(foundUserInHomework);
+      console.log(foundUserInHomework);
 
-      let returnData;
+      let returnData ;
       if (foundUserInHomework) {
         returnData = {
           state: foundUserInHomework?.state,
@@ -563,13 +563,14 @@ export class ClassService {
           memberId: currentUser?._id,
         };
       }
+      
       return returnData;
     });
 
     newDoneMembers.filter((n) => n != null);
-    // console.log(newDoneMembers);
+    console.log(newDoneMembers);
     foundHomework.doneMembers = newDoneMembers;
-    // console.log(foundHomework.doneMembers)
+    console.log(foundHomework.doneMembers)
     await foundHomework.save();
 
     return 'Save successfully';

@@ -124,7 +124,7 @@ const ExcelLikeTable = ({ headers, rows, course }) => {
   const returnHomeworks = async (homework) => {
     try {
       const response = await axios.post(
-        `http://localhost:3001/class/returnHomeworks/${id}/a/${homework?.id}`,
+        `https://classmatebe-final.onrender.com/class/returnHomeworks/${id}/a/${homework?.id}`,
         {
           headers: {
             Authorization: "Bearer: " + token?.refreshToken,
@@ -217,7 +217,7 @@ const CustomTableHeader = ({
       label: "Return all",
       action: () => {
         returnAllHomework(currentHomework);
-        mutate(`http://localhost:3001/class/getClass/${id}`);
+        mutate(`https://classmatebe-final.onrender.com/class/getClass/${id}`);
       },
     },
   ];
@@ -262,7 +262,7 @@ const CustomTableHeader = ({
 
       try {
         const response = await axios.post(
-          `http://localhost:3001/class/updateHomeworkScore/${id}/a/${homework.id}`,
+          `https://classmatebe-final.onrender.com/class/updateHomeworkScore/${id}/a/${homework.id}`,
           scoringDetail,
           {
             headers: {
@@ -462,7 +462,7 @@ const CustomTableBody = ({ data, rowHeaderOptions }) => {
   const returnHomework = async () => {
     try {
       const response = await axios.post(
-        `http://localhost:3001/class/returnHomework/${id}/a/${
+        `https://classmatebe-final.onrender.com/class/returnHomework/${id}/a/${
           data[hoveredCell.rowIndex].homeworks[hoveredCell.colIndex]._id
         }`,
         {
@@ -560,7 +560,7 @@ const CustomTableBody = ({ data, rowHeaderOptions }) => {
 
       try {
         const response = await axios.post(
-          `http://localhost:3001/class/updateHomework/${id}`,
+          `https://classmatebe-final.onrender.com/class/updateHomework/${id}`,
           updateData,
           {
             headers: {
@@ -610,7 +610,7 @@ const CustomTableBody = ({ data, rowHeaderOptions }) => {
 
     try {
       const response = await axios.post(
-        `http://localhost:3001/auth/setUserStudentId`,
+        `https://classmatebe-final.onrender.com/auth/setUserStudentId`,
         updateData,
         {
           headers: {

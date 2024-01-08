@@ -9,7 +9,7 @@ function ClassCard({ item, user }) {
   async function getClass(classId) {
     try {
   const response =  await axios
-  .get(`http://localhost:3001/class/getClass/${classId}`, {
+  .get(`https://classmatebe-final.onrender.com/class/getClass/${classId}`, {
     headers: {
       "Content-Type": "application/x-www-form-urlencoded",
       "Access-Control-Allow-Origin": "*",

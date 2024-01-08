@@ -117,7 +117,7 @@ const Section = ({ title, data, icon, sendMailAction, createLink, course }) => {
     try {
       console.log(studentId + "check");
       await axios.post(
-        `http://localhost:3001/class/removeStudent/${studentId}`,
+        `https://classmatebe-final.onrender.com/class/removeStudent/${studentId}`,
         {
           id: course?._id,
         },

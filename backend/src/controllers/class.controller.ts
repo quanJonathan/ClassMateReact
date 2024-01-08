@@ -179,7 +179,7 @@ export class ClassController {
   }
 
   @Post('/updateHomeworkScore/:id/a/:homeworkId')
-  @UseGuards(RefreshTokenGuard)
+ // @UseGuards(RefreshTokenGuard)
   async updateHomeworkScore(
     @Body() body,
     @Param() params: any,
@@ -191,11 +191,12 @@ export class ClassController {
 
     const homeworks = body;
     console.log(homeworks);
-    const result = this.classService.updateHomeworkScore(
+    const result = await this.classService.updateHomeworkScore(
       _id,
       homeworks,
       homeworkId,
     );
+    console.log(result)
 
     if (result) {
       return response.status(HttpStatus.OK).json('Update data successfully');
@@ -214,7 +215,7 @@ export class ClassController {
   }
 
   @Post('/returnHomework/:id/a/:homeworkId')
-  async returnHomework(@Body() body, @Param() params: any) {
+  async returnHomework(@Body() body, @Param() params: any, @Res() res: any) {
     console.log('Returning');
     const _id = params.id;
     const userId = body.userId;
@@ -236,6 +237,7 @@ export class ClassController {
         result.className,
         result.homework,
       );
+      return res.status(HttpStatus.OK).json(result);
     } else {
       throw new BadRequestException('Return homework Failed');
     }
@@ -252,11 +254,11 @@ export class ClassController {
     const result = await this.classService.returnHomeworks(_id, homeworkId);
 
     if (result) {
-      await this.emailConfirmService.sendMultipleReturnHomeworkLink(
-        result.className,
-        result.homework,
-        result.users,
-      );
+      // await this.emailConfirmService.sendMultipleReturnHomeworkLink(
+      //   result.className,
+      //   result.homework,
+      //   result.users,
+      // );
       return res.status(HttpStatus.OK).json(result);
     } else {
       throw new BadRequestException('Return homework Failed');

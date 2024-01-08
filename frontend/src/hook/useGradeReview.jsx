@@ -8,7 +8,7 @@ export function useGradeReview() {
 
   const fetcher = (url) => axios.get(url).then((res) => res.data);
   const { data, isLoading, error } = useSWR(
-    `http://localhost:3001/gradeReview/h/${homeworkId}`,
+    `https://classmatebe-final.onrender.com/gradeReview/h/${homeworkId}`,
     fetcher
   );
 

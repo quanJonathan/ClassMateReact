@@ -337,7 +337,7 @@ export class EmailConfirmationService {
       `;
 
       const emailTemplate = {
-        to: (user.memberId as User).email,
+        to: (user.memberId as User)?.email,
         subject: `Graded: "${homework.name}"`,
         html: htmlText,
       };
