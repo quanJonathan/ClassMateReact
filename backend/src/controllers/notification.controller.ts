@@ -1,12 +1,14 @@
 /* eslint-disable prettier/prettier */
-import { Controller, Get, HttpStatus, Param, Post, Req, Res } from '@nestjs/common';
+import { Controller, Get, HttpStatus, Param, Post, Req, Res, UseGuards } from '@nestjs/common';
 import { NotificationService } from 'src/services/notification.service';
-
+import { RefreshTokenGuard } from 'src/guards/refresh-token.guard';
 @Controller('notification')
 export class NotificationController {
   constructor(private notificationService: NotificationService) {}
 
+
   @Post('/add/:userId')
+
   async addNewNotification(@Res() res: any, @Req() req: any, @Param() params: any ){
     const userId = params.userId;
     const notification = req.body.notification;
@@ -27,6 +29,7 @@ export class NotificationController {
   }
 
   @Get('/u/:userId')
+  @UseGuards(RefreshTokenGuard)
   async getByUserId(@Param() params: any){
     return this.notificationService.getAllUserNotification(params.userId);
   }
