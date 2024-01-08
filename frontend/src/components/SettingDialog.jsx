@@ -23,74 +23,74 @@ import { toast } from "react-toastify";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import YesNoDialog from "./yesNoDialog";
-import DraggableList from "react-draggable-list";
+// import DraggableList from "react-draggable-list";
 
 const Transition = forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-const GradeCompositionsItem = (props) => {
-  const { item, dragHandleProps, commonProps } = props;
+// const GradeCompositionsItem = (props) => {
+//   const { item, dragHandleProps, commonProps } = props;
 
-  const { onMouseDown, onTouchStart } = dragHandleProps;
-  const { setYesNo, deleteGradeComposition, handleTextChange } = commonProps;
+//   const { onMouseDown, onTouchStart } = dragHandleProps;
+//   const { setYesNo, deleteGradeComposition, handleTextChange } = commonProps;
 
-  return (
-    <Stack
-      spacing={2}
-      direction="row"
-      onTouchStart={(e) => {
-        e.preventDefault();
-        console.log("touchStart");
-        e.target.style.backgroundColor = "blue";
-        document.body.style.overflow = "hidden";
-        onTouchStart(e);
-      }}
-      onTouchEnd={(e) => {
-        e.target.style.backgroundColor = "black";
-        document.body.style.overflow = "visible";
-      }}
-    >
-      <TextField
-        className="disable-select"
-        required
-        label="Grade composition"
-        value={item?.name}
-        variant="filled"
-        focused
-        InputLabelProps={{
-          shrink: true,
-        }}
-        helperText={item?.helperText}
-        onChange={(e) => handleTextChange(index, "name", e.target.value)}
-      />
-      <TextField
-        className="disable-select"
-        label="gradeScale*"
-        value={item?.gradeScale}
-        type="number"
-        variant="filled"
-        onChange={(e) => handleTextChange(index, "gradeScale", e.target.value)}
-        inputProps={{
-          min: 1,
-          max: 100,
-        }}
-      />
-      <IconButton
-        className="disable-select"
-        onClick={() => {
-          item?.isDefault ? setYesNo(true) : deleteGradeComposition(index);
-        }}
-      >
-        <Close />
-      </IconButton>
-      <IconButton className="dragHandle">
-        <ArrowDropUp />
-        <ArrowDropDown />
-      </IconButton>
-    </Stack>
-  );
-};
+//   return (
+//     <Stack
+//       spacing={2}
+//       direction="row"
+//       onTouchStart={(e) => {
+//         e.preventDefault();
+//         console.log("touchStart");
+//         e.target.style.backgroundColor = "blue";
+//         document.body.style.overflow = "hidden";
+//         onTouchStart(e);
+//       }}
+//       onTouchEnd={(e) => {
+//         e.target.style.backgroundColor = "black";
+//         document.body.style.overflow = "visible";
+//       }}
+//     >
+//       <TextField
+//         className="disable-select"
+//         required
+//         label="Grade composition"
+//         value={item?.name}
+//         variant="filled"
+//         focused
+//         InputLabelProps={{
+//           shrink: true,
+//         }}
+//         helperText={item?.helperText}
+//         onChange={(e) => handleTextChange(index, "name", e.target.value)}
+//       />
+//       <TextField
+//         className="disable-select"
+//         label="gradeScale*"
+//         value={item?.gradeScale}
+//         type="number"
+//         variant="filled"
+//         onChange={(e) => handleTextChange(index, "gradeScale", e.target.value)}
+//         inputProps={{
+//           min: 1,
+//           max: 100,
+//         }}
+//       />
+//       <IconButton
+//         className="disable-select"
+//         onClick={() => {
+//           item?.isDefault ? setYesNo(true) : deleteGradeComposition(index);
+//         }}
+//       >
+//         <Close />
+//       </IconButton>
+//       <IconButton className="dragHandle">
+//         <ArrowDropUp />
+//         <ArrowDropDown />
+//       </IconButton>
+//     </Stack>
+//   );
+// };
 
 function SettingDialog({ open, handleClose, compositions, defaultValue }) {
   const { user, token } = useAuth();
