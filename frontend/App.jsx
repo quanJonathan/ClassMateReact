@@ -23,6 +23,7 @@ import JoinClassVerify from "./src/routes/join-class-verify";
 import JoinClass from "./src/routes/join-class";
 import AssignmentViewingDetails from "./src/routes/assignment-viewing-details";
 import AssignmentViewingAll from "./src/routes/assignment-viewing-all";
+import ActivateEmptyAccount from "./src/routes/activateEmptyAccount";
 
 export const router = createBrowserRouter(
   createRoutesFromElements(
@@ -78,6 +79,11 @@ export const router = createBrowserRouter(
         <Route path="join/verify/:classId" element={<JoinClassVerify />} />
         <Route path="t/join/:classId" element={<JoinClass />} />
         <Route path="t/join/verify/:classId" element={<JoinClassVerify />} />
+      </Route>
+
+      <Route path="/activateEmptyAccount">
+        <Route path=":accountId" element={<ActivateEmptyAccount />} />
+        <Route path="update/" element={<JoinClassVerify />} />
       </Route>
     </Route>
   )

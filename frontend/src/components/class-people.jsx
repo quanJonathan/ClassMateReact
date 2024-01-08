@@ -55,7 +55,7 @@ export const ClassPeople = (props) => {
     console.dir(studentId);
     setPersonal(true);
 
-    setUrl(`http://localhost:5173/c/join/${course?._id}/${studentId}`);
+    setUrl(`http://localhost:5173/activateEmptyAccount/${studentId}`);
     sendMailForStudent();
   };
 
@@ -291,7 +291,7 @@ const Section = ({ title, data, icon, sendMailAction, createLink, course }) => {
 
               {currentRole && (item.email === "" || !item.email) && (
                 <Button
-                  onClick={() => createLink(item.studentId)}
+                  onClick={() => createLink(item._id)}
                   variant="contained"
                   color="primary"
                   elevation={0}

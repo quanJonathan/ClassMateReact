@@ -4,6 +4,7 @@ import {
   Controller,
   Get,
   HttpStatus,
+  Param,
   Post,
   Res,
   UseGuards,
@@ -25,6 +26,12 @@ export class UserController {
   @Get('/all')
   async getAll() {
     return await this.userService.findAll();
+  }
+
+  @Get('get/:accountId')
+  async getOneById(@Param() params: any) {
+    console.log(params)
+    return await this.userService.findOneById(params.accountId);
   }
 
   @Post('addAccount')
@@ -53,7 +60,10 @@ export class UserController {
       let user = newUSer;
       console.log(user)
       if (user.state && user.state !== userStateEnum.banned)
-        this.userService.updateState(user, userStateEnum.banned);
+        {
+          console.log("ban")
+          this.userService.updateState(user, userStateEnum.banned);
+        }
       else
         this.userService.updateState(user, userStateEnum.activated);
       return response.status(HttpStatus.OK).json({
