@@ -103,7 +103,7 @@ export default function FullScreenDialog({ open, handleClose }) {
             autoFocus
             variant="contained"
             onClick={handleSave}
-            disabled={!/(?=.*[0-9])(?=.*[a-zA-Z])/.test(classId)}
+            disabled={classId.length!=6}
           >
             Save
           </Button>
