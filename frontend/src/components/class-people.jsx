@@ -49,7 +49,7 @@ export const ClassPeople = (props) => {
     console.dir(studentId);
     setPersonal(true);
 
-    setUrl(`http://localhost:5173/activateEmptyAccount/${studentId}`);
+    setUrl(`https://classmatefe-final.onrender.com/activateEmptyAccount/${studentId}`);
     sendMailForStudent();
   };
 

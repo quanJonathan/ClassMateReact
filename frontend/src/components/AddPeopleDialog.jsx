@@ -51,7 +51,7 @@ import axios from "axios";
        
         const body = {
           email: email,
-          url: role === 'teacher' ? `http://localhost:5173/c/t/join/${course?._id}` : `http://localhost:5173/c/join/${course?._id}`
+          url: role === 'teacher' ? `https://classmatefe-final.onrender.com/c/t/join/${course?._id}` : `https://classmatefe-final.onrender.com/c/join/${course?._id}`
         };
        
         await axios
@@ -194,7 +194,7 @@ import axios from "axios";
             // ref={textareaRef}
             id="invitation-link"
             className="text"
-            value={role === 'teacher' ? `http://localhost:5173/c/t/join/${course?._id}` : (personal ? url : `http://localhost:5173/c/join/${course?._id}`)}
+            value={role === 'teacher' ? `https://classmatefe-final.onrender.com/c/t/join/${course?._id}` : (personal ? url : `https://classmatefe-final.onrender.com/c/join/${course?._id}`)}
             variant="outlined"
             size="small"
             InputProps={{
@@ -221,7 +221,7 @@ import axios from "axios";
         <Button variant="contained" color="primary" elevation={0} sx={{
                 "textTransform": "none"
             }}
-            onClick={()=>copyTextAction(role === 'teacher' ? `http://localhost:5173/c/t/join/${course?._id}` : (personal ? url :`http://localhost:5173/c/join/${course?._id}`))}
+            onClick={()=>copyTextAction(role === 'teacher' ? `https://classmatefe-final.onrender.com/c/t/join/${course?._id}` : (personal ? url :`https://classmatefe-final.onrender.com/c/join/${course?._id}`))}
             >
            Copy
           </Button>

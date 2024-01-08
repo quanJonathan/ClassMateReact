@@ -77,7 +77,7 @@ export const ClassGeneral = ({ course, user }) => {
       icon: <InsertLink />,
       label: "Sao chép đường liên kết mã lớp",
       action: () => {
-        copyTextAction(`http://localhost:5173/c/join/${course?._id}`);
+        copyTextAction(`https://classmatefe-final.onrender.com/c/join/${course?._id}`);
       },
     },
     {
