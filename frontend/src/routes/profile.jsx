@@ -18,7 +18,9 @@ export default function ProfilePage() {
   const [isView, setIsView] = useState(true);
   const { token, updateUser, user} = useAuth();
   const navigate = useNavigate();
-  
+  const [checkFirstName ,setCheckFirstName] = useState("");
+  const [checkLastName,setCheckLastName] = useState("");
+  const [checkPhone ,setCheckPhone] = useState("");
   const [firstName, setFirstName] = useState(user?.firstName || "")
   const [lastName, setLastName] = useState(user?.lastName || "")
   const [phoneNumber, setPhoneNumber] = useState(user?.phoneNumber || "")
@@ -87,6 +89,40 @@ export default function ProfilePage() {
     }
   };
 
+  const handleChange = (e) => {
+    const inputValue = e.target.value;
+    if (e.target.id == "firstName"){
+   
+    if (inputValue.length <=30) {
+      setCheckFirstName("");
+    } else {
+      setCheckFirstName(
+        "The First Name can't be over 30 characters"
+      );
+    }
+    setFirstName(e.target.value);
+  } else if (e.target.id=="lastName"){
+    if (inputValue.length <=30) {
+      setCheckLastName("");
+    } else {
+      setCheckLastName(
+        "Last Name can't be over 30 characters"
+      );
+    }
+    setLastName(e.target.value);
+  }
+  else if (e.target.id == "phoneNumber"){
+    let regPhone = /((^(\+84|84|0|0084){1})(3|5|7|8|9))+([0-9]{8})$/;
+    if (regPhone.test(e.target.value)){
+      setCheckPhone("")
+    }
+    else {
+      setCheckPhone("Phone Number Wrong Format")
+    }
+    setPhoneNumber(e.target.value);
+  }
+};
+
   return (
     <MiniDrawer profile="true" page="Profile">
     <Container component="main" maxWidth="sm" height="100vh"
@@ -109,6 +145,7 @@ export default function ProfilePage() {
                   InputProps={{ sx: { borderRadius: 10,
                     paddingLeft: "20px",
                     paddingRight: "20px",
+                    maxLength: 30
                   } }}
                   margin="normal"
                   autoComplete="given-name"
@@ -122,7 +159,9 @@ export default function ProfilePage() {
                   InputLabelProps={{
                     style: { marginLeft: "5px", marginRight: "5px" },
                   }}
-                  onChange={(e) => setFirstName(e.target.value)}
+                    error={!!checkFirstName}
+                    helperText={checkFirstName}
+                    onChange={handleChange}
                   disabled={isView}
                 />
             </Grid>
@@ -131,6 +170,7 @@ export default function ProfilePage() {
                 InputProps={{ sx: { borderRadius: 10,
                   paddingLeft: "20px",
                   paddingRight: "20px",
+                  maxLength: 30
                 } }}
                 margin="normal"
                 required
@@ -141,7 +181,10 @@ export default function ProfilePage() {
                 autoComplete="family-name"
                 value={lastName}
                 autoFocus
-                onChange={(e) => setLastName(e.target.value)}
+                error={!!checkLastName}
+                    helperText={checkLastName}
+                    onChange={handleChange}
+              
                 disabled = {isView}
                 InputLabelProps={{
                   style: { marginLeft: "5px", marginRight: "5px" },
@@ -162,7 +205,9 @@ export default function ProfilePage() {
                 autoComplete="phone"
                 value={phoneNumber}
                 autoFocus
-                onChange={(e) => setPhoneNumber(e.target.value)}
+                error={!!checkPhone}
+                    helperText={checkPhone}
+                    onChange={handleChange}
                 disabled={isView}
                 InputLabelProps={{
                   style: { marginLeft: "5px", marginRight: "5px" },

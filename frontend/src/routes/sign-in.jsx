@@ -30,7 +30,14 @@ export default function SignIn() {
   const location = useLocation();
   const from = (location.state?.from?.pathname === '/auth' ? '/' : location.state?.from?.pathname) || '/';
   const { login, setUser } = useAuth();
+  const [valid,setValid] = useState(true);
+  const [email,setEmail] = useState(null);
 
+  const handleValidation = (e) => {
+    let regEmail = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    setValid(regEmail.test(e.target.value));
+    setEmail(e.target.value);
+  };
   const handleSubmit = async (event) => {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
@@ -172,6 +179,10 @@ export default function SignIn() {
                     name="email"
                     autoComplete="email"
                     autoFocus
+                    onChange={(e) => handleValidation(e)}
+                    error={!valid}
+                    value={email}
+                    helperText={!valid ? 'Invalid Format' : ' '}
                     InputLabelProps={{
                       style: { marginLeft: "5px", marginRight: "5px" },
                     }}
