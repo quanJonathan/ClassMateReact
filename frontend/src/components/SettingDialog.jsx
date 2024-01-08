@@ -274,6 +274,27 @@ function SettingDialog({ open, handleClose, compositions, defaultValue }) {
     handleClose();
   };
 
+
+
+  const dragComposition = useRef(0);
+  const dragOverComposition = useRef(0);
+
+  const handleDrag = () => {
+    const gradeCompositionClone = [...gradeCompositions];
+    const temp = gradeCompositionClone[dragComposition.current];
+    gradeCompositionClone[dragComposition.current] = gradeCompositionClone[dragOverComposition.current];
+    gradeCompositionClone[dragOverComposition.current] = temp;
+
+
+    setGradeCompositions(gradeCompositionClone);
+    console.log(gradeCompositions);
+
+  }
+
+
+
+
+
   return (
     <>
       <Dialog
@@ -371,12 +392,21 @@ function SettingDialog({ open, handleClose, compositions, defaultValue }) {
 
               <List sx={{minWidth: '100%'}}>
                 {gradeCompositions.map((composition, index) => (
-                  <ListItem
+                  <div
                     key={composition?._id}
                     onMouseEnter={() => setCurrentComposition(composition)}
-                    sx={{ minWidth: "100%" }}
+                    style={{ minWidth: "100%", cursor: "move" }}
                   >
-                    <Stack spacing={2} direction="row" sx={{minWidth: '80%'}}>
+                    <Card 
+                    draggable
+                    onDragStart={()=>dragComposition.current = index}
+                    onDragEnter={()=>dragOverComposition.current = index}
+                    onDragEnd={handleDrag}
+                     onDragOver={(e) => e.preventDefault()}
+                  
+                    
+                    sx={{my: 1, display: "flex", justifyContent: "space-between", flexDirection: "row"}}>
+                    <Stack spacing={2} direction="row" sx={{minWidth: '80%'}} >
                       <TextField
                         required
                         label="Grade composition"
@@ -405,7 +435,8 @@ function SettingDialog({ open, handleClose, compositions, defaultValue }) {
                           max: 100,
                         }}
                       />
-                      <IconButton
+                    </Stack>
+                    <IconButton
                         onClick={() => {
                           composition.isDefault
                             ? setYesNo(true)
@@ -414,8 +445,8 @@ function SettingDialog({ open, handleClose, compositions, defaultValue }) {
                       >
                         <Close />
                       </IconButton>
-                    </Stack>
-                  </ListItem>
+                    </Card>
+                  </div>
                 ))}
               </List>
 
