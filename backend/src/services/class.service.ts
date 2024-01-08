@@ -62,7 +62,12 @@ export class ClassService {
   }
 
   async getClassByHomework(homeworkId: ObjectId) {
-    return await this.classModel.findOne({homeworks: {$elmMatch: {$eq: homeworkId}}}).populate("members");
+    return await this.classModel
+    .findOne({ homeworks: { $elemMatch: { $eq: homeworkId } } })
+    .populate({
+      path: "members",
+      populate: "classes"
+    });
   }
 
   async getMember(classId: string): Promise<User | any> {

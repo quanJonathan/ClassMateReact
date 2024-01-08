@@ -32,12 +32,15 @@ import { stringAvatar } from "../helpers/stringAvator";
 import { useParams } from "react-router-dom";
 import { useAuth } from "../hook/useAuth";
 import { toast } from "react-toastify";
+import { useIsTeacher } from "../helpers/getCurrentRole";
 
 export const ClassGeneral = ({ course, user }) => {
   const [excelData, setExcelData] = useState(null);
   const { id } = useParams();
   const { token } = useAuth();
   const textareaRef = useRef(null);
+
+  const isTeacher = useIsTeacher(id)
 
   const copyTextAction = (text) => {
     console.log("copying...");
@@ -108,6 +111,7 @@ export const ClassGeneral = ({ course, user }) => {
       }
     });
 
+    console.log(students)
     // console.log("adding");
     // console.log(students);
 
@@ -174,13 +178,16 @@ export const ClassGeneral = ({ course, user }) => {
              fontStyle: "italic"
         }}>{course?.description ?? ""}</Typography>
           </Box>
-          <Stack
+          {isTeacher && (
+            <Stack
             flexDirection="row"
             sx={{ position: "absolute", right: 0, top: 0 }}
           >
             <ExcelUploadButton onUpload={handleUpload} />
             <DownloadExcelButton toolTipName="Download template" />
           </Stack>
+          )}
+          
         </CardActions>
       </Card>
       {!isSmallScreen && (

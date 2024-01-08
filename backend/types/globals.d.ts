@@ -101,6 +101,12 @@ declare global {
     isDelete: boolean
   }
 
+  interface GradeReviewNotification{
+    name: string,
+    url: string,
+    content: string
+  }
+
 }
 
 export {};

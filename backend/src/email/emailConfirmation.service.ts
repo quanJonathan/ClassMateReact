@@ -15,6 +15,7 @@ import { ClassService } from 'src/services/class.service';
 import { ObjectId } from 'mongoose';
 import { Homework } from 'src/model/homework.schema';
 import { GradeReview } from 'src/model/grade-review.schema';
+import { Class } from 'src/model/class.schema';
 
 @Injectable()
 export class EmailConfirmationService {
@@ -124,16 +125,20 @@ export class EmailConfirmationService {
       throw new NotFoundException('This class is either inactive or deleted');
     }
 
+    console.log(foundClass.members)
+
     const teachersEmails = foundClass.members
       .filter((m) => {
-        const classObject = m.classes.find((c) => c.classId == foundClass._id);
-        return classObject.role === '3000';
+        console.log(m.classes)
+        const classObject = m.classes.find((c) => (c.classId as ObjectId).toString() == foundClass._id.toString());
+        return classObject?.role === '3000';
       })
       .map((teacher) => teacher.email);
 
     if (!teachersEmails) return;
     else {
       const student = gradeReview.user[0];
+      console.log(foundHomework.doneMembers)
       const currentScore = foundHomework.doneMembers.find(
         (m) => (m.memberId as ObjectId).toString() == student._id.toString(),
       ).score;

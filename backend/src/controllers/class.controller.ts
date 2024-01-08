@@ -144,13 +144,18 @@ export class ClassController {
   }
 
   @Post('/addStudents/:classId')
-  @UseGuards(RefreshTokenGuard)
-  async addStudentsToClass(@Body() body, @Param() params: any) {
+  //@UseGuards(RefreshTokenGuard)
+  async addStudentsToClass(@Body() body, @Param() params: any, @Res() res: any) {
     console.log('adding multiple user');
     const students = body;
     // console.log(students);
     const classId = params.classId;
-    return this.classService.addStudentViaDocument(classId, students);
+    const response = this.classService.addStudentViaDocument(classId, students);
+    if(response){
+      return res.status(HttpStatus.ACCEPTED || HttpStatus.OK).json("Added successfully")
+    }
+
+    return res.status(HttpStatus.BAD_REQUEST).json()
   }
 
   @Post('/removeStudent/:studentId')

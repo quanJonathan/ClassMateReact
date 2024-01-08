@@ -3,6 +3,7 @@ import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, ObjectId } from 'mongoose';
 import { userStateEnum } from 'src/enum/userState.enum';
+import { Class } from 'src/model/class.schema';
 import {
   Notification,
   NotificationDocument,
@@ -28,17 +29,43 @@ export class NotificationService {
 
   async getOneByRealId(id: ObjectId): Promise<Notification | any> {
     return await this.notificationModel.findOne({ _id: id });
-  
   }
 
   async getAllUserNotification(userId: ObjectId): Promise<Notification[]> {
-    const notifications =  await this.notificationModel.find({user: userId}).sort({ createdDate: -1 }) // Sort by createdDate in descending order
-    .limit(10).exec();
-   
+    const notifications = await this.notificationModel
+      .find({ user: userId })
+      .sort({ createdDate: -1 }) // Sort by createdDate in descending order
+      .limit(10)
+      .exec();
+
     return notifications;
   }
 
-  async addNewNotification(userId: ObjectId, notificationObject: Notification):  Promise<Notification | any> {
+  async addNewNotificationForAllTeacher(
+    foundClass: Class,
+    notificationObject: GradeReviewNotification,
+  ) {
+    for (const member of foundClass.members) {
+      const teacher = member.classes.find(
+        (c) =>
+          c.role === '3000' &&
+          (c.classId as ObjectId).toString() === foundClass._id.toString(),
+      );
+      console.log(teacher)
+      if (teacher) {
+        const newNotification = new this.notificationModel({
+          ...notificationObject,
+          user: teacher,
+        });
+        await newNotification.save();
+      }
+    }
+  }
+
+  async addNewNotification(
+    userId: ObjectId,
+    notificationObject: Notification,
+  ): Promise<Notification | any> {
     const foundUser = await this.userModel.findById(userId);
     if (!foundUser) {
       throw new NotFoundException('User not found');
@@ -48,12 +75,9 @@ export class NotificationService {
       throw new BadRequestException('This user is currently banned');
     }
 
-  
     const newNotification = { ...notificationObject, user: foundUser };
 
-  
     const createNotification = new this.notificationModel(newNotification);
-   
 
     // foundUser.classes.push({ classId: createClass, role: '3000' });
     await createNotification.save();
