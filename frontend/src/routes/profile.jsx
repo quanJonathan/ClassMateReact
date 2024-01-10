@@ -52,7 +52,7 @@ export default function ProfilePage() {
       else {
       setIsView(true);
       await axios
-        .post("https://classmatebe-final.onrender.com/auth/profile/update", form, {
+        .post("http://localhost:3001/auth/profile/update", form, {
           headers: {
             Authorization: "Bearer " + token.refreshToken,
           },

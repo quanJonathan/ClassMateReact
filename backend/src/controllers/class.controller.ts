@@ -18,12 +18,15 @@ import { EmailConfirmationService } from 'src/email/emailConfirmation.service';
 import { UserRoles } from 'src/enum/userRole.enum';
 import { RefreshTokenGuard } from 'src/guards/refresh-token.guard';
 import { ClassService } from 'src/services/class.service';
+import { NotificationService } from 'src/services/notification.service';
+import { User } from 'src/user/model/user.schema';
 
 @Controller('class')
 export class ClassController {
   constructor(
     private classService: ClassService,
     private emailConfirmService: EmailConfirmationService,
+    private notiService: NotificationService
   ) {}
 
   @Get('/all')
@@ -219,6 +222,7 @@ export class ClassController {
     console.log('Returning');
     const _id = params.id;
     const userId = body.userId;
+    const teacherName = body.teacherName;
     const homeworkId = params.homeworkId;
 
     // console.log(_id);
@@ -232,11 +236,21 @@ export class ClassController {
     );
 
     if (result) {
+      const user = result.user
+      const className = result.className
+      const homework = result.homework
       this.emailConfirmService.sendReturnHomeworkLink(
-        result.user,
-        result.className,
-        result.homework,
+        user,
+        className,
+        homework,
       );
+
+      const notification = {
+        name: teacherName + ` has returned homework ${homework.name}  in ` + className,
+        url: '',
+        content: 'Please check your score',
+      };
+      this.notiService.addNewNotificationForStudent(user, notification);
       return res.status(HttpStatus.OK).json(result);
     } else {
       throw new BadRequestException('Return homework Failed');
@@ -244,10 +258,12 @@ export class ClassController {
   }
 
   @Post('/returnHomeworks/:id/a/:homeworkId')
-  async returnHomeworks(@Res() res: any, @Param() params: any) {
+  async returnHomeworks(@Res() res: any, @Param() params: any, @Body() body) {
     console.log('Returning multiple');
     const _id = params.id;
     const homeworkId = params.homeworkId;
+    const teacherName = body.teacherName
+    console.log(body)
     // console.log(_id);
     // console.log(homeworkId);
 
@@ -259,6 +275,17 @@ export class ClassController {
       //   result.homework,
       //   result.users,
       // );
+      const users = result.users
+      const homework = result.homework
+      const classObject = result.classObject
+      const notification = {
+        name: teacherName + ` has returned homework ${homework.name}  in ` + classObject.className,
+        url: '',
+        content: 'Please check your score',
+      };
+    
+      this.notiService.addNewNotificationForStudents(users, classObject, notification)
+
       return res.status(HttpStatus.OK).json(result);
     } else {
       throw new BadRequestException('Return homework Failed');

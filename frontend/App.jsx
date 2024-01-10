@@ -63,15 +63,14 @@ export const router = createBrowserRouter(
             element={<ConfirmEmailRecieve />}
           />
         </Route>
-      </Route>
-
-      <Route path="/c">
-        <Route path=":id" element={<MainPageCourse />} />
-        <Route
-          path=":id/a/:homeworkId/details"
-          element={<AssignmentViewingDetails />}
-        />
-        <Route path=":id/a/all" element={<AssignmentViewingAll />} />
+        <Route path="/c">
+          <Route path=":id" element={<MainPageCourse />} />
+          <Route
+            path=":id/a/:homeworkId/details"
+            element={<AssignmentViewingDetails />}
+          />
+          <Route path=":id/a/all" element={<AssignmentViewingAll />} />
+        </Route>
       </Route>
 
       <Route path="/c">

@@ -183,7 +183,7 @@ export const AssignmentViewingAllMain = () => {
                           ? "No deadline"
                           : "Due at " +
                             format(homework?.deadline, "HH:mm yyyy-MM-dd")}
-                        {" " + homework?.composition.name}
+                        {" " + homework?.composition?.name}
                       </Typography>
                     </Stack>
                   </Box>

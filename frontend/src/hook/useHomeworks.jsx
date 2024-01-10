@@ -3,7 +3,9 @@ export const calculateTotalScore = (member, homeworks, compositions) => {
   // console.log(compositions)
   compositions?.map((c, index) => {
     let temp = 0;
-    const foundHomeworks = homeworks?.filter((h) => h?.composition?._id == c?._id);
+    const foundHomeworks = homeworks?.filter(
+      (h) => h?.composition?._id == c?._id
+    );
     //console.log("homework of composition " + c.name + "for " +  member?.studentId)
     //console.log("grade scale " +  c.gradeScale)
     //console.log(foundHomeworks)
@@ -16,13 +18,13 @@ export const calculateTotalScore = (member, homeworks, compositions) => {
     });
 
     //console.log(temp)
-    
+
     //console.log(foundHomeworks?.length)
 
     //console.log("currentScore for " + member?.studentId)
     //console.log(temp)
-    if(foundHomeworks.length != 0){
-      result = result + (temp / foundHomeworks.length) * c.gradeScale / 100;
+    if (foundHomeworks.length != 0) {
+      result = result + ((temp / foundHomeworks.length) * c.gradeScale) / 100;
     }
 
     //console.log("total score "+  result );
@@ -30,11 +32,16 @@ export const calculateTotalScore = (member, homeworks, compositions) => {
 
   return {
     _id: "total_score_" + member._id,
-    score: result.toFixed(2)*100,
-  }
+    score: result.toFixed(2) * 100,
+  };
 };
 
-export function useHomeworks(members, homeworks, compositions) {
+export function useHomeworks(
+  members,
+  homeworks,
+  compositions,
+  gradeReviews = []
+) {
   // const { token } = useAuth();
   // const fetcher = (url) =>
   //   axios
@@ -46,7 +53,7 @@ export function useHomeworks(members, homeworks, compositions) {
   //     .then((res) => res.data);
   // const { id } = useParams();
   // const { data, isLoading, error } = useSWR(
-  //   `https://classmatebe-final.onrender.com/class/getHomeworks/${id}`,
+  //   `http://localhost:3001/class/getHomeworks/${id}`,
   //   fetcher
   // );
 
@@ -64,7 +71,7 @@ export function useHomeworks(members, homeworks, compositions) {
       totalScore: {
         label: "Total score",
         id: "total_scoring_field",
-      }
+      },
     },
   ];
 
@@ -84,10 +91,28 @@ export function useHomeworks(members, homeworks, compositions) {
   });
 
   rows = members?.map((member) => {
-    const { doneHomework } = homeworks.reduce(
+    const { doneHomework, gradeReview } = homeworks.reduce(
       (acc, homework) => {
+        
+        // console.log(gradeReviews)
+        gradeReviews?.map((g, index) => {
+          // console.log("g: " + g.homeWorkId)
+          // console.log("h: " + homework._id)
+          // console.log("u: " + g.user[0]._id)
+          // console.log("m: " + member._id)
+          if (
+            g.homeWorkId == homework._id &&
+            g.user[0]._id == member._id
+          ) {
+            // console.log("in " + index)
+            acc.gradeReview = g;
+          }
+        });
+
+        // console.log(acc.gradeReview)
+
         const doneMember = homework.doneMembers.find(
-          (doneMember) => doneMember?.memberId === member?._id
+          (doneMember) => doneMember?.memberId == member?._id
         );
 
         if (doneMember) {
@@ -108,15 +133,24 @@ export function useHomeworks(members, homeworks, compositions) {
 
         return acc;
       },
-      { doneHomework: [], notDoneHomework: [] }
+      { doneHomework: [], notDoneHomework: [], gradeReview: null }
     );
 
     const allHomeworks = [...doneHomework];
 
-    const totalScore = calculateTotalScore(member, homeworks, compositions)
+    // console.log(allHomeworks)
+
+    const totalScore = calculateTotalScore(member, homeworks, compositions);
     // console.log(totalScore)
-    //console.log(member)
-    return { user: member, totalScore: totalScore, align: "center", homeworks: allHomeworks };
+    // console.log(member)
+     console.log(gradeReview)
+    return {
+      user: member,
+      totalScore: totalScore,
+      align: "center",
+      homeworks: allHomeworks,
+      gradeReview: gradeReview
+    };
   });
 
   // rows.forEach((row) =>{

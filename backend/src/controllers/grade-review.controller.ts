@@ -1,5 +1,6 @@
 /* eslint-disable prettier/prettier */
 import {
+  Body,
   Controller,
   Get,
   HttpStatus,
@@ -34,6 +35,38 @@ export class GradeReviewController {
     return result;
   }
 
+  @Post(':id/comment')
+  async addNewComment(
+    @Param() params: any,
+    @Body() body: any,
+    @Res() res: any,
+  ) {
+    const _id = params.id;
+    const comment = body.comment;
+    const target = body.target;
+
+    const result = await this.gradeReviewService.addNewComment(_id, comment);
+    if (result) {
+      const noti = {
+        name:
+          comment.role === '3000'
+            ? 'Teacher '
+            : 'Student ' +
+              result.user.firstName +
+              ' ' +
+              result.user.lastName +
+              ' has reply to grade review of ' +
+              result.homeworkName,
+        url: '',
+        content: body.content,
+      };
+
+      this.notificationService.addNewNotification(target, noti);
+      return res.status(HttpStatus.ACCEPTED).json(result);
+    }
+    return res.status(HttpStatus.BAD_REQUEST).json();
+  }
+
   @Post('/add/h/:homeworkId')
   async addNewGradeReviewForHomework(
     @Res() res: any,
@@ -52,21 +85,30 @@ export class GradeReviewController {
     );
 
     if (result) {
-      const foundUser = await this.userService.getOneById(result.user[0]._id)
+      const gradeReview = result.gradeReview;
+      const homework = result.homework;
+      const foundUser = await this.userService.getOneById(
+        gradeReview.user[0]._id,
+      );
       const notification = {
-        name: foundUser?.firstName + ' ' + foundUser?.lastName + "requested a grade review",
+        name:
+          foundUser?.firstName +
+          ' ' +
+          foundUser?.lastName +
+          ' requested a grade review for ' +
+          homework.name,
         url: '',
-        content: 'Expected grade: ' + result.expectedGrade,
+        content: 'Expected grade: ' + gradeReview.expectedGrade,
       };
-      console.log(result.user)
-      const foundClass = await this.classService.getClassByHomework(homeworkId)
+
+      const foundClass = await this.classService.getClassByHomework(homeworkId);
 
       // await this.emailConfirmService.sendNotificationForGradeReview(
       //   homeworkId,
       //   result,
       // );
 
-      console.log(foundClass)
+      // console.log(foundClass)
 
       await this.notificationService.addNewNotificationForAllTeacher(
         foundClass,

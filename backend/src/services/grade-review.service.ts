@@ -43,7 +43,10 @@ export class GradeReviewService {
 
       await newGradeReview.save();
 
-      return newGradeReview;
+      return {
+        homework: foundHomework,
+        gradeReview: newGradeReview,
+      };
     }
   }
 
@@ -55,9 +58,10 @@ export class GradeReviewService {
         select: 'email _id studentId',
       })
       .populate({
-        path: 'teacherComment.teacherId teacherComment.comment',
+        path: 'comments.userId comments.content',
         select: 'email _id',
-      }).exec()
+      })
+      .exec();
 
     // console.log(foundGradeReview);
     return foundGradeReview;
@@ -79,5 +83,28 @@ export class GradeReviewService {
     } else {
       return foundGradeReview;
     }
+  }
+
+  async addNewComment(_id: ObjectId, comment: Comment) {
+    const gradeReview = await this.gradeReviewModel.findById(_id).populate({
+      path: 'homeworkId',
+      select: 'name',
+    });
+    const foundUser = await this.userModel.findById(comment.id);
+    if (!gradeReview) {
+      throw new NotFoundException('This grade review not existed');
+    }
+
+    gradeReview.comments.push({
+      userId: foundUser,
+      content: comment.content,
+      role: comment.role,
+    });
+
+    await gradeReview.save();
+    return {
+      homeworkName: gradeReview?.homeWorkId?.name,
+      user: foundUser
+    };
   }
 }

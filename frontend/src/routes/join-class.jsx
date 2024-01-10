@@ -16,7 +16,7 @@ import Spinner from '../components/spinner.jsx'
 async function getClass(_id) {
   try {
     const response = await axios.get(
-      `https://classmatebe-final.onrender.com/class/getClass/${_id}`,
+      `http://localhost:3001/class/getClass/${_id}`,
       {
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",
@@ -76,7 +76,7 @@ export default function JoinClass() {
     if (role === "teacher") {
       // navigate(`/c/t/join/verify/${_id}`)
       const response = await axios.post(
-        `https://classmatebe-final.onrender.com/class/joinClassAsTeacher/${result?._id}`,
+        `http://localhost:3001/class/joinClassAsTeacher/${result?._id}`,
         user,
         {
           headers: {
@@ -98,7 +98,7 @@ export default function JoinClass() {
     } else {
       if (user?.studentId) {
         const response = await axios.post(
-          `https://classmatebe-final.onrender.com/class/joinClass/${result?._id}`,
+          `http://localhost:3001/class/joinClass/${result?._id}`,
           user,
           {
             headers: {

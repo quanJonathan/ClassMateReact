@@ -76,7 +76,7 @@ export default function SignUp() {
     }
     else {
     await axios
-      .post("https://classmatebe-final.onrender.com/auth/signUp", form, {
+      .post("http://localhost:3001/auth/signUp", form, {
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",
           "Access-Control-Allow-Origin": "*",
@@ -136,7 +136,7 @@ export default function SignUp() {
   const loginWithGoogle = async() =>{
     console.log('click')
     try{
-      window.open(`https://classmatebe-final.onrender.com/auth/google/${from.replaceAll('/', '@')}`, "_self");
+      window.open(`http://localhost:3001/auth/google/${from.replaceAll('/', '@')}`, "_self");
     }catch(error) {
       console.log(error)
     }
@@ -144,7 +144,7 @@ export default function SignUp() {
 
   const loginWithFaceBook = async() => {
     try{
-      window.open(`https://classmatebe-final.onrender.com/auth/facebook`, "_self");
+      window.open(`http://localhost:3001/auth/facebook`, "_self");
     }catch(error) {
       console.log(error)
     }

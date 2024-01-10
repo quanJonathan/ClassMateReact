@@ -22,8 +22,8 @@ export class GradeReview {
   @Prop({required: true})
   studentExplanation: string
 
-  @Prop({ type: [{teacherId: {type: mongoose.Schema.Types.ObjectId, ref: 'User'}, comment: String}], validate: [(val: string[]) => val.every(str => str.length <= 400), 'Each teacherComment must be 400 characters or less'] })
-  teacherComment: {teacherId: User, comment: string}[];
+  @Prop({ type: [{userId: {type: mongoose.Schema.Types.ObjectId, ref: 'User'}, content: String, role: String}]})
+  comments: {userId: User, content: string, role: string}[];
 
   @Prop({type: Number, min: 0, max: 10})
   expectedGrade: number

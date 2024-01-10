@@ -40,7 +40,7 @@ export default function FullScreenDialog({ open, handleClose }) {
   const handleSave = async () => {
     try {
       const response = await axios.post(
-        `https://classmatebe-final.onrender.com/class/joinClassWithId/${classId}`,
+        `http://localhost:3001/class/joinClassWithId/${classId}`,
         user,
         {
           headers: {

@@ -8,7 +8,7 @@ async function bootstrap() {
   // const whitelist = [
   //   'http://localhost',
   //   'http://localhost:3000',
-  //   'https://classmatebe-final.onrender.com',
+  //   'http://localhost:3001',
   //   'https://accounts.google.com/o/oauth2/v2',
   //   'https://classmatebe.onrender.com/auth/google-logins',
   //   'https://classmatebe.onrender.com/auth/google/callback',

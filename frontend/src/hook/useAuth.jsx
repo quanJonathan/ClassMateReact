@@ -17,9 +17,10 @@ export const AuthProvider = ({ children }) => {
     localStorage.getItem("token")
   );
 
-  const [isLoading, setIsLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(false);
 
-  const fetcher = (url) =>
+  const fetcher = (url) => {
+    if (!token) return;
     axios
       .get(url, {
         headers: {
@@ -28,10 +29,11 @@ export const AuthProvider = ({ children }) => {
       })
       .then((res) => {
         setUser(res.data);
-        setIsLoading(false)
+        setIsLoading(false);
       });
+  };
 
-  useSWR("https://classmatebe-final.onrender.com/auth/profile", fetcher);
+  useSWR("http://localhost:3001/auth/profile", fetcher);
 
   const [tempEmail, setTempEmail] = useLocalStorage(
     "tempEmail",
@@ -91,22 +93,22 @@ export const AuthProvider = ({ children }) => {
   const login = async (form) => {
     try {
       const response = await axios.post(
-        "https://classmatebe-final.onrender.com/auth/signIn",
+        "http://localhost:3001/auth/signIn",
         form
       );
       const token = response.data;
-      console.log(response);
+      // console.log(response);
       // console.log(Object.values(token));
-      console.log(token);
+      // console.log(token);
       if (token) {
         setToken(token);
         localStorage.setItem("token", JSON.stringify(token));
         console.log(user);
-        setIsLoading(true)
+        setIsLoading(true);
 
-        if(joining){
-          navigate(currentJoiningLink)
-        }else{
+        if (joining) {
+          navigate(currentJoiningLink);
+        } else {
           navigate("/dashboard", { replace: true });
         }
       } else {
@@ -170,7 +172,7 @@ export const AuthProvider = ({ children }) => {
       tempEmail,
       currentJoiningLink,
       setCurrentJoiningLink,
-      setIsLoading
+      setIsLoading,
     ]
   );
 

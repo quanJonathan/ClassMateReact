@@ -495,7 +495,7 @@ export class ClassService {
 
     return {
       users: foundHomework.doneMembers,
-      className: foundClass.className,
+      classObject: foundClass,
       homework: {
         state: foundHomework.homeworkState,
         maxScore: foundHomework.maxScore,

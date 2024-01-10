@@ -3,7 +3,7 @@ import { More, PlayCircle, Star } from "@mui/icons-material";
 import { Link } from "react-router-dom";
 function CourseCard({ item, courseWidth, courseHeight }) {
   const CourseBox = styled(Box)(({ theme }) => ({
-    maxWidth:  courseWidth || 300,
+    maxWidth: courseWidth || 300,
     height: courseHeight || 400,
     backgroundColor: "#fff",
     borderTopLeftRadius: "20px",
@@ -18,8 +18,7 @@ function CourseCard({ item, courseWidth, courseHeight }) {
   }));
 
   return (
-    <CourseBox
-    >
+    <CourseBox>
       <Box
         sx={{
           height: "40%",
@@ -36,7 +35,7 @@ function CourseCard({ item, courseWidth, courseHeight }) {
           alt={item.id}
           src={item.img}
         />
-         <Chip
+        <Chip
           sx={{
             position: "absolute",
             top: "8px",
@@ -49,7 +48,6 @@ function CourseCard({ item, courseWidth, courseHeight }) {
             </Box>
           }
         />
-        
       </Box>
 
       <Box
@@ -60,16 +58,21 @@ function CourseCard({ item, courseWidth, courseHeight }) {
           alignItems: "center",
         }}
       >
-       <Typography  sx={{ fontWeight: "700", color: "#0B036B" }}>
+        <Typography sx={{ fontWeight: "700", color: "#0B036B" }}>
           {item.title}
         </Typography>
-        <Typography variant="body2" sx={{ my: 2, textAlign: "center",
-          overflow: 'hidden',
-          textOverflow: 'ellipsis',
-          display: '-webkit-box',
-          WebkitLineClamp: '2',
-          WebkitBoxOrient: 'vertical',
-    }}>
+        <Typography
+          variant="body2"
+          sx={{
+            my: 2,
+            textAlign: "center",
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+            display: "-webkit-box",
+            WebkitLineClamp: "2",
+            WebkitBoxOrient: "vertical",
+          }}
+        >
           {item.description}
         </Typography>
 
@@ -91,9 +94,12 @@ function CourseCard({ item, courseWidth, courseHeight }) {
             }}
           >
             <PlayCircle color="primary" sx={{ margin: "10px" }} />
-            <Typography  sx={{ fontWeight: "bold",
-            fontSize: courseWidth ? "12px" : "14px"
-        }}>
+            <Typography
+              sx={{
+                fontWeight: "bold",
+                fontSize: courseWidth ? "12px" : "14px",
+              }}
+            >
               12x Lessons
             </Typography>
           </Box>
@@ -114,7 +120,7 @@ function CourseCard({ item, courseWidth, courseHeight }) {
                   sx={{
                     color: "#FFD700",
                     height: courseWidth ? "15px" : "20px",
-                    width: courseWidth ? "15px": "20px",
+                    width: courseWidth ? "15px" : "20px",
                     margin: "3px",
                   }}
                 />

@@ -47,28 +47,60 @@ export class NotificationService {
 
   async addNewNotificationForAllTeacher(
     foundClass: Class,
-    notificationObject: GradeReviewNotification,
+    notificationObject: CustomNotification,
   ) {
     for (const member of foundClass.members) {
-      const teacher = member.classes.find(
+      const isTeacher = member.classes.find(
         (c) =>
           c.role === '3000' &&
           (c.classId as ObjectId).toString() === foundClass._id.toString(),
       );
-      console.log(teacher)
-      if (teacher) {
+
+      if (isTeacher) {
         const newNotification = new this.notificationModel({
           ...notificationObject,
-          user: teacher,
+          user: member,
         });
         await newNotification.save();
       }
     }
   }
 
+  async addNewNotificationForStudent(
+    user: Partial<MailUser>,
+    notificationObject: CustomNotification,
+  ) {
+    const newNotification = new this.notificationModel({
+      ...notificationObject,
+      user: user.memberId as User,
+    });
+    await newNotification.save();
+  }
+
+  async addNewNotificationForStudents(
+    users: MailUser[],
+    classObject: Class,
+    notificationObject: CustomNotification,
+  ) {
+    for (const user of users) {
+      for (const member of classObject.members) {
+        if (member._id.toString() === (user.memberId as User)._id.toString()) {
+          const isTeacher = member.classes.find(
+            (c) =>
+              c.role === '3000' &&
+              (c.classId as ObjectId).toString() === classObject._id.toString(),
+          );
+          if (!isTeacher) {
+            this.addNewNotificationForStudent(user, notificationObject);
+          }
+        }
+      }
+    }
+  }
+
   async addNewNotification(
     userId: ObjectId,
-    notificationObject: Notification,
+    notificationObject: CustomNotification,
   ): Promise<Notification | any> {
     const foundUser = await this.userModel.findById(userId);
     if (!foundUser) {
