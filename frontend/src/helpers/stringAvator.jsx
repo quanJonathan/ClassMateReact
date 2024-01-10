@@ -27,7 +27,7 @@ export function stringAvatar(name, custom) {
   return {
     sx: {
       bgcolor: stringToColor(name),
-      ...custom
+      ...custom,
     },
     children: `${firstName}${lastName}`,
   };

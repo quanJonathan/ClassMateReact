@@ -6,100 +6,82 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import { toast } from "react-toastify";
 import axios from "axios";
-import {
-  Divider,
-  IconButton,
-  Paper,
-  styled
-} from "@mui/material";
-import { NavLink, useLocation } from "react-router-dom";
+import { Divider, IconButton, Paper, styled } from "@mui/material";
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { useState } from "react";
-import { useAuth } from "../hook/useAuth.jsx";
+
 import AppName from "../components/WebName.jsx";
 
-
-
 export default function ForgotPassword() {
-
-  const CustomBox = styled(Box)(({ theme }) => ({
-    display: "flex",
-    justifyContent: "center",
-    gap: theme.spacing(5),
-    height: "100vh",
-    [theme.breakpoints.down("md")]: {
-      flexDirection: "column",
-      alignItems: "center",
-      textAlign: "center",
-    },
-  }));
-
   const [errorMessage, setErrorMessage] = useState("");
   const [loading, setLoading] = useState(false);
   const location = useLocation();
-  const from = (location.state?.from?.pathname === '/auth' ? '/' : location.state?.from?.pathname) || '/';
+  const navigate = useNavigate();
+  const from =
+    (location.state?.from?.pathname === "/auth"
+      ? "/"
+      : location.state?.from?.pathname) || "/";
   const handleSubmit = async (event) => {
     event.preventDefault();
-    setLoading(true)
+    setLoading(true);
     const formData = new FormData(event.currentTarget);
     const form = {
-      email: formData.get("email")
+      email: formData.get("email"),
     };
 
     await axios
-    .post("http://localhost:3001/auth/forgot-password", form, {
-      headers: {
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-      },
-    })
-    .then(function (res) {
-      console.log(res);
-      setLoading(false)
-      toast.success("We have sent an confirmation to your email. Please have a check.");
-     
-    })
-    .catch(function (error) {
-      if (error.response) {
-        // The request was made and the server responded with a status code
-        // that falls out of the range of 2xx
-        console.log(error.response.data);
-        console.log(error.response.status);
-        console.log(error.response.headers);
-        toast.error('Send Email Failed due to :' + error.response.data);
-      } else if (error.request) {
-        // The request was made but no response was received
-        // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
-        // http.ClientRequest in node.js
-        console.log(error.request);
-        toast.error('Send Email Failed');
-      } 
-      console.log(error.config);
-      navigate("/sign-in");
-    });
-    } 
-    
- 
-    
+      .post("https://classmatebe-final.onrender.com/auth/forgot-password", form, {
+        headers: {
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*",
+        },
+      })
+      .then(function (res) {
+        console.log(res);
+        setLoading(false);
+        toast.success(
+          "We have sent an confirmation to your email. Please have a check."
+        );
+      })
+      .catch(function (error) {
+        if (error.response) {
+          // The request was made and the server responded with a status code
+          // that falls out of the range of 2xx
+          console.log(error.response.data);
+          console.log(error.response.status);
+          console.log(error.response.headers);
+          toast.error("Send Email Failed due to :" + error.response.data);
+        } else if (error.request) {
+          // The request was made but no response was received
+          // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+          // http.ClientRequest in node.js
+          console.log(error.request);
+          toast.error("Send Email Failed");
+        }
+        console.log(error.config);
+        navigate("/sign-in");
+      });
+  };
 
-  const loginWithGoogle = async() =>{
-    console.log('click')
-    try{
-      window.open(`http://localhost:3001/auth/google/${from.replaceAll('/', '@')}`, "_self");
-    }catch(error) {
-      console.log(error)
+  const loginWithGoogle = async () => {
+    console.log("click");
+    try {
+      window.open(
+        `https://classmatebe-final.onrender.com/auth/google/${from.replaceAll("/", "@")}`,
+        "_self"
+      );
+    } catch (error) {
+      console.log(error);
     }
-  }
+  };
 
-  const loginWithFaceBook = async() => {
-    try{
-      window.open(`http://localhost:3001/auth/facebook`, "_self");
-    }catch(error) {
-      console.log(error)
+  const loginWithFaceBook = async () => {
+    try {
+      window.open(`https://classmatebe-final.onrender.com/auth/facebook`, "_self");
+    } catch (error) {
+      console.log(error);
     }
-  }
-
-
-
+  };
 
   return (
     <Box
@@ -114,7 +96,7 @@ export default function ForgotPassword() {
         backgroundSize: "100% 100%",
         backgroundPosition: "center",
         justifyContent: "center",
-        display: "flex"
+        display: "flex",
       }}
     >
       <CssBaseline />
@@ -125,7 +107,7 @@ export default function ForgotPassword() {
           display: "flex",
           justifyContent: "space-between",
           border: "10px solid white",
-          alignItems: "center"
+          alignItems: "center",
         }}
         component={Paper}
         elevation={6}
@@ -139,37 +121,76 @@ export default function ForgotPassword() {
           sx={{
             display: {
               xs: "none",
-              lg: "block"
+              lg: "block",
             },
-           
           }}
         >
-          <Box sx={{
-            height: "100%",
-            display: "flex",
-            alignItems: "center",
-          }} >
-            <img alt="login" src="/assets/log-in-2.png" 
-            style={{
-              width: "100%"
+          <Box
+            sx={{
+              height: "100%",
+              display: "flex",
+              alignItems: "center",
             }}
+          >
+            <img
+              alt="login"
+              src="/assets/log-in-2.png"
+              style={{
+                width: "100%",
+              }}
             />
           </Box>
         </Grid>
 
-        <Grid item xs={12} sm={8} md={6} sx={{ width: {xs: "100%", lg: "auto"}, display: "flex", flexDirection: "column", alignItems: "center"}}>
-          <Box height="20%" sx={{ mt: 2, ml: 0, display: "flex", alignItems: "center",flexDirection: {xs: "column", lg: "row"}, justifyContent: "center", width: {xs: "100%", lg: "auto"} }}>
-            <AppName sx={{height: "100%"}} />
-            <Divider sx={{ mt: 3, mb: 3, mx:2, width: "20%", display: { xs: "none", lg: "flex" }  }} />
-            <Typography sx={{fontSize: "16px", width: {xs: "50%", lg: "100%"}, textAlign: {xs: "center", lg: "right"}}} >
-                {"Don't have an account ?"}
-                {
-                  <NavLink to="/sign-up" variant="body2">
-                    {" "}
-                    Sign Up
-                  </NavLink>
-                }
-              </Typography>
+        <Grid
+          item
+          xs={12}
+          sm={8}
+          md={6}
+          sx={{
+            width: { xs: "100%", lg: "auto" },
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+          }}
+        >
+          <Box
+            height="20%"
+            sx={{
+              mt: 2,
+              ml: 0,
+              display: "flex",
+              alignItems: "center",
+              flexDirection: { xs: "column", lg: "row" },
+              justifyContent: "center",
+              width: { xs: "100%", lg: "auto" },
+            }}
+          >
+            <AppName sx={{ height: "100%" }} />
+            <Divider
+              sx={{
+                mt: 3,
+                mb: 3,
+                mx: 2,
+                width: "20%",
+                display: { xs: "none", lg: "flex" },
+              }}
+            />
+            <Typography
+              sx={{
+                fontSize: "16px",
+                width: { xs: "50%", lg: "100%" },
+                textAlign: { xs: "center", lg: "right" },
+              }}
+            >
+              {"Don't have an account ?"}
+              {
+                <NavLink to="/sign-up" variant="body2">
+                  {" "}
+                  Sign Up
+                </NavLink>
+              }
+            </Typography>
           </Box>
           <Box
             sx={{
@@ -182,30 +203,41 @@ export default function ForgotPassword() {
             {/* <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
                                 <LockOutlinedIcon />
                             </Avatar> */}
-            <Typography component="h1" variant="h4"
-            sx={{
+            <Typography
+              component="h1"
+              variant="h4"
+              sx={{
                 display: "flex",
                 alignItems: "center",
                 width: "50%",
-                textAlign: "center"
-            }}
+                textAlign: "center",
+              }}
             >
-            Forgot Your Password ?
+              Forgot Your Password ?
             </Typography>
             <Box
               component="form"
               noValidate
               onSubmit={handleSubmit}
-              sx={{ mt: 1, width: {xs: "80%", sm: "100%"} }}
+              sx={{ mt: 1, width: { xs: "80%", sm: "100%" } }}
             >
-              <Grid container spacing={1} sx={{justifyContent: "center", px: 2}}>
-              <Grid item xs={10} sx={{mx: 12}}>
-                 Enter the email address associated with your account.
+              <Grid
+                container
+                spacing={1}
+                sx={{ justifyContent: "center", px: 2 }}
+              >
+                <Grid item xs={10} sx={{ mx: 12 }}>
+                  Enter the email address associated with your account.
                 </Grid>
-                <Grid item xs={10} sx={{mx: 10}}>
+                <Grid item xs={10} sx={{ mx: 10 }}>
                   <TextField
-                    InputProps={{ sx: { borderRadius: 10, paddingLeft: "20px",
-                    paddingRight: "20px", } }}
+                    InputProps={{
+                      sx: {
+                        borderRadius: 10,
+                        paddingLeft: "20px",
+                        paddingRight: "20px",
+                      },
+                    }}
                     margin="normal"
                     required
                     fullWidth
@@ -220,43 +252,77 @@ export default function ForgotPassword() {
                     }}
                   />
                 </Grid>
-               
               </Grid>
-             
-              <Box sx={{ display: "flex", justifyContent: "center", p: {xs: 2, sm: 0}}}>
-              <Button
-                type="submit"
-                fullWidth
-                variant="contained"
-                sx={{  mb: 2, borderRadius: 4, color: "white",
-                  width: "70%"
-              }}
+
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "center",
+                  p: { xs: 2, sm: 0 },
+                }}
               >
-               Submit
-              </Button>
+                <Button
+                  type="submit"
+                  fullWidth
+                  variant="contained"
+                  sx={{ mb: 2, borderRadius: 4, color: "white", width: "70%" }}
+                >
+                  Submit
+                </Button>
               </Box>
-              {/* <Copyright sx={{ mt: 5 }} /> */}
               <Typography component="p" variant="p" color="red">
                 {errorMessage}
               </Typography>
 
-              <Box
-                sx={{ justifyContent: "center" }}
-              >
-               <Divider sx={{width: "100%", px: 20, display: "flex", justifyContent: "center", alignItems: "center"}}>
-                or sign in with
-               </Divider>
+              <Box sx={{ justifyContent: "center" }}>
+                <Divider
+                  sx={{
+                    width: "100%",
+                    px: 20,
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  or sign in with
+                </Divider>
                 <Box
                   sx={{
                     justifyContent: "center",
-                    display: "flex"
+                    display: "flex",
                   }}
                 >
-                  <IconButton onClick={loginWithFaceBook} sx={{ border: 1, width: "35px", height: "35px", p: 0, m: 1 }}>
-                    <img src="/assets/log-in-fb.svg" width="100%" />
+                  <IconButton
+                    onClick={loginWithFaceBook}
+                    sx={{
+                      border: 1,
+                      width: "35px",
+                      height: "35px",
+                      p: 0,
+                      m: 1,
+                    }}
+                  >
+                    <img
+                      alt="log-in-fb-btn"
+                      src="/assets/log-in-fb.svg"
+                      width="100%"
+                    />
                   </IconButton>
-                  <IconButton onClick={loginWithGoogle} sx={{ border: 1, width: "35px", height: "35px", p: 0, m: 1 }}>
-                    <img src="/assets/log-in-gg.svg" width="100%" />
+                  <IconButton
+                    onClick={loginWithGoogle}
+                    sx={{
+                      border: 1,
+                      width: "35px",
+                      height: "35px",
+                      p: 0,
+                      m: 1,
+                    }}
+                  >
+                    <img
+                      alt="log-in-gg-btn"
+                      src="/assets/log-in-gg.svg"
+                      width="100%"
+                    />
                   </IconButton>
                 </Box>
               </Box>

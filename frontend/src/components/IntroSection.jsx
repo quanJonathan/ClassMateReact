@@ -1,5 +1,4 @@
-import { Button, styled, Typography } from "@mui/material";
-import { Box } from "@mui/system";
+import { Button, styled, Typography, Box } from "@mui/material";
 // const subName1 = "CLASS";
 // const subName2 = "MATE";
 

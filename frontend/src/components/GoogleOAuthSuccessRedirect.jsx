@@ -2,16 +2,17 @@ import { useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useAuth } from "../hook/useAuth";
 import axios from "axios";
-import { join } from "lodash";
+import Spinner from "../components/spinner";
 
 const GoogleOAuthSuccessRedirect = ({ props }) => {
   let { accessToken, refreshToken, from } = useParams();
-  const { setToken, currentJoiningLink, user, joining, setIsLoading } = useAuth();
+  const { setToken, currentJoiningLink, user, joining, setIsLoading } =
+    useAuth();
   const navigate = useNavigate();
   //const dispatch = useAppDispatch()
 
   const array = currentJoiningLink?.split("/");
-  console.log(array)
+  console.log(array);
 
   console.log("accessToken" + accessToken);
   console.log("freshToken" + refreshToken);
@@ -27,18 +28,18 @@ const GoogleOAuthSuccessRedirect = ({ props }) => {
       setToken(token);
       localStorage.setItem("token", JSON.stringify(token));
       if (joining) {
-        axios.post(`http://localhost:3001/class/joinClass/${array[3]}`, user, {
+        axios.post(`https://classmatebe-final.onrender.com/class/joinClass/${array[3]}`, user, {
           headers: {
             Authorization: "Bearer " + token?.refreshToken,
           },
         });
       }
-      setIsLoading(true)
+      setIsLoading(true);
       navigate("/dashboard", { replace: true });
     }
   }, [accessToken, from, navigate, refreshToken, setToken]);
 
-  return <div>Loading...</div>;
+  return <Spinner />;
 };
 
 export default GoogleOAuthSuccessRedirect;

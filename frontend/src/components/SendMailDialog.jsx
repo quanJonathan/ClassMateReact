@@ -5,12 +5,10 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
-  DialogContentText,
   DialogTitle,
   ListItem,
   TextField,
 } from "@mui/material";
-import axios from "axios";
 import { useState } from "react";
 
 export default function SendMailDialog({ isOpen, title, handleClose }) {

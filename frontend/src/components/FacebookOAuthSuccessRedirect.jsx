@@ -27,7 +27,7 @@ const FacebookOAuthSuccessRedirect = ({ props }) => {
       setToken(token);
       localStorage.setItem("token", JSON.stringify(token));
       if (joining) {
-        axios.post(`http://localhost:3001/class/joinClass/${array[3]}`, user, {
+        axios.post(`https://classmatebe-final.onrender.com/class/joinClass/${array[3]}`, user, {
           headers: {
             Authorization: "Bearer " + token?.refreshToken,
           },

@@ -4,24 +4,32 @@ import {
   Button,
   Card,
   CardContent,
-  CardHeader,
   Divider,
+  IconButton,
   Typography,
   styled,
 } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import { useState } from "react";
 import { useAuth } from "../hook/useAuth";
-import { AddRounded, AssignmentRounded } from "@mui/icons-material";
-import { Link } from "react-router-dom";
+import {
+  AddRounded,
+  AssignmentRounded,
+  SendOutlined,
+} from "@mui/icons-material";
+import { Link, useParams } from "react-router-dom";
 import GradeReviewDialog from "./GradeReviewDialog";
 import { useIsTeacher } from "../helpers/getCurrentRole";
-import { useParams } from "react-router-dom";
 import { format } from "date-fns";
+import { stringAvatar } from "../helpers/stringAvator";
+import axios, { HttpStatusCode } from "axios";
+import { toast } from "react-toastify";
 
 export default function StudentLayout({ course, homework }) {
-  const { user } = useAuth();
+  const { user, token } = useAuth();
   const [isOpen, setOpen] = useState(false);
   const { id } = useParams();
+  const [isSending, setIsSending] = useState(false);
+  const [comment, setComment] = useState("");
   let assignment = course?.homeworks?.find((item) => item._id === homework);
   const isTeacher = useIsTeacher(id);
   // console.log(assignment?.deadline);
@@ -40,6 +48,43 @@ export default function StudentLayout({ course, homework }) {
       flexDirection: "column",
     },
   }));
+
+  const sendComment = async () => {
+    if (comment == "") return;
+    setIsSending(true);
+    console.log("sending");
+    // try {
+    //   const response = await axios.post(
+    //     `https://classmatebe-final.onrender.com/gradeReview/${currentStudent?.gradeReview?._id}/comment`,
+    //     {
+    //       comment: {
+    //         role: "3000",
+    //         id: user?._id,
+    //         content: comment,
+    //       },
+    //       target: "all",
+    //     },
+    //     {
+    //       headers: {
+    //         Authorization: "Bearer: " + token?.refreshToken,
+    //       },
+    //     }
+    //   );
+
+    //   if (
+    //     response.status == HttpStatusCode.Accepted ||
+    //     response.status == HttpStatusCode.Created
+    //   ) {
+    //     setIsSending(false);
+    //     setComment("");
+    //   } else {
+    //     toast.error(response.statusText);
+    //     setIsSending(false);
+    //   }
+    // } catch (e) {
+    //   toast.error(e);
+    // }
+  };
 
   const handleHomework = (homework) => {
     const foundUser = homework?.doneMembers?.find(
@@ -102,11 +147,49 @@ export default function StudentLayout({ course, homework }) {
             }}
           >
             <Typography>
-              {assignment && `Due ${format(assignment.deadline, "HH:MM:ss yyyy-mm-dd")}`}
+              {assignment &&
+                `Due ${format(assignment.deadline, "HH:MM:ss yyyy-mm-dd")}`}
             </Typography>
             <Typography sx={{ pl: 5, fontSize: "15px", fontWeight: "600" }}>
               Grade: {handleHomework(assignment)}
             </Typography>
+          </Box>
+
+          <Box sx={{ width: "100%", mt: 10, ml: 0 }}>
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                margin: "10px",
+                padding: "20px",
+                boxShadow: "0px 1px 6px -2px black",
+                justifyContent: "space-between",
+                borderRadius: "15px",
+              }}
+            >
+              <Avatar
+                {...stringAvatar(
+                  user ? `${user.firstName} ${user.lastName}` : "Default Name"
+                )}
+              ></Avatar>
+              <input
+                type="text"
+                placeholder="Comment your thought"
+                value={comment}
+                onChange={(e) => setComment(e.target.value)}
+                style={{
+                  border: "none",
+                  padding: "15px 20px",
+                  width: "100%",
+                  mx: "20px",
+                  fontSize: "17px",
+                  outline: "none",
+                }}
+              />
+              <IconButton onClick={sendComment} disabled={isSending}>
+                <SendOutlined />
+              </IconButton>
+            </div>
           </Box>
           <Divider sx={{ my: 3 }} />
         </Box>

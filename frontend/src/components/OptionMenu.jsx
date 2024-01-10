@@ -6,7 +6,7 @@ import {
   Menu,
   MenuItem,
 } from "@mui/material";
-import { useRef, useState } from "react";
+import { useState } from "react";
 
 const ITEM_HEIGHT = 60;
 function OptionMenu({ options, actionIcon, onClick }) {
@@ -14,17 +14,16 @@ function OptionMenu({ options, actionIcon, onClick }) {
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
-    if(typeof onClick === 'function') onClick();
+    if (typeof onClick === "function") onClick();
     event.stopPropagation();
   };
   const handleClose = (option) => {
     setAnchorEl(null);
 
-    if(typeof option?.action === 'function')
-      option?.action();
-    };
+    if (typeof option?.action === "function") option?.action();
+  };
 
-  const maxMenuWidth = Math.max(...options?.map((label) => label.length));
+  const maxMenuWidth = Math.max(...options?.map((label) => label?.length));
 
   return (
     <Box>
@@ -37,7 +36,7 @@ function OptionMenu({ options, actionIcon, onClick }) {
         aria-haspopup="true"
         onClick={handleClick}
         disableFocusRipple
-        sx={{p: '5px'}}
+        sx={{ p: "5px" }}
       >
         {actionIcon}
       </IconButton>
@@ -69,10 +68,10 @@ function OptionMenu({ options, actionIcon, onClick }) {
 
 OptionMenu.defaultProps = {
   onClick: () => {
-    // Default action when onClick is not provided 
+    // Default action when onClick is not provided
     // console.log("Default clicked")
   },
-  options: []
+  options: [],
 };
 
-export default OptionMenu
+export default OptionMenu;

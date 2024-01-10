@@ -3,15 +3,11 @@ import { useAuth } from "../hook/useAuth";
 import { Box } from "@mui/system";
 import MiniDrawer from "../components/Drawer";
 import { useClass } from "../hook/useClass";
-import { Tab, Tabs, Typography } from "@mui/material";
-import Spinner from "../components/spinner";
-import { countBy } from "lodash";
 import { useIsTeacher } from "../helpers/getCurrentRole";
 import StudentLayout from "../components/StudentLayout";
 import TeacherLayout from "../components/TeacherLayout";
 
 export const AssignmentViewingDetailsMain = ({ course }) => {
-  const { user } = useAuth();
   const { id, homeworkId } = useParams();
 
   // console.log(course);
@@ -26,11 +22,14 @@ export const AssignmentViewingDetailsMain = ({ course }) => {
 
   return (
     <>
-      {isTeacher ? <TeacherLayout course={course}  /> : <StudentLayout course={course} homework={homeworkId} />}
+      {isTeacher ? (
+        <TeacherLayout course={course} />
+      ) : (
+        <StudentLayout course={course} homework={homeworkId} />
+      )}
     </>
   );
 };
-
 
 const AssignmentViewingDetails = () => {
   const { course, isLoading, isError, ...other } = useClass();

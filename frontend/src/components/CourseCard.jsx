@@ -1,6 +1,6 @@
 import { Box, styled, Typography, Chip, IconButton } from "@mui/material";
-import { More, PlayCircle, Star } from "@mui/icons-material";
-import { Link } from "react-router-dom";
+import { PlayCircle, Star } from "@mui/icons-material";
+
 function CourseCard({ item, courseWidth, courseHeight }) {
   const CourseBox = styled(Box)(({ theme }) => ({
     maxWidth: courseWidth || 300,
@@ -32,8 +32,8 @@ function CourseCard({ item, courseWidth, courseHeight }) {
             borderTopRightRadius: "20px",
             height: "100%",
           }}
-          alt={item.id}
-          src={item.img}
+          alt={item?.id}
+          src={item?.img}
         />
         <Chip
           sx={{
@@ -59,7 +59,7 @@ function CourseCard({ item, courseWidth, courseHeight }) {
         }}
       >
         <Typography sx={{ fontWeight: "700", color: "#0B036B" }}>
-          {item.title}
+          {item?.title}
         </Typography>
         <Typography
           variant="body2"
@@ -73,7 +73,7 @@ function CourseCard({ item, courseWidth, courseHeight }) {
             WebkitBoxOrient: "vertical",
           }}
         >
-          {item.description}
+          {item?.description}
         </Typography>
 
         <Box

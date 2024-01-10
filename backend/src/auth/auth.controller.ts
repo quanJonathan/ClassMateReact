@@ -49,7 +49,7 @@ export class AuthController {
     //console.log('accessToken of google ' + auth.accessToken);
     //console.log('refreshToken ' + auth.refreshToken);
     res.redirect(
-      `http://localhost:5173/google-oauth-success-redirect/${auth.accessToken}/${auth.refreshToken}${req.params.from}`,
+      `https://classmatefe-final.onrender.com/google-oauth-success-redirect/${auth.accessToken}/${auth.refreshToken}${req.params.from}`,
     );
   }
 
@@ -67,7 +67,7 @@ export class AuthController {
     //console.log('accessToken of facebook ' + auth.accessToken);
     //console.log('refreshToken ' + auth.refreshToken);
     res.redirect(
-      `http://localhost:5173/facebook-oauth-success-redirect/${auth.accessToken}/${auth.refreshToken}${req.params.from}`,
+      `https://classmatefe-final.onrender.com/facebook-oauth-success-redirect/${auth.accessToken}/${auth.refreshToken}${req.params.from}`,
     );
   }
 

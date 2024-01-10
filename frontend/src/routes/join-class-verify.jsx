@@ -10,20 +10,26 @@ const JoinClassVerify = () => {
   const location = useLocation();
   // console.log(location.pathname);
 
-const role = location.pathname.split('/')[2] === 't' ? 'teacher' : 'student'
+  const role = location.pathname.split("/")[2] === "t" ? "teacher" : "student";
   useEffect(() => {
     if (user === null) {
       setJoining(true);
-      setCurrentJoiningLink( location.pathname);
+      setCurrentJoiningLink(location.pathname);
       navigate("/sign-in", { replace: true });
     } else {
       setJoining(false);
       setCurrentJoiningLink(null);
-      axios.post(role === 'teacher' ? `http://localhost:3001/class/joinClassAsTeacher/${classId}` : `http://localhost:3001/class/joinClass/${classId}`, user, {
-        headers: {
-          Authorization: "Bearer " + token?.refreshToken,
-        },
-      });
+      axios.post(
+        role === "teacher"
+          ? `https://classmatebe-final.onrender.com/class/joinClassAsTeacher/${classId}`
+          : `https://classmatebe-final.onrender.com/class/joinClass/${classId}`,
+        user,
+        {
+          headers: {
+            Authorization: "Bearer " + token?.refreshToken,
+          },
+        }
+      );
       navigate("/dashboard", { replace: true });
     }
   }, [user?._id, navigate, setJoining, setCurrentJoiningLink]);

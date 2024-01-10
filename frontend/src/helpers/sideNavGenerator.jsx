@@ -1,11 +1,4 @@
-import {
-  ArrowDropDown,
-  ArrowDropUp,
-  Home,
-  KeyboardArrowDown,
-  KeyboardArrowUp,
-  School,
-} from "@mui/icons-material";
+import { ArrowDropDown, ArrowDropUp, Home, School } from "@mui/icons-material";
 import SupervisedUserCircleRoundedIcon from "@mui/icons-material/SupervisedUserCircleRounded";
 import { useAuth } from "../hook/useAuth";
 

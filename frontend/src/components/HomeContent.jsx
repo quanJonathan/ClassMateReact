@@ -1,11 +1,9 @@
 import { Box, Button, Divider, Typography, styled } from "@mui/material";
-import React, { useEffect, useState } from "react";
-import CourseCard from "./CourseCard";
 import { useAuth } from "../hook/useAuth";
 import ClassCard from "./ClassCard";
 
 export default function HomeContent() {
-  const { user, readFromStorage } = useAuth();
+  const { user } = useAuth();
 
   // const courses = [
   //   {
@@ -86,9 +84,9 @@ export default function HomeContent() {
     },
     [theme.breakpoints.down("sm")]: {
       width: "100%",
-      flexDirection: 'column',
-      justifyContent: 'flex-start',
-      alignContent: 'flex-start'
+      flexDirection: "column",
+      justifyContent: "flex-start",
+      alignContent: "flex-start",
     },
     display: "flex",
   }));
@@ -98,25 +96,25 @@ export default function HomeContent() {
       {/* {isLoading ? (
         <Typography>Loading</Typography>
       ) : ( */}
-        <CustomBox>
-          <Box
+      <CustomBox>
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "row",
+            alignItems: "center",
+          }}
+        >
+          <Typography variant="h4">Hello, {user?.firstName || ""}</Typography>
+          <Divider
             sx={{
-              display: "flex",
-              flexDirection: "row",
-              alignItems: "center",
+              ml: 2,
+              mr: 2,
+              display: { xs: "none", md: "flex" },
+              width: "50%",
             }}
-          >
-            <Typography variant="h4">Hello, {user?.firstName || ""}</Typography>
-            <Divider
-              sx={{
-                ml: 2,
-                mr: 2,
-                display: { xs: "none", md: "flex" },
-                width: "50%",
-              }}
-            ></Divider>
-          </Box>
-          {/* <Typography
+          ></Divider>
+        </Box>
+        {/* <Typography
             variant="body2"
             sx={{
               fontSize: "16px",
@@ -127,17 +125,13 @@ export default function HomeContent() {
             Recent Courses
           </Typography> */}
 
-          <CourseBoxes>
-            {user?.classes?.map((course) => (
-              <ClassCard
-                key={course?.classId?._id}
-                item={course}
-                user={user}
-              />
-            ))}
-          </CourseBoxes>
-          </CustomBox>
-          {/* <Box
+        <CourseBoxes>
+          {user?.classes?.map((course) => (
+            <ClassCard key={course?.classId?._id} item={course} user={user} />
+          ))}
+        </CourseBoxes>
+      </CustomBox>
+      {/* <Box
             sx={{
               justifyContent: "center",
               display: "flex",

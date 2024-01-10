@@ -1,5 +1,4 @@
-import { styled, Typography } from "@mui/material";
-import { Box } from "@mui/system";
+import { styled, Typography, Box } from "@mui/material";
 
 function BenefitSection() {
   const CustomBox = styled(Box)(({ theme }) => ({
@@ -66,6 +65,7 @@ function BenefitSection() {
 
         <BenefitBox>
           <img
+            alt="degree"
             src="/assets/degree.svg"
             style={{ width: "50px", height: "50px", margin: "10px" }}
           />
@@ -74,6 +74,7 @@ function BenefitSection() {
 
         <BenefitBox>
           <img
+            alt="course"
             src="/assets/courses.svg"
             style={{ width: "50px", height: "50px", margin: "10px" }}
           />
@@ -82,6 +83,7 @@ function BenefitSection() {
 
         <BenefitBox>
           <img
+            alt="trainer"
             src="/assets/trainer.svg"
             style={{ width: "50px", height: "50px", margin: "10px" }}
           />

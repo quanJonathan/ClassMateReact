@@ -69,7 +69,7 @@ export const ClassGeneral = ({ course, user }) => {
 
   const resetCodeAction = () => {
     console.log("Resetting code...");
-    //axios.post("http://localhost:3001/class/resetClassId");
+    //axios.post("https://classmatebe-final.onrender.com/class/resetClassId");
   };
 
   const options = [
@@ -77,7 +77,7 @@ export const ClassGeneral = ({ course, user }) => {
       icon: <InsertLink />,
       label: "Sao chép đường liên kết mã lớp",
       action: () => {
-        copyTextAction(`http://localhost:5173/c/join/${course?._id}`);
+        copyTextAction(`https://classmatefe-final.onrender.com/c/join/${course?._id}`);
       },
     },
     {
@@ -117,7 +117,7 @@ export const ClassGeneral = ({ course, user }) => {
 
     console.log(id);
     const response = await axios.post(
-      `http://localhost:3001/class/addStudents/${id}`,
+      `https://classmatebe-final.onrender.com/class/addStudents/${id}`,
       students,
       {
         headers: {

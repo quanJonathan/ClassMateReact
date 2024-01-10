@@ -9,45 +9,21 @@ import {
   AccordionSummary,
   Button,
   Divider,
-  Paper,
   Select,
   Typography,
   Box,
   Icon,
   AccordionActions,
+  Stack,
 } from "@mui/material";
 import { useState } from "react";
 import { format } from "date-fns";
-import { DndProvider, useDrag, useDrop } from "react-dnd";
+import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { Link, useNavigate, useParams } from "react-router-dom";
 
 import { useIsTeacher } from "../helpers/getCurrentRole";
 import OptionMenu from "./OptionMenu";
-import { Stack } from "@mui/system";
-
-const CourseCardMini = ({ id, text, index, moveCard }) => {
-  const [, ref] = useDrag({
-    type: "CARD",
-    homework: { id, index },
-  });
-
-  const [, drop] = useDrop({
-    accept: "CARD",
-    hover: (draggedhomework) => {
-      if (draggedhomework.index !== index) {
-        moveCard(draggedhomework.index, index);
-        draggedhomework.index = index;
-      }
-    },
-  });
-
-  return (
-    <div ref={(node) => ref(drop(node))} style={{ marginBottom: 8 }}>
-      <Paper sx={{ padding: 2 }}>{text}</Paper>
-    </div>
-  );
-};
 
 const DraggableContent = () => {
   const [category, setCategory] = useState("all");
@@ -105,7 +81,6 @@ const DraggableContent = () => {
 };
 
 export const ClassHomeWork = ({ homeworks }) => {
-  // console.log(homeworks);
   const navigate = useNavigate();
   const { id } = useParams();
 
@@ -175,7 +150,7 @@ export const ClassHomeWork = ({ homeworks }) => {
                     "@media screen and (max-width: 500px)": {
                       fontSize: "11px",
                       ml: 1,
-                      mr: 1
+                      mr: 1,
                     },
                   }}
                 >

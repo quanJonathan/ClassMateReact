@@ -8,94 +8,30 @@ import {
   Divider,
   IconButton,
   List,
-  ListItem,
   Slide,
   Switch,
   TextField,
   Toolbar,
   Typography,
+  Box,
+  Stack,
 } from "@mui/material";
 import { forwardRef, useRef, useState } from "react";
-import { ArrowDropDown, ArrowDropUp, Close } from "@mui/icons-material";
-import { Box, Stack } from "@mui/system";
+import { Close } from "@mui/icons-material";
 import { useAuth } from "../hook/useAuth";
 import { toast } from "react-toastify";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import YesNoDialog from "./yesNoDialog";
-// import DraggableList from "react-draggable-list";
 
 const Transition = forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-// const GradeCompositionsItem = (props) => {
-//   const { item, dragHandleProps, commonProps } = props;
-
-//   const { onMouseDown, onTouchStart } = dragHandleProps;
-//   const { setYesNo, deleteGradeComposition, handleTextChange } = commonProps;
-
-//   return (
-//     <Stack
-//       spacing={2}
-//       direction="row"
-//       onTouchStart={(e) => {
-//         e.preventDefault();
-//         console.log("touchStart");
-//         e.target.style.backgroundColor = "blue";
-//         document.body.style.overflow = "hidden";
-//         onTouchStart(e);
-//       }}
-//       onTouchEnd={(e) => {
-//         e.target.style.backgroundColor = "black";
-//         document.body.style.overflow = "visible";
-//       }}
-//     >
-//       <TextField
-//         className="disable-select"
-//         required
-//         label="Grade composition"
-//         value={item?.name}
-//         variant="filled"
-//         focused
-//         InputLabelProps={{
-//           shrink: true,
-//         }}
-//         helperText={item?.helperText}
-//         onChange={(e) => handleTextChange(index, "name", e.target.value)}
-//       />
-//       <TextField
-//         className="disable-select"
-//         label="gradeScale*"
-//         value={item?.gradeScale}
-//         type="number"
-//         variant="filled"
-//         onChange={(e) => handleTextChange(index, "gradeScale", e.target.value)}
-//         inputProps={{
-//           min: 1,
-//           max: 100,
-//         }}
-//       />
-//       <IconButton
-//         className="disable-select"
-//         onClick={() => {
-//           item?.isDefault ? setYesNo(true) : deleteGradeComposition(index);
-//         }}
-//       >
-//         <Close />
-//       </IconButton>
-//       <IconButton className="dragHandle">
-//         <ArrowDropUp />
-//         <ArrowDropDown />
-//       </IconButton>
-//     </Stack>
-//   );
-// };
-
 function SettingDialog({ open, handleClose, compositions, defaultValue }) {
   const { user, token } = useAuth();
   const [error, setError] = useState("");
-  const modifiedInitial = compositions?.map((c, index) => {
+  const modifiedInitial = compositions?.map((c) => {
     return {
       _id: c?._id,
       gradeScale: c?.gradeScale,
@@ -169,7 +105,7 @@ function SettingDialog({ open, handleClose, compositions, defaultValue }) {
 
     try {
       const response = await axios.post(
-        `http://localhost:3001/class/updateOrAddGradeCompositions/${id}`,
+        `https://classmatebe-final.onrender.com/class/updateOrAddGradeCompositions/${id}`,
         modifiedGradeCompositions,
         {
           headers: {
@@ -232,13 +168,13 @@ function SettingDialog({ open, handleClose, compositions, defaultValue }) {
   };
 
   const deleteGradeComposition = (index) => {
-
-    setGradeScaleLeft((prev) => prev + parseInt(gradeCompositions[index].gradeScale));
+    setGradeScaleLeft(
+      (prev) => prev + parseInt(gradeCompositions[index].gradeScale)
+    );
     const updatedCompositions = [...gradeCompositions];
     updatedCompositions.splice(index, 1);
-    
+
     setGradeCompositions(updatedCompositions);
-  
 
     // calculateGradeScale(currentComposition?.gradeScale, index)
   };
@@ -278,139 +214,135 @@ function SettingDialog({ open, handleClose, compositions, defaultValue }) {
     handleClose();
   };
 
-
-
   const dragComposition = useRef(0);
   const dragOverComposition = useRef(0);
 
   const handleDrag = () => {
     const gradeCompositionClone = [...gradeCompositions];
     const temp = gradeCompositionClone[dragComposition.current];
-    gradeCompositionClone[dragComposition.current] = gradeCompositionClone[dragOverComposition.current];
+    gradeCompositionClone[dragComposition.current] =
+      gradeCompositionClone[dragOverComposition.current];
     gradeCompositionClone[dragOverComposition.current] = temp;
-
 
     setGradeCompositions(gradeCompositionClone);
     console.log(gradeCompositions);
-
-  }
-
-
-
-
+  };
 
   return (
-    <>
-      <Dialog
-        fullScreen
-        open={open}
-        onClose={handleClose}
-        TransitionComponent={Transition}
-        scroll="paper"
+    <Dialog
+      fullScreen
+      open={open}
+      onClose={handleClose}
+      TransitionComponent={Transition}
+      scroll="paper"
+    >
+      <YesNoDialog
+        open={openYesNo}
+        onYes={onYes}
+        onNo={onNo}
+        title={currentComposition?.name}
+      />
+      <AppBar
+        elevation={0}
+        sx={{
+          position: "relative",
+          backgroundColor: "rgba(255, 255, 255, 0.1)",
+          borderBottom: "1px solid #ccc",
+        }}
       >
-        <YesNoDialog
-          open={openYesNo}
-          onYes={onYes}
-          onNo={onNo}
-          title={currentComposition?.name}
-        />
-        <AppBar
-          elevation={0}
-          sx={{
-            position: "relative",
-            backgroundColor: "rgba(255, 255, 255, 0.1)",
-            borderBottom: "1px solid #ccc",
-          }}
-        >
-          <Toolbar>
-            <IconButton
-              edge="start"
-              color="inherit"
-              onClick={onClose}
-              aria-label="close"
-            >
-              <Close />
-            </IconButton>
-            <Typography
-              sx={{ ml: 2, flex: 1, fontWeight: "semi-bold" }}
-              variant="body1"
-              component="div"
-            >
-              Class settings
-            </Typography>
-            <Button
-              autoFocus
-              variant="contained"
-              disabled={!isAllValid()}
-              onClick={saveGradeCompositions}
-            >
-              Save
-            </Button>
-          </Toolbar>
-        </AppBar>
-        <DialogContent
-          sx={{
-            display: 'flex',
-            height: "100%",
-            justifyContent: 'center',
-            alignContent: 'center',
-            mt: 3,
-            p: 1
-          }}
-        >
-          <Card
-            sx={{
-              width: '60%',
-              p: 4,
-              overflowY: "auto",
-              "@media screen and (max-width: 500px)": {
-                p: 0
-              },
-            }}
+        <Toolbar>
+          <IconButton
+            edge="start"
+            color="inherit"
+            onClick={onClose}
+            aria-label="close"
           >
-            <CardContent sx={{ minHeight: 0 }}>
-              <Typography variant="h4" sx={{ fontWeight: "500" }}>
-                Grading
-              </Typography>
-              <Typography variant="h6" sx={{ my: 2, fontWeight: "400" }}>
-                Grading method
-              </Typography>
-              <Box
-                sx={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                }}
-              >
-                <Typography>Show total score</Typography>
-                <Switch />
-              </Box>
+            <Close />
+          </IconButton>
+          <Typography
+            sx={{ ml: 2, flex: 1, fontWeight: "semi-bold" }}
+            variant="body1"
+            component="div"
+          >
+            Class settings
+          </Typography>
+          <Button
+            autoFocus
+            variant="contained"
+            disabled={!isAllValid()}
+            onClick={saveGradeCompositions}
+          >
+            Save
+          </Button>
+        </Toolbar>
+      </AppBar>
+      <DialogContent
+        sx={{
+          display: "flex",
+          height: "100%",
+          justifyContent: "center",
+          alignContent: "center",
+          mt: 3,
+          p: 1,
+        }}
+      >
+        <Card
+          sx={{
+            width: "60%",
+            p: 4,
+            overflowY: "auto",
+            "@media screen and (max-width: 500px)": {
+              p: 0,
+            },
+          }}
+        >
+          <CardContent sx={{ minHeight: 0 }}>
+            <Typography variant="h4" sx={{ fontWeight: "500" }}>
+              Grading
+            </Typography>
+            <Typography variant="h6" sx={{ my: 2, fontWeight: "400" }}>
+              Grading method
+            </Typography>
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "space-between",
+              }}
+            >
+              <Typography>Show total score</Typography>
+              <Switch />
+            </Box>
 
-              <Divider />
+            <Divider />
 
-              <Typography variant="h5" sx={{ mt: 2 }}>
-                Grade Composition
-              </Typography>
-              <Typography variant="subtitle1" color="gray" sx={{ mt: 1 }}>
-                Grade composition must have the total of 100%
-              </Typography>
+            <Typography variant="h5" sx={{ mt: 2 }}>
+              Grade Composition
+            </Typography>
+            <Typography variant="subtitle1" color="gray" sx={{ mt: 1 }}>
+              Grade composition must have the total of 100%
+            </Typography>
 
-              <List sx={{minWidth: '100%'}}>
-                {gradeCompositions.map((composition, index) => (
-                  <div
-                    key={composition?._id}
-                    onMouseEnter={() => setCurrentComposition(composition)}
-                    style={{ minWidth: "100%", cursor: "move" }}
-                  >
-                    <Card 
+            <List sx={{ minWidth: "100%" }}>
+              {gradeCompositions.map((composition, index) => (
+                <div
+                  key={composition?._id}
+                  onMouseEnter={() => setCurrentComposition(composition)}
+                  style={{ minWidth: "100%", cursor: "move" }}
+                >
+                  <Card
                     draggable
-                    onDragStart={()=>dragComposition.current = index}
-                    onDragEnter={()=>dragOverComposition.current = index}
+                    onDragStart={() => (dragComposition.current = index)}
+                    onDragEnter={() => (dragOverComposition.current = index)}
                     onDragEnd={handleDrag}
-                     onDragOver={(e) => e.preventDefault()}
-                  
-                    
-                    sx={{my: 1, display: "flex", justifyContent: "space-between", flexDirection: "row"}}>
-                    <Stack spacing={2} direction="row" sx={{minWidth: '80%'}} >
+                    onDragOver={(e) => e.preventDefault()}
+                    sx={{
+                      my: 1,
+                      display: "flex",
+                      justifyContent: "space-between",
+                      flexDirection: "row",
+                    }}
+                  >
+                    <Stack spacing={2} direction="row" sx={{ minWidth: "80%" }}>
                       <TextField
                         required
                         label="Grade composition"
@@ -441,50 +373,33 @@ function SettingDialog({ open, handleClose, compositions, defaultValue }) {
                       />
                     </Stack>
                     <IconButton
-                        onClick={() => {
-                          composition.isDefault
-                            ? setYesNo(true)
-                            : deleteGradeComposition(index);
-                        }}
-                      >
-                        <Close />
-                      </IconButton>
-                    </Card>
-                  </div>
-                ))}
-              </List>
+                      onClick={() => {
+                        composition.isDefault
+                          ? setYesNo(true)
+                          : deleteGradeComposition(index);
+                      }}
+                    >
+                      <Close />
+                    </IconButton>
+                  </Card>
+                </div>
+              ))}
+            </List>
 
-              {/* <div id="scrollable-div">
-                <DraggableList
-                  rowSize="1"
-                  itemKey="draggable-list"
-                  template={GradeCompositionsItem}
-                  list={compositions}
-                  commonProps={{
-                    handleTextChange,
-                    setYesNo,
-                    deleteGradeComposition,
-                  }}
-                  onMoveEnd={(newList) => onListChange(newList)}
-                  container={() => document.getElementById("scrollable-div")}
-                />
-              </div> */}
-
-              {gradeCompositions.length > 0 && (
-                <Typography>Grade scale left: {gradeScaleLeft}%</Typography>
-              )}
-              <Button
-                variant="text"
-                sx={{ p: 0, m: 0 }}
-                onClick={addGradeComposition}
-              >
-                Add grade composition
-              </Button>
-            </CardContent>
-          </Card>
-        </DialogContent>
-      </Dialog>
-    </>
+            {gradeCompositions.length > 0 && (
+              <Typography>Grade scale left: {gradeScaleLeft}%</Typography>
+            )}
+            <Button
+              variant="text"
+              sx={{ p: 0, m: 0 }}
+              onClick={addGradeComposition}
+            >
+              Add grade composition
+            </Button>
+          </CardContent>
+        </Card>
+      </DialogContent>
+    </Dialog>
   );
 }
 

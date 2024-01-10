@@ -1,19 +1,19 @@
 export function strToBool(string) {
-    if (string === null || string === undefined || string === false) {
-      return false;
-    } else if (string === true) {
-      return true;
-    } else {
-      switch (string.toLowerCase()) {
-        case 'null':
-        case 'undefined':
-        case 'false':
-        case 'no':
-        case '0':
-        case '':
-          return false;
-        default:
-          return true;
-      }
+  if (string === null || string === undefined || string === false) {
+    return false;
+  } else if (string === true) {
+    return true;
+  } else {
+    switch (string.toLowerCase()) {
+      case "null":
+      case "undefined":
+      case "false":
+      case "no":
+      case "0":
+      case "":
+        return false;
+      default:
+        return true;
     }
   }
+}

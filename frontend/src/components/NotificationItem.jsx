@@ -1,4 +1,3 @@
-import { AccountCircle } from "@mui/icons-material";
 import { Link, Typography, useTheme } from "@mui/material";
 import { format } from "date-fns";
 import { useNavigate } from "react-router-dom";
@@ -43,7 +42,8 @@ const NotificationItem = (props) => {
           <span style={{ fontWeight: "bold" }}>
             {`[${format(content?.createdDate, "HH:MM:ss yyyy:mm:dd")}]`}{" "}
             {content?.name}:{" "}
-          </span> {"\n"}
+          </span>{" "}
+          {"\n"}
           {content?.content}
         </Typography>
       </Link>

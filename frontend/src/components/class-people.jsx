@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import {
   List,
   ListItem,
@@ -49,7 +49,7 @@ export const ClassPeople = (props) => {
     console.dir(studentId);
     setPersonal(true);
 
-    setUrl(`http://localhost:5173/activateEmptyAccount/${studentId}`);
+    setUrl(`https://classmatefe-final.onrender.com/activateEmptyAccount/${studentId}`);
     sendMailForStudent();
   };
 
@@ -76,7 +76,7 @@ export const ClassPeople = (props) => {
         course={course}
         url={url}
       />
-      <Card sx={{backdropFilter: 'none'}}>
+      <Card sx={{ backdropFilter: "none" }}>
         <Container style={{ marginTop: 20, justifyContent: "center" }}>
           <Section
             title="Teachers"
@@ -85,7 +85,7 @@ export const ClassPeople = (props) => {
             icon={<PersonAddAlt1OutlinedIcon />}
             sendMailAction={() => sendMailForTeacher()}
           />
-          { (
+          {
             <Section
               title="Students"
               data={students}
@@ -94,7 +94,7 @@ export const ClassPeople = (props) => {
               icon={<PersonAddAlt1OutlinedIcon />}
               sendMailAction={() => sendMailForStudent()}
             />
-          )}
+          }
         </Container>
       </Card>
     </Box>
@@ -117,7 +117,7 @@ const Section = ({ title, data, icon, sendMailAction, createLink, course }) => {
     try {
       console.log(studentId + "check");
       await axios.post(
-        `http://localhost:3001/class/removeStudent/${studentId}`,
+        `https://classmatebe-final.onrender.com/class/removeStudent/${studentId}`,
         {
           id: course?._id,
         },
@@ -182,11 +182,6 @@ const Section = ({ title, data, icon, sendMailAction, createLink, course }) => {
         </Typography>
         {currentRole && (
           <>
-            {/* {data?.length > 0 && (
-              <Typography variant="body2" fontWeight="bold">
-                {data?.length} student {data?.length > 1 && "s"}
-              </Typography>
-            )} */}
             <IconButton>
               <PersonRemoveAlt1Outlined />
             </IconButton>
@@ -249,10 +244,9 @@ const Section = ({ title, data, icon, sendMailAction, createLink, course }) => {
                   edge="start"
                   aria-label="account of current user"
                   color="gray"
-                  sx={{mr:2}}
+                  sx={{ mr: 2 }}
                 >
-                  <PersonRounded
-                  />
+                  <PersonRounded />
                 </Avatar>
               ) : (
                 <Avatar
@@ -291,7 +285,7 @@ const Section = ({ title, data, icon, sendMailAction, createLink, course }) => {
                   sx={{
                     textTransform: "none",
                     "@media screen and (max-width: 500px)": {
-                      display: 'none',
+                      display: "none",
                     },
                   }}
                 >

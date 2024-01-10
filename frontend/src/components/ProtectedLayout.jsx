@@ -1,7 +1,6 @@
 import { useNavigate, useOutlet } from "react-router-dom";
 import { useAuth } from "../hook/useAuth.jsx";
 import { useEffect } from "react";
-import { toast } from "react-toastify";
 
 export const ProtectedLayout = () => {
   const { token, user, joining, currentJoiningLink, isLoading } = useAuth();

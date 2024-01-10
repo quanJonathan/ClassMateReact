@@ -17,17 +17,26 @@ const GradeScaleDialog = ({ open, onClose, compositions }) => {
         <Typography variant="body2">
           Grade is calculated based on percentage of compositions
         </Typography>
-        <Box display="flex" flexDirection="column" alignContent='flex-start' justifyContent='flex-start'>
+        <Box
+          display="flex"
+          flexDirection="column"
+          alignContent="flex-start"
+          justifyContent="flex-start"
+        >
           {compositions?.map((c) => (
-            <Stack key={c._id} flexDirection='row' justifyContent='flex-start'>
-              <Typography sx={{fontWeight: '500'}}>{c?.name}</Typography>
-              <Typography sx={{fontWeight: '500', ml: 2}}>{c?.gradeScale}%</Typography>
+            <Stack key={c?._id} flexDirection="row" justifyContent="flex-start">
+              <Typography sx={{ fontWeight: "500" }}>{c?.name}</Typography>
+              <Typography sx={{ fontWeight: "500", ml: 2 }}>
+                {c?.gradeScale}%
+              </Typography>
             </Stack>
           ))}
         </Box>
       </DialogContent>
       <DialogActions>
-        <Button onClick={onClose} sx={{mr: 3}}>Close</Button>
+        <Button onClick={onClose} sx={{ mr: 3 }}>
+          Close
+        </Button>
       </DialogActions>
     </Dialog>
   );

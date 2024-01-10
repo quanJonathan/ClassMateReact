@@ -6,13 +6,7 @@ import {
   CardContent,
   Dialog,
   DialogContent,
-  Divider,
   IconButton,
-  List,
-  ListItem,
-  ListItemIcon,
-  ListItemText,
-  MenuItem,
   Slide,
   TextField,
   Toolbar,
@@ -20,8 +14,8 @@ import {
   useMediaQuery,
 } from "@mui/material";
 import { forwardRef, useState } from "react";
-import { Close, ContentCopy, Http, InsertLink } from "@mui/icons-material";
-import { Box, Stack } from "@mui/system";
+import { Close } from "@mui/icons-material";
+import { Stack } from "@mui/system";
 import { useAuth } from "../hook/useAuth";
 import { stringAvatar } from "../helpers/stringAvator";
 import axios, { HttpStatusCode } from "axios";
@@ -40,7 +34,7 @@ export default function FullScreenDialog({ open, handleClose }) {
   const handleSave = async () => {
     try {
       const response = await axios.post(
-        `http://localhost:3001/class/joinClassWithId/${classId}`,
+        `https://classmatebe-final.onrender.com/class/joinClassWithId/${classId}`,
         user,
         {
           headers: {
@@ -103,7 +97,7 @@ export default function FullScreenDialog({ open, handleClose }) {
             autoFocus
             variant="contained"
             onClick={handleSave}
-            disabled={classId.length!=6}
+            disabled={classId.length != 6}
           >
             Save
           </Button>

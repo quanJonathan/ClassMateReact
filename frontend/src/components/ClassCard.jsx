@@ -1,8 +1,7 @@
-import { Box, styled, Typography, Avatar } from "@mui/material";
+import { Box, styled, Typography } from "@mui/material";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { stringAvatar } from "../helpers/stringAvator";
 
 function ClassCard({ item, user }) {
   // console.log(item)
@@ -10,7 +9,7 @@ function ClassCard({ item, user }) {
   async function getClass(classId) {
     try {
       const response = await axios.get(
-        `http://localhost:3001/class/getClass/${classId}`,
+        `https://classmatebe-final.onrender.com/class/getClass/${classId}`,
         {
           headers: {
             "Content-Type": "application/x-www-form-urlencoded",

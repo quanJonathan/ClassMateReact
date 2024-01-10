@@ -15,31 +15,12 @@ import {
   OutlinedInput,
   Paper,
 } from "@mui/material";
-import { NavLink, useNavigate, useLocation, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { useState } from "react";
 import axios from "axios";
-import AppName from "../components/WebName";
 import { toast } from "react-toastify";
 import { useAuth } from "../hook/useAuth";
-
-function Copyright(props) {
-  return (
-    <Typography
-      variant="body2"
-      color="text.secondary"
-      align="center"
-      {...props}
-    >
-      {"Copyright © "}
-      <Link color="inherit" href="https://mui.com/">
-        Your Website
-      </Link>{" "}
-      {new Date().getFullYear()}
-      {"."}
-    </Typography>
-  );
-}
 
 export default function ActivateEmptyAccount() {
   let navigate = useNavigate();
@@ -50,13 +31,11 @@ export default function ActivateEmptyAccount() {
   const [data, setData] = useState(null);
   const [isLoading, setLoading] = useState(false);
 
-
   const { setTempEmail, login } = useAuth();
   const post = async (id) => {
     if (!isLoading) {
-      await axios.get(`http://localhost:3001/user/get/${id}`, {
-
-      })
+      await axios
+        .get(`https://classmatebe-final.onrender.com/user/get/${id}`, {})
         .then(function (res) {
           console.log(res);
           //toast.success("Get Successfully!");
@@ -64,11 +43,11 @@ export default function ActivateEmptyAccount() {
           setData(res.data);
         })
         .catch(function (error) {
-          console.log(error)
-        })
+          console.log(error);
+        });
       setLoading(true);
     }
-  }
+  };
 
   //const location = useLocation();
   //const from = (location.state?.from?.pathname === '/auth' ? '/' : location.state?.from?.pathname) || '/';
@@ -80,7 +59,7 @@ export default function ActivateEmptyAccount() {
     //     firstName: data.get('firstName'),
     //     lastName: data.get('lastName')
     // });
-    console.log(data)
+    console.log(data);
 
     const form = {
       _id: data._id,
@@ -88,34 +67,30 @@ export default function ActivateEmptyAccount() {
       lastName: data.lastName,
       email: email,
       password: password,
-      studentId: data.studentId
+      studentId: data.studentId,
     };
     if (form.firstName == "") {
-      toast.warning('First Name is Required');
+      toast.warning("First Name is Required");
     } else if (form.lastName == "") {
-      toast.warning('Last Name is Required');
+      toast.warning("Last Name is Required");
     } else if (!valid) {
-      toast.warning('Email is Invalid');
-    }
-    else if (form.password == "") {
-      toast.warning('Password is Required');
-    }
-    else {
+      toast.warning("Email is Invalid");
+    } else if (form.password == "") {
+      toast.warning("Password is Required");
+    } else {
       console.log(form);
       await axios
-        .post("http://localhost:3001/user/mergeEmptyAccount", form, {
-
-        })
+        .post("https://classmatebe-final.onrender.com/user/mergeEmptyAccount", form, {})
         .then(function (res) {
           //console.log(res.data.email);
           //setTempEmail(res.data.email);
-          console.log("Merge successfully")
-          toast.success("Merge successfully")
+          console.log("Merge successfully");
+          toast.success("Merge successfully");
           login({
             email: email,
             password: password,
-          })
-        })
+          });
+        });
       //   .catch(function (error) {
       //     if (error.response) {
       //       // The request was made and the server responded with a status code
@@ -151,18 +126,18 @@ export default function ActivateEmptyAccount() {
   };
 
   const handleValidation = (e) => {
-    let regEmail = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    let regEmail =
+      /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     setValid(regEmail.test(e.target.value));
     setEmail(e.target.value);
   };
 
   const t = post(accountId);
 
-
   // const loginWithGoogle = async() =>{
   //   console.log('click')
   //   try{
-  //     window.open(`http://localhost:3001/auth/google/${from.replaceAll('/', '@')}`, "_self");
+  //     window.open(`https://classmatebe-final.onrender.com/auth/google/${from.replaceAll('/', '@')}`, "_self");
   //   }catch(error) {
   //     console.log(error)
   //   }
@@ -170,7 +145,7 @@ export default function ActivateEmptyAccount() {
 
   // const loginWithFaceBook = async() => {
   //   try{
-  //     window.open(`http://localhost:3001/auth/facebook`, "_self");
+  //     window.open(`https://classmatebe-final.onrender.com/auth/facebook`, "_self");
   //   }catch(error) {
   //     console.log(error)
   //   }
@@ -189,7 +164,7 @@ export default function ActivateEmptyAccount() {
         backgroundSize: "100% 100%",
         backgroundPosition: "center",
         justifyContent: "center",
-        display: "flex"
+        display: "flex",
       }}
     >
       <CssBaseline />
@@ -212,44 +187,82 @@ export default function ActivateEmptyAccount() {
           sx={{
             display: {
               xs: "none",
-              lg: "block"
+              lg: "block",
             },
           }}
         >
-          <Box sx={{
-            height: "100%",
-            display: "flex",
-            alignItems: "center",
-          }} >
-            <img alt="signUp" src="/assets/log-in-2.png"
+          <Box
+            sx={{
+              height: "100%",
+              display: "flex",
+              alignItems: "center",
+            }}
+          >
+            <img
+              alt="signUp"
+              src="/assets/log-in-2.png"
               style={{
-                width: "100%"
+                width: "100%",
               }}
             />
           </Box>
         </Grid>
-        <Grid item xs={12} sm={4} sx={{ width: { xs: "100%", lg: "auto" }, display: "flex", flexDirection: "column", alignItems: "center" }}>
-          <Box height="20%" sx={{ mt: 2, ml: 0, display: "flex", alignItems: "center", flexDirection: { xs: "column", lg: "row" }, justifyContent: "center", width: { xs: "100%", lg: "auto" } }}>
+        <Grid
+          item
+          xs={12}
+          sm={4}
+          sx={{
+            width: { xs: "100%", lg: "auto" },
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+          }}
+        >
+          <Box
+            height="20%"
+            sx={{
+              mt: 2,
+              ml: 0,
+              display: "flex",
+              alignItems: "center",
+              flexDirection: { xs: "column", lg: "row" },
+              justifyContent: "center",
+              width: { xs: "100%", lg: "auto" },
+            }}
+          >
             {/* <AppName sx={{height: "100%"}} /> */}
             {/* <Divider sx={{ my: 3, mx:2, width: "20%", display: { xs: "none", lg: "flex" }  }} /> */}
-            {data?.email && <Typography sx={{
-              fontSize: "16px", fontWeight: "bold", width: { xs: "50%", lg: "100%" },
-              textAlign: { xs: "center", lg: "right" },
-              color: "red"
-
-            }} >
-              {data.email + " (id = " + data.studentId + ") HAS ALREADY BEEN ACTIVATED!"}
-
-            </Typography> }{!data?.email &&
-              <Typography sx={{
-                fontSize: "16px", fontWeight: "bold", width: { xs: "50%", lg: "100%" },
-                textAlign: { xs: "center", lg: "right" },
-                color: "red"
-
-              }} >
-                {"Please enter information to merge: (Student id = " + data?.studentId + ")"}
-
-              </Typography>}
+            {data?.email && (
+              <Typography
+                sx={{
+                  fontSize: "16px",
+                  fontWeight: "bold",
+                  width: { xs: "50%", lg: "100%" },
+                  textAlign: { xs: "center", lg: "right" },
+                  color: "red",
+                }}
+              >
+                {data.email +
+                  " (id = " +
+                  data.studentId +
+                  ") HAS ALREADY BEEN ACTIVATED!"}
+              </Typography>
+            )}
+            {!data?.email && (
+              <Typography
+                sx={{
+                  fontSize: "16px",
+                  fontWeight: "bold",
+                  width: { xs: "50%", lg: "100%" },
+                  textAlign: { xs: "center", lg: "right" },
+                  color: "red",
+                }}
+              >
+                {"Please enter information to merge: (Student id = " +
+                  data?.studentId +
+                  ")"}
+              </Typography>
+            )}
           </Box>
           <Box
             sx={{
@@ -273,17 +286,22 @@ export default function ActivateEmptyAccount() {
               paddingX={4}
             >
               <Grid container spacing={1} sx={{ justifyContent: "center" }}>
-                <Grid item xs={10} lg={5} sx={{
-                  paddingLeft: { xs: "30px !important", sm: "0px" },
-                  paddingRight: { xs: "30px", sm: "0px" }
-                }}>
+                <Grid
+                  item
+                  xs={10}
+                  lg={5}
+                  sx={{
+                    paddingLeft: { xs: "30px !important", sm: "0px" },
+                    paddingRight: { xs: "30px", sm: "0px" },
+                  }}
+                >
                   <TextField
                     InputProps={{
                       sx: {
                         borderRadius: 10,
                         paddingLeft: "20px",
                         paddingRight: "20px",
-                      }
+                      },
                     }}
                     margin="normal"
                     autoComplete="given-name"
@@ -299,17 +317,22 @@ export default function ActivateEmptyAccount() {
                     }}
                   />
                 </Grid>
-                <Grid item xs={10} lg={5} sx={{
-                  paddingLeft: { xs: "30px !important", sm: "0px" },
-                  paddingRight: { xs: "30px", sm: "0px" }
-                }}>
+                <Grid
+                  item
+                  xs={10}
+                  lg={5}
+                  sx={{
+                    paddingLeft: { xs: "30px !important", sm: "0px" },
+                    paddingRight: { xs: "30px", sm: "0px" },
+                  }}
+                >
                   <TextField
                     InputProps={{
                       sx: {
                         borderRadius: 10,
                         paddingLeft: "20px",
                         paddingRight: "20px",
-                      }
+                      },
                     }}
                     margin="normal"
                     required
@@ -325,17 +348,21 @@ export default function ActivateEmptyAccount() {
                     }}
                   />
                 </Grid>
-                <Grid item xs={10} sx={{
-                  paddingLeft: { xs: "30px !important", sm: "0px" },
-                  paddingRight: { xs: "30px", sm: "0px" }
-                }}>
+                <Grid
+                  item
+                  xs={10}
+                  sx={{
+                    paddingLeft: { xs: "30px !important", sm: "0px" },
+                    paddingRight: { xs: "30px", sm: "0px" },
+                  }}
+                >
                   <TextField
                     InputProps={{
                       sx: {
                         borderRadius: 10,
                         paddingLeft: "20px",
                         paddingRight: "20px",
-                      }
+                      },
                     }}
                     margin="normal"
                     fullWidth
@@ -350,20 +377,24 @@ export default function ActivateEmptyAccount() {
                     }}
                     value={data ? data?.studentId : ""}
                     required={true}
-                    helperText={!valid ? 'Invalid Format' : ' '}
+                    helperText={!valid ? "Invalid Format" : " "}
                   />
                 </Grid>
-                <Grid item xs={10} sx={{
-                  paddingLeft: { xs: "30px !important", sm: "0px" },
-                  paddingRight: { xs: "30px", sm: "0px" }
-                }}>
+                <Grid
+                  item
+                  xs={10}
+                  sx={{
+                    paddingLeft: { xs: "30px !important", sm: "0px" },
+                    paddingRight: { xs: "30px", sm: "0px" },
+                  }}
+                >
                   <TextField
                     InputProps={{
                       sx: {
                         borderRadius: 10,
                         paddingLeft: "20px",
                         paddingRight: "20px",
-                      }
+                      },
                     }}
                     margin="normal"
                     fullWidth
@@ -380,13 +411,17 @@ export default function ActivateEmptyAccount() {
                     error={!valid}
                     required={true}
                     disabled={data?.email}
-                    helperText={!valid ? 'Invalid Format' : ' '}
+                    helperText={!valid ? "Invalid Format" : " "}
                   />
                 </Grid>
-                <Grid item xs={10} sx={{
-                  paddingLeft: { xs: "30px !important", sm: "0px" },
-                  paddingRight: { xs: "30px", sm: "0px" }
-                }}>
+                <Grid
+                  item
+                  xs={10}
+                  sx={{
+                    paddingLeft: { xs: "30px !important", sm: "0px" },
+                    paddingRight: { xs: "30px", sm: "0px" },
+                  }}
+                >
                   {/* <TextField
                                             InputProps={{ sx: { borderRadius: 10 } }}
                                             margin="normal"
@@ -400,9 +435,11 @@ export default function ActivateEmptyAccount() {
                 
                                         /> */}
                   <FormControl fullWidth required variant="outlined">
-                    <InputLabel htmlFor="outlined-adornment-password"
+                    <InputLabel
+                      htmlFor="outlined-adornment-password"
                       sx={{
-                        marginLeft: "5px", marginRight: "5px"
+                        marginLeft: "5px",
+                        marginRight: "5px",
                       }}
                     >
                       Password
@@ -416,7 +453,9 @@ export default function ActivateEmptyAccount() {
                       }}
                       id="outlined-adornment-password"
                       type={showPassword ? "text" : "password"}
-                      value={data?.password ? "xxxxxx" : password ? password : ""}
+                      value={
+                        data?.password ? "xxxxxx" : password ? password : ""
+                      }
                       disabled={data?.password}
                       onChange={(e) => setPassword(e.target.value)}
                       endAdornment={
@@ -445,28 +484,46 @@ export default function ActivateEmptyAccount() {
                                         Forgot password?
                                     </Link>
                                 </Box> */}
-              <Box sx={{ display: "flex", justifyContent: "center", width: "100%" }}>
-                {(data && !data?.password) && <Button
-                  type="submit"
-                  fullWidth
-                  variant="contained"
-                  sx={{ mt: 3, mb: 2, borderRadius: 4, color: "white", width: "70%" }}
-                >
-                  Sign Up
-                </Button>
-                }
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "center",
+                  width: "100%",
+                }}
+              >
+                {data && !data?.password && (
+                  <Button
+                    type="submit"
+                    fullWidth
+                    variant="contained"
+                    sx={{
+                      mt: 3,
+                      mb: 2,
+                      borderRadius: 4,
+                      color: "white",
+                      width: "70%",
+                    }}
+                  >
+                    Sign Up
+                  </Button>
+                )}
               </Box>
               {/* <Copyright sx={{ mt: 5 }} /> */}
 
-              <Box
-                sx={{ justifyContent: "center" }}
-              >
-                <Divider sx={{ width: "100%", px: 20, display: "flex", justifyContent: "center", alignItems: "center" }}>
-                </Divider>
+              <Box sx={{ justifyContent: "center" }}>
+                <Divider
+                  sx={{
+                    width: "100%",
+                    px: 20,
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                ></Divider>
                 <Box
                   sx={{
                     justifyContent: "center",
-                    display: "flex"
+                    display: "flex",
                   }}
                 >
                   {/* <IconButton onClick={loginWithGoogle} sx={{ border: 1, width: "35px", height: "35px", p: 0, m: 1 }}>
@@ -477,8 +534,6 @@ export default function ActivateEmptyAccount() {
                   </IconButton> */}
                 </Box>
               </Box>
-
-
             </Box>
           </Box>
         </Grid>

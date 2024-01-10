@@ -53,7 +53,7 @@ export function useHomeworks(
   //     .then((res) => res.data);
   // const { id } = useParams();
   // const { data, isLoading, error } = useSWR(
-  //   `http://localhost:3001/class/getHomeworks/${id}`,
+  //   `https://classmatebe-final.onrender.com/class/getHomeworks/${id}`,
   //   fetcher
   // );
 

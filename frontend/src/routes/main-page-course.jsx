@@ -3,7 +3,7 @@ import MiniDrawer from "../components/Drawer";
 import { useClass } from "../hook/useClass";
 
 const MainPageCourse = () => {
-  const {course, isLoading, error} = useClass()
+  const { course, isLoading, error } = useClass();
   return (
     <Box
       sx={{
@@ -15,7 +15,7 @@ const MainPageCourse = () => {
         minHeight: "100vh",
       }}
     >
-      <MiniDrawer page="Course" children={course}/>
+      <MiniDrawer page="Course" children={course} />
     </Box>
   );
 };

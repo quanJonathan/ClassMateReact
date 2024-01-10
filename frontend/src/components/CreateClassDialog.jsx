@@ -7,15 +7,13 @@ import {
   TextField,
   Box,
 } from "@mui/material";
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { useAuth } from "../hook/useAuth";
 import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import axios from "axios";
-import { mutate } from "swr";
 
 export default function CreateClassDialog({ isOpen, handleClose }) {
-  const { id } = useParams();
   const { token, user } = useAuth();
   const [loading, setLoading] = useState(false);
   const [checkClassName, setCheckClassName] = useState("");
@@ -29,14 +27,14 @@ export default function CreateClassDialog({ isOpen, handleClose }) {
         className: data.get("className"),
         description: data.get("description"),
       },
-      user: user._id,
+      user: user?._id,
     };
     if (form.className == "") {
       toast.warning("Class Name is Required");
     } else {
       setLoading(true);
       await axios
-        .post("http://localhost:3001/class/addClass", form, {
+        .post("https://classmatebe-final.onrender.com/class/addClass", form, {
           headers: {
             Authorization: "Bearer " + token?.refreshToken,
           },
@@ -46,7 +44,7 @@ export default function CreateClassDialog({ isOpen, handleClose }) {
           setLoading(false);
           toast.success("Create Class Successfully!");
           handleClose();
-          // mutate("http://localhost:3001/auth/profile");
+          // mutate("https://classmatebe-final.onrender.com/auth/profile");
         })
         .catch(function (error) {
           if (error.response) {
@@ -69,23 +67,19 @@ export default function CreateClassDialog({ isOpen, handleClose }) {
 
   const handleChange = (e) => {
     const inputValue = e.target.value;
-    if (e.target.id == "className"){
-    if (inputValue.length <=30) {
-      setCheckClassName("");
-    } else {
-      setCheckClassName(
-        "The Class Name can't be over 30 characters"
-      );
+    if (e.target.id == "className") {
+      if (inputValue.length <= 30) {
+        setCheckClassName("");
+      } else {
+        setCheckClassName("The Class Name can't be over 30 characters");
+      }
+    } else if (e.target.id == "description") {
+      if (inputValue.length <= 120) {
+        setCheckDescription("");
+      } else {
+        setCheckDescription("Description can't be over 120 characters");
+      }
     }
-  } else if (e.target.id=="description"){
-    if (inputValue.length <=120) {
-      setCheckDescription("");
-    } else {
-      setCheckDescription(
-        "Description can't be over 120 characters"
-      );
-    }
-  }
   };
 
   return (
@@ -108,7 +102,6 @@ export default function CreateClassDialog({ isOpen, handleClose }) {
                   maxLength: 30,
                 },
               }}
-
               error={!!checkClassName}
               helperText={checkClassName}
               onChange={handleChange}
@@ -128,7 +121,7 @@ export default function CreateClassDialog({ isOpen, handleClose }) {
                 sx: {
                   paddingLeft: "20px",
                   paddingRight: "20px",
-                  maxLength: 120
+                  maxLength: 120,
                 },
               }}
               error={!!checkDescription}

@@ -1,22 +1,19 @@
-import Button from "@mui/material/Button";
-import CssBaseline from "@mui/material/CssBaseline";
-import TextField from "@mui/material/TextField";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
-import Link from "@mui/material/Link";
-import Grid from "@mui/material/Grid";
-import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
-
 import {
+  Box,
+  Button,
+  Checkbox,
+  CssBaseline,
   Divider,
   FormControl,
+  FormControlLabel,
+  Grid,
   IconButton,
   InputAdornment,
   InputLabel,
   OutlinedInput,
   Paper,
-  styled
+  TextField,
+  Typography,
 } from "@mui/material";
 import { NavLink, useLocation } from "react-router-dom";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
@@ -25,16 +22,19 @@ import { useAuth } from "../hook/useAuth.jsx";
 import AppName from "../components/WebName.jsx";
 
 export default function SignIn() {
-
   const [errorMessage, setErrorMessage] = useState("");
   const location = useLocation();
-  const from = (location.state?.from?.pathname === '/auth' ? '/' : location.state?.from?.pathname) || '/';
+  const from =
+    (location.state?.from?.pathname === "/auth"
+      ? "/"
+      : location.state?.from?.pathname) || "/";
   const { login, setUser, setIsLoading } = useAuth();
-  const [valid,setValid] = useState(true);
-  const [email,setEmail] = useState(null);
+  const [valid, setValid] = useState(true);
+  const [email, setEmail] = useState(null);
 
   const handleValidation = (e) => {
-    let regEmail = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    let regEmail =
+      /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     setValid(regEmail.test(e.target.value));
     setEmail(e.target.value);
   };
@@ -48,27 +48,29 @@ export default function SignIn() {
     };
 
     login(form);
-
   };
 
-  const loginWithGoogle = async() =>{
-    console.log('click')
-    try{
-      setIsLoading(true)
-      window.open(`http://localhost:3001/auth/google/${from.replaceAll('/', '@')}`, "_self");
-    }catch(error) {
-      console.log(error)
+  const loginWithGoogle = async () => {
+    console.log("click");
+    try {
+      setIsLoading(true);
+      window.open(
+        `https://classmatebe-final.onrender.com/auth/google/${from.replaceAll("/", "@")}`,
+        "_self"
+      );
+    } catch (error) {
+      console.log(error);
     }
-  }
+  };
 
-  const loginWithFaceBook = async() => {
-    try{
-      setIsLoading(true)
-      window.open(`http://localhost:3001/auth/facebook`, "_self");
-    }catch(error) {
-      console.log(error)
+  const loginWithFaceBook = async () => {
+    try {
+      setIsLoading(true);
+      window.open(`https://classmatebe-final.onrender.com/auth/facebook`, "_self");
+    } catch (error) {
+      console.log(error);
     }
-  }
+  };
 
   const [showPassword, setShowPassword] = useState(false);
 
@@ -77,7 +79,6 @@ export default function SignIn() {
   const handleMouseDownPassword = (event) => {
     event.preventDefault();
   };
-
 
   return (
     <Box
@@ -92,7 +93,7 @@ export default function SignIn() {
         backgroundSize: "100% 100%",
         backgroundPosition: "center",
         justifyContent: "center",
-        display: "flex"
+        display: "flex",
       }}
     >
       <CssBaseline />
@@ -116,37 +117,76 @@ export default function SignIn() {
           sx={{
             display: {
               xs: "none",
-              lg: "block"
+              lg: "block",
             },
-           
           }}
         >
-          <Box sx={{
-            height: "100%",
-            display: "flex",
-            alignItems: "center",
-          }} >
-            <img alt="login" src="/assets/log-in-2.png" 
-            style={{
-              width: "100%"
+          <Box
+            sx={{
+              height: "100%",
+              display: "flex",
+              alignItems: "center",
             }}
+          >
+            <img
+              alt="login"
+              src="/assets/log-in-2.png"
+              style={{
+                width: "100%",
+              }}
             />
           </Box>
         </Grid>
 
-        <Grid item xs={12} sm={8} md={6} sx={{ width: {xs: "100%", lg: "auto"}, display: "flex", flexDirection: "column", alignItems: "center"}}>
-          <Box height="20%" sx={{ mt: 2, ml: 0, display: "flex", alignItems: "center",flexDirection: {xs: "column", lg: "row"}, justifyContent: "center", width: {xs: "100%", lg: "auto"} }}>
-            <AppName sx={{height: "100%"}} />
-            <Divider sx={{ mt: 3, mb: 3, mx:2, width: "20%", display: { xs: "none", lg: "flex" }  }} />
-            <Typography sx={{fontSize: "16px", width: {xs: "50%", lg: "100%"}, textAlign: {xs: "center", lg: "right"}}} >
-                {"Don't have an account ?"}
-                {
-                  <NavLink to="/sign-up" variant="body2">
-                    {" "}
-                    Sign Up
-                  </NavLink>
-                }
-              </Typography>
+        <Grid
+          item
+          xs={12}
+          sm={8}
+          md={6}
+          sx={{
+            width: { xs: "100%", lg: "auto" },
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+          }}
+        >
+          <Box
+            height="20%"
+            sx={{
+              mt: 2,
+              ml: 0,
+              display: "flex",
+              alignItems: "center",
+              flexDirection: { xs: "column", lg: "row" },
+              justifyContent: "center",
+              width: { xs: "100%", lg: "auto" },
+            }}
+          >
+            <AppName sx={{ height: "100%" }} />
+            <Divider
+              sx={{
+                mt: 3,
+                mb: 3,
+                mx: 2,
+                width: "20%",
+                display: { xs: "none", lg: "flex" },
+              }}
+            />
+            <Typography
+              sx={{
+                fontSize: "16px",
+                width: { xs: "50%", lg: "100%" },
+                textAlign: { xs: "center", lg: "right" },
+              }}
+            >
+              {"Don't have an account ?"}
+              {
+                <NavLink to="/sign-up" variant="body2">
+                  {" "}
+                  Sign Up
+                </NavLink>
+              }
+            </Typography>
           </Box>
           <Box
             sx={{
@@ -166,13 +206,18 @@ export default function SignIn() {
               component="form"
               noValidate
               onSubmit={handleSubmit}
-              sx={{ mt: 1, width: {xs: "80%", sm: "100%"} }}
+              sx={{ mt: 1, width: { xs: "80%", sm: "100%" } }}
             >
-              <Grid container spacing={1} sx={{justifyContent: "center"}}>
-                <Grid item xs={10} sx={{mx: 10}}>
+              <Grid container spacing={1} sx={{ justifyContent: "center" }}>
+                <Grid item xs={10} sx={{ mx: 10 }}>
                   <TextField
-                    InputProps={{ sx: { borderRadius: 10, paddingLeft: "20px",
-                    paddingRight: "20px", } }}
+                    InputProps={{
+                      sx: {
+                        borderRadius: 10,
+                        paddingLeft: "20px",
+                        paddingRight: "20px",
+                      },
+                    }}
                     margin="normal"
                     required
                     fullWidth
@@ -184,13 +229,13 @@ export default function SignIn() {
                     onChange={(e) => handleValidation(e)}
                     error={!valid}
                     value={email}
-                    helperText={!valid ? 'Invalid Format' : ' '}
+                    helperText={!valid ? "Invalid Format" : " "}
                     InputLabelProps={{
                       style: { marginLeft: "5px", marginRight: "5px" },
                     }}
                   />
                 </Grid>
-                <Grid item xs={10} sx={{mx: 10}}>
+                <Grid item xs={10} sx={{ mx: 10 }}>
                   {/* <TextField
                         InputProps={{ sx: { borderRadius: 10 } }}
                         margin="normal"
@@ -203,16 +248,19 @@ export default function SignIn() {
                         autoComplete="current-password"
                       /> */}
                   <FormControl fullWidth required variant="outlined">
-                    <InputLabel htmlFor="outlined-adornment-password" 
-                    sx={{
-                      marginLeft: "5px", marginRight: "5px"
-                    }}
+                    <InputLabel
+                      htmlFor="outlined-adornment-password"
+                      sx={{
+                        marginLeft: "5px",
+                        marginRight: "5px",
+                      }}
                     >
                       Password
                     </InputLabel>
                     <OutlinedInput
                       name="password"
-                      sx={{ borderRadius: 10,
+                      sx={{
+                        borderRadius: 10,
                         paddingLeft: "20px",
                         paddingRight: "20px",
                       }}
@@ -235,58 +283,102 @@ export default function SignIn() {
                   </FormControl>
                 </Grid>
               </Grid>
-              <Box sx={{display: "flex", justifyContent: "center"}}>
-              <Box sx={{ display: "flex", justifyContent: "space-between", width: "70%", my: 2, p: 1}}>
-                <FormControlLabel
-                  control={
-                    <Checkbox
-                      value="remember-me"
-                      id="remember-me"
-                      color="primary"
-                      name="remember-me"
-                    />
-                  }
-                  label="Remember me"
-                />
-                <NavLink to="/forgot-password" variant="body2" >
-                Forgot Password?
+              <Box sx={{ display: "flex", justifyContent: "center" }}>
+                <Box
+                  sx={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    width: "70%",
+                    my: 2,
+                    p: 1,
+                  }}
+                >
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        value="remember-me"
+                        id="remember-me"
+                        color="primary"
+                        name="remember-me"
+                      />
+                    }
+                    label="Remember me"
+                  />
+                  <NavLink to="/forgot-password" variant="body2">
+                    Forgot Password?
                   </NavLink>
+                </Box>
               </Box>
-              </Box>
-              <Box sx={{ display: "flex", justifyContent: "center", p: {xs: 2, sm: 0}}}>
-              <Button
-                type="submit"
-                fullWidth
-                variant="contained"
-                sx={{  mb: 2, borderRadius: 4, color: "white",
-                  width: "70%"
-              }}
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "center",
+                  p: { xs: 2, sm: 0 },
+                }}
               >
-                Sign In
-              </Button>
+                <Button
+                  type="submit"
+                  fullWidth
+                  variant="contained"
+                  sx={{ mb: 2, borderRadius: 4, color: "white", width: "70%" }}
+                >
+                  Sign In
+                </Button>
               </Box>
               {/* <Copyright sx={{ mt: 5 }} /> */}
               <Typography component="p" variant="p" color="red">
                 {errorMessage}
               </Typography>
 
-              <Box
-                sx={{ justifyContent: "center" }}
-              >
-               <Divider sx={{width: "100%", px: 20, display: "flex", justifyContent: "center", alignItems: "center"}}>
-                or sign in with
-               </Divider>
+              <Box sx={{ justifyContent: "center" }}>
+                <Divider
+                  sx={{
+                    width: "100%",
+                    px: 20,
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  or sign in with
+                </Divider>
                 <Box
                   sx={{
                     justifyContent: "center",
-                    display: "flex"
+                    display: "flex",
                   }}
                 >
-                  <IconButton onClick={loginWithFaceBook} sx={{ border: 1, width: "35px", height: "35px", p: 0, m: 1 }}>
-                    <img src="/assets/log-in-fb.svg" width="100%" />
+                  <IconButton
+                    onClick={loginWithFaceBook}
+                    sx={{
+                      border: 1,
+                      width: "35px",
+                      height: "35px",
+                      p: 0,
+                      m: 1,
+                    }}
+                  >
+                    <img
+                      alt="log-in-fb-btn"
+                      src="/assets/log-in-fb.svg"
+                      width="100%"
+                    />
                   </IconButton>
-                  <IconButton onClick={loginWithGoogle} sx={{ border: 1, width: "35px", height: "35px", p: 0, m: 1 }}>
-                    <img src="/assets/log-in-gg.svg" width="100%" />
+                  <IconButton
+                    onClick={loginWithGoogle}
+                    sx={{
+                      border: 1,
+                      width: "35px",
+                      height: "35px",
+                      p: 0,
+                      m: 1,
+                    }}
+                  >
+                    <img
+                      alt="log-in-gg-btn"
+                      src="/assets/log-in-gg.svg"
+                      width="100%"
+                    />
                   </IconButton>
                 </Box>
               </Box>

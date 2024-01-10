@@ -3,9 +3,6 @@ import { useNavigate } from "react-router-dom";
 import { useLocalStorage } from "./useLocalStorage";
 import axios from "axios";
 import { toast } from "react-toastify";
-import { Email } from "@mui/icons-material";
-import { replace, set } from "lodash";
-import useFetchProfile from "./useUserProfile";
 import useSWR from "swr";
 
 const AuthContext = createContext();
@@ -33,7 +30,7 @@ export const AuthProvider = ({ children }) => {
       });
   };
 
-  useSWR("http://localhost:3001/auth/profile", fetcher);
+  useSWR("https://classmatebe-final.onrender.com/auth/profile", fetcher);
 
   const [tempEmail, setTempEmail] = useLocalStorage(
     "tempEmail",
@@ -93,7 +90,7 @@ export const AuthProvider = ({ children }) => {
   const login = async (form) => {
     try {
       const response = await axios.post(
-        "http://localhost:3001/auth/signIn",
+        "https://classmatebe-final.onrender.com/auth/signIn",
         form
       );
       const token = response.data;

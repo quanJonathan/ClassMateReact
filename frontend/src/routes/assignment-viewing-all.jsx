@@ -25,7 +25,7 @@ import GradeScaleDialog from "../components/GradeScaleDialog";
 
 export const AssignmentViewingAllMain = () => {
   const { user } = useAuth();
-  const { id, homeworkId } = useParams();
+  const { id } = useParams();
   const [open, setOpen] = useState(false);
 
   const { course, members, teachers, isLoading, isError } = useClass();

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, lazy, Suspense } from "react";
 import {
   Box,
   styled,
@@ -16,7 +16,7 @@ import {
   useMediaQuery,
   Link,
   Typography,
-  Badge,
+  Badge  
 } from "@mui/material";
 import MuiDrawer from "@mui/material/Drawer";
 import MuiAppBar from "@mui/material/AppBar";
@@ -26,7 +26,6 @@ import {
   Menu as MenuIcon,
   ChevronLeft,
   ChevronRight,
-  AccountCircle,
   Add,
   NavigateNext,
   Settings,
@@ -37,24 +36,20 @@ import { useAuth } from "../hook/useAuth.jsx";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import SubMenu from "./Submenu.jsx";
 import { useSideNavGenerator } from "../helpers/sideNavGenerator";
-import { Stack } from "@mui/system";
-import CourseContent from "../components/CourseContent.jsx";
 import OptionMenu from "./OptionMenu.jsx";
-import FullScreenDialog from "./FullScreenDialog.jsx";
 import { stringAvatar } from "../helpers/stringAvator";
-import axios from "axios";
-import AssignmentViewingDetails from "../routes/assignment-viewing-details.jsx";
-import AssignmentViewingAll, {
-  AssignmentViewingAllMain,
-} from "../routes/assignment-viewing-all.jsx";
-import AddPeopleDialog from "./AddPeopleDialog.jsx";
+import CourseContent from '../components/CourseContent.jsx'
+import { AssignmentViewingAllMain } from "../routes/assignment-viewing-all.jsx";
 import CreateClassDialog from "./CreateClassDialog.jsx";
 import { AssignmentViewingDetailsMain } from "../routes/assignment-viewing-details.jsx";
 import { useIsTeacher } from "../helpers/getCurrentRole.jsx";
-import SettingDialog from "./SettingDialog.jsx";
 import OutsideClickHandler from "react-outside-click-handler";
 import NotificationDropdown from "./NotificationDropdown.jsx";
 import { useNotification } from "../hook/useNotification.jsx";
+import Spinner from "./spinner.jsx";
+
+const FullScreenDialog = lazy(() => import("./FullScreenDialog.jsx"));
+const SettingDialog = lazy(() => import("./SettingDialog.jsx"));
 
 const drawerWidth = 330;
 const openedMixin = (theme) => ({
@@ -146,7 +141,7 @@ export default function MiniDrawer({ children, page }) {
   // console.log(location)
   const navigate = useNavigate();
   const [isNotificationClick, setNotificationClick] = useState(false);
-  
+
   const handleNotiMouseClick = () => {
     setNotificationClick(!isNotificationClick);
   };
@@ -237,20 +232,23 @@ export default function MiniDrawer({ children, page }) {
   return (
     <>
       <CssBaseline />
-      <FullScreenDialog
-        open={isDialogJoinOpen}
-        handleClose={() => setDialogJoinOpen(false)}
-      />
-      <CreateClassDialog
-        isOpen={isDialogAddOpen}
-        handleClose={() => setDialogAddOpen(false)}
-      />
-      <SettingDialog
-        open={isDialogOpen}
-        handleClose={() => setDialogOpen(false)}
-        compositions={children?.compositions}
-        defaultValue={getGradeScaleLeft()}
-      />
+      <Suspense fallback={<Spinner />}>
+        <FullScreenDialog
+          open={isDialogJoinOpen}
+          handleClose={() => setDialogJoinOpen(false)}
+        />
+        <CreateClassDialog
+          isOpen={isDialogAddOpen}
+          handleClose={() => setDialogAddOpen(false)}
+        />
+        <SettingDialog
+          open={isDialogOpen}
+          handleClose={() => setDialogOpen(false)}
+          compositions={children?.compositions}
+          defaultValue={getGradeScaleLeft()}
+        />
+      </Suspense>
+
       <AppBar
         position={true ? "fixed" : "absolute"}
         elevation={0}
@@ -343,12 +341,10 @@ export default function MiniDrawer({ children, page }) {
               {isAuthenticated() && (
                 <>
                   {location.pathname === "/dashboard" && (
-                    <>
-                      <OptionMenu
-                        options={options}
-                        actionIcon={<Add sx={{ width: 30, height: 30 }} />}
-                      />
-                    </>
+                    <OptionMenu
+                      options={options}
+                      actionIcon={<Add sx={{ width: 30, height: 30 }} />}
+                    />
                   )}
                   <Badge
                     badgeContent={notifications?.length}

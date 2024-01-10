@@ -20,11 +20,11 @@ import {
 } from "@mui/material";
 import {
   Close,
+  EmailOutlined,
   PeopleAltRounded,
   SendOutlined,
   Settings,
 } from "@mui/icons-material";
-import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined";
 import { alpha } from "@mui/material/styles";
 import PropTypes from "prop-types";
 import { useState } from "react";
@@ -89,11 +89,9 @@ const StudentHomeworkPage = ({ course, homeworkId }) => {
     gradeReviews
   );
 
-  // console.log(homework);
   const doneMembers = homework?.doneMembers;
-  // console.log(doneMembers);
+
   const getData = (data) => {
-    // console.log(data);
     setCurrentStudent(data);
     setComment("");
   };
@@ -104,7 +102,7 @@ const StudentHomeworkPage = ({ course, homeworkId }) => {
     console.log("sending");
     try {
       const response = await axios.post(
-        `http://localhost:3001/gradeReview/${currentStudent?.gradeReview?._id}/comment`,
+        `https://classmatebe-final.onrender.com/gradeReview/${currentStudent?.gradeReview?._id}/comment`,
         {
           comment: {
             role: "3000",
@@ -154,7 +152,7 @@ const StudentHomeworkPage = ({ course, homeworkId }) => {
         <Stack flexDirection="row">
           <Button variant="contained">Return homework</Button>
           <IconButton sx={{ ml: 4 }}>
-            <EmailOutlinedIcon sx={{ height: 30, width: 30 }} />
+            <EmailOutlined sx={{ height: 30, width: 30 }} />
           </IconButton>
         </Stack>
         <OptionMenu actionIcon={<Settings sx={{ height: 30, width: 30 }} />} />

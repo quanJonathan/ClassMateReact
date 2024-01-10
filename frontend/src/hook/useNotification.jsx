@@ -16,7 +16,7 @@ export function useNotification() {
       .then((res) => res.data);
 
   const { data, isLoading, error } = useSWR(
-    `http://localhost:3001/notification/u/${user?._id}`,
+    `https://classmatebe-final.onrender.com/notification/u/${user?._id}`,
     fetcher
   );
   return {

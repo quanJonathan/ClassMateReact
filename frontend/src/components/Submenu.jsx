@@ -4,11 +4,9 @@ import {
   Icon,
   IconButton,
   Typography,
-  Box,
   ListItemButton,
-  Divider,
 } from "@mui/material";
-import React, { useState } from "react";
+import { useState } from "react";
 import { Link, useLocation, useParams } from "react-router-dom";
 import styled from "styled-components";
 
@@ -35,7 +33,6 @@ const DropdownLink = styled(Link)`
 
 const SubMenu = ({ item, open }) => {
   const [subnav, setSubnav] = useState(open);
-  const location = useLocation();
   const { id } = useParams();
 
   const showSubnav = () => setSubnav(!subnav);
@@ -44,7 +41,7 @@ const SubMenu = ({ item, open }) => {
     <>
       <CssBaseline />
       <ListItemButton
-        key={item?._path}
+        key={item?.path}
         sx={{
           borderTopRightRadius: "32px",
           borderBottomRightRadius: "32px",
@@ -68,7 +65,7 @@ const SubMenu = ({ item, open }) => {
               justifyContent: "center",
             }}
           >
-            {item.icon}
+            {item?.icon}
           </Icon>
           <Typography
             sx={{
@@ -78,30 +75,30 @@ const SubMenu = ({ item, open }) => {
               overflow: "hidden",
             }}
           >
-            {item.title}
+            {item?.title}
           </Typography>
-          {item.subNav && (
+          {item?.subNav && (
             <Icon onClick={showSubnav}>
-              {subnav ? item.iconOpened : item.iconClosed}
+              {subnav ? item?.iconOpened : item?.iconClosed}
             </Icon>
           )}
         </SidebarLink>
       </ListItemButton>
 
       {subnav &&
-        item.subNav?.map((item, index) => {
+        item?.subNav?.map((item, index) => {
           return (
             <DropdownLink
-              to={item.path}
+              to={item?.path}
               onClick={showSubnav}
-              selected={item.path.includes(id)}
+              selected={item?.path?.includes(id)}
               sx={{
                 alignItems: "center",
                 display: "flex",
                 flexDirection: "column",
                 justifyContent: subnav ? "initial" : "center",
               }}
-              key={`${item.subNav}${index}`}
+              key={`${item?.subNav}${index}`}
             >
               <IconButton
                 sx={{
@@ -110,7 +107,7 @@ const SubMenu = ({ item, open }) => {
                   justifyContent: "center",
                 }}
               >
-                {item.subNav?.icon}
+                {item?.subNav?.icon}
               </IconButton>
               <Typography
                 variant="header1"
@@ -121,7 +118,7 @@ const SubMenu = ({ item, open }) => {
                   overflow: "hidden",
                 }}
               >
-                {item.title}
+                {item?.title}
               </Typography>
             </DropdownLink>
           );
