@@ -43,7 +43,7 @@ export default function StudentLayout({ course, homework }) {
 
   const handleHomework = (homework) => {
     const foundUser = homework?.doneMembers?.find(
-      (m) => m.memberId === user._id
+      (m) => m.memberId === user?._id
     );
     // console.log("homework");
     // console.log(homework);
@@ -134,7 +134,7 @@ export default function StudentLayout({ course, homework }) {
                   </Typography>
                 </Box>
                 {assignment?.doneMembers?.find(
-                  (m) => m.memberId === user._id
+                  (m) => m.memberId === user?._id
                 ) ? (
                   <Card
                     variant="outlined"
@@ -156,7 +156,7 @@ export default function StudentLayout({ course, homework }) {
               </CardContent>
             </Card>
 
-            {assignment?.doneMembers?.find((m) => m.memberId === user._id) && (
+            {assignment?.doneMembers?.find((m) => m.memberId === user?._id) && (
               <Button
                 sx={{ m: 2 }}
                 fullWidth

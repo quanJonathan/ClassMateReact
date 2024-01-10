@@ -31,7 +31,7 @@ export class NotificationController {
   @Get('/u/:userId')
   @UseGuards(RefreshTokenGuard)
   async getByUserId(@Param() params: any){
-    return this.notificationService.getAllUserNotification(params.userId);
+    return await this.notificationService.getAllUserNotification(params.userId);
   }
 
 

@@ -13,6 +13,7 @@ export const ProtectedLayout = () => {
     if (!token) {
       navigate("/", { replace: true });
       console.log("expired!");
+      return;
     }
     if (user && joining) {
       navigate(currentJoiningLink);

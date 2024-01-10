@@ -49,7 +49,7 @@ export const ClassPeople = (props) => {
     console.dir(studentId);
     setPersonal(true);
 
-    setUrl(`https://classmatefe-final.onrender.com/activateEmptyAccount/${studentId}`);
+    setUrl(`http://localhost:5173/activateEmptyAccount/${studentId}`);
     sendMailForStudent();
   };
 
@@ -117,7 +117,7 @@ const Section = ({ title, data, icon, sendMailAction, createLink, course }) => {
     try {
       console.log(studentId + "check");
       await axios.post(
-        `https://classmatebe-final.onrender.com/class/removeStudent/${studentId}`,
+        `http://localhost:3001/class/removeStudent/${studentId}`,
         {
           id: course?._id,
         },

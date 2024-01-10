@@ -48,13 +48,13 @@ export default function GradeReviewDialog({ open, handleClose, assignment }) {
     } else {
       try {
         const response = await axios.post(
-          `https://classmatebe-final.onrender.com/gradeReview/add/h/${assignment?._id}`,
+          `http://localhost:3001/gradeReview/add/h/${assignment?._id}`,
           {
             gradeReview: {
               expectedGrade: expected,
               studentExplanation: explanation,
               user: [user],
-              teacherComment: [],
+              comments: [],
             },
             user: user._id,
           },
@@ -93,7 +93,7 @@ export default function GradeReviewDialog({ open, handleClose, assignment }) {
 
   const handleHomework = (homework) => {
     const foundUser = homework?.doneMembers?.find(
-      (m) => m.memberId === user._id
+      (m) => m.memberId === user?._id
     );
     // console.log("homework");
     // console.log(homework);

@@ -54,7 +54,7 @@ export default function ActivateEmptyAccount() {
   const { setTempEmail, login } = useAuth();
   const post = async (id) => {
     if (!isLoading) {
-      await axios.get(`https://classmatebe-final.onrender.com/user/get/${id}`, {
+      await axios.get(`http://localhost:3001/user/get/${id}`, {
 
       })
         .then(function (res) {
@@ -103,7 +103,7 @@ export default function ActivateEmptyAccount() {
     else {
       console.log(form);
       await axios
-        .post("https://classmatebe-final.onrender.com/user/mergeEmptyAccount", form, {
+        .post("http://localhost:3001/user/mergeEmptyAccount", form, {
 
         })
         .then(function (res) {
@@ -162,7 +162,7 @@ export default function ActivateEmptyAccount() {
   // const loginWithGoogle = async() =>{
   //   console.log('click')
   //   try{
-  //     window.open(`https://classmatebe-final.onrender.com/auth/google/${from.replaceAll('/', '@')}`, "_self");
+  //     window.open(`http://localhost:3001/auth/google/${from.replaceAll('/', '@')}`, "_self");
   //   }catch(error) {
   //     console.log(error)
   //   }
@@ -170,7 +170,7 @@ export default function ActivateEmptyAccount() {
 
   // const loginWithFaceBook = async() => {
   //   try{
-  //     window.open(`https://classmatebe-final.onrender.com/auth/facebook`, "_self");
+  //     window.open(`http://localhost:3001/auth/facebook`, "_self");
   //   }catch(error) {
   //     console.log(error)
   //   }

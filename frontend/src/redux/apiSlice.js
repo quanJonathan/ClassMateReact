@@ -1,7 +1,7 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react"
 import { setAuthTokens } from "./authSlice"
 
-const baseURL = 'https://classmatebe-final.onrender.com'
+const baseURL = 'http://localhost:3001'
 
 const baseQuery_login = fetchBaseQuery({ baseUrl: baseURL })
 

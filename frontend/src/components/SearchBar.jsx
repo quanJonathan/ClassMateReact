@@ -14,7 +14,7 @@ export const SearchBar = ({setResults}) => {
         if (!query) {
           return;
         } else {
-            const url = 'https://classmatebe-final.onrender.com/user/all';
+            const url = 'http://localhost:3001/user/all';
         
             axios.get(url)
               .then((response) => response.data) 

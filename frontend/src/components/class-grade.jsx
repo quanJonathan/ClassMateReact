@@ -63,7 +63,7 @@ const ExcelLikeTable = ({ headers, rows, course }) => {
   //   console.log("headers")
   //   console.log(headers)
   const { id } = useParams();
-  const { token } = useAuth();
+  const { token, user } = useAuth();
 
   const openModal = () => {};
 
@@ -124,7 +124,8 @@ const ExcelLikeTable = ({ headers, rows, course }) => {
   const returnHomeworks = async (homework) => {
     try {
       const response = await axios.post(
-        `https://classmatebe-final.onrender.com/class/returnHomeworks/${id}/a/${homework?.id}`,
+        `http://localhost:3001/class/returnHomeworks/${id}/a/${homework?.id}`,
+        {teacherName: user?.firstName + " " + user?.lastName},
         {
           headers: {
             Authorization: "Bearer: " + token?.refreshToken,
@@ -217,7 +218,7 @@ const CustomTableHeader = ({
       label: "Return all",
       action: () => {
         returnAllHomework(currentHomework);
-        mutate(`https://classmatebe-final.onrender.com/class/getClass/${id}`);
+        mutate(`http://localhost:3001/class/getClass/${id}`);
       },
     },
   ];
@@ -262,7 +263,7 @@ const CustomTableHeader = ({
 
       try {
         const response = await axios.post(
-          `https://classmatebe-final.onrender.com/class/updateHomeworkScore/${id}/a/${homework.id}`,
+          `http://localhost:3001/class/updateHomeworkScore/${id}/a/${homework.id}`,
           scoringDetail,
           {
             headers: {
@@ -452,7 +453,7 @@ const CustomTableBody = ({ data, rowHeaderOptions }) => {
   });
   //console.log(editedData)
 
-  const { token } = useAuth();
+  const { token, user } = useAuth();
   const { id } = useParams();
 
   const handleClose = () => {
@@ -462,11 +463,12 @@ const CustomTableBody = ({ data, rowHeaderOptions }) => {
   const returnHomework = async () => {
     try {
       const response = await axios.post(
-        `https://classmatebe-final.onrender.com/class/returnHomework/${id}/a/${
+        `http://localhost:3001/class/returnHomework/${id}/a/${
           data[hoveredCell.rowIndex].homeworks[hoveredCell.colIndex]._id
         }`,
         {
           userId: data[hoveredCell.rowIndex].user._id,
+          teacherName: user?.firstName + user?.lastName,
         },
         {
           headers: {
@@ -560,7 +562,7 @@ const CustomTableBody = ({ data, rowHeaderOptions }) => {
 
       try {
         const response = await axios.post(
-          `https://classmatebe-final.onrender.com/class/updateHomework/${id}`,
+          `http://localhost:3001/class/updateHomework/${id}`,
           updateData,
           {
             headers: {
@@ -610,7 +612,7 @@ const CustomTableBody = ({ data, rowHeaderOptions }) => {
 
     try {
       const response = await axios.post(
-        `https://classmatebe-final.onrender.com/auth/setUserStudentId`,
+        `http://localhost:3001/auth/setUserStudentId`,
         updateData,
         {
           headers: {

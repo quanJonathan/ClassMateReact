@@ -101,9 +101,15 @@ declare global {
     isDelete: boolean
   }
 
-  interface GradeReviewNotification{
+  interface CustomNotification{
     name: string,
     url: string,
+    content: string
+  }
+
+  interface Comment{
+    role: string,
+    id: ObjectId,
     content: string
   }
 

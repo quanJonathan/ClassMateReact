@@ -4,11 +4,11 @@ import useSWR from "swr";
 
 export function useGradeReview() {
   const { homeworkId } = useParams();
-  console.log(homeworkId)
+  // console.log(homeworkId)
 
   const fetcher = (url) => axios.get(url).then((res) => res.data);
   const { data, isLoading, error } = useSWR(
-    `https://classmatebe-final.onrender.com/gradeReview/h/${homeworkId}`,
+    `http://localhost:3001/gradeReview/h/${homeworkId}`,
     fetcher
   );
 

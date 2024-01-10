@@ -19,7 +19,7 @@ const role = location.pathname.split('/')[2] === 't' ? 'teacher' : 'student'
     } else {
       setJoining(false);
       setCurrentJoiningLink(null);
-      axios.post(role === 'teacher' ? `https://classmatebe-final.onrender.com/class/joinClassAsTeacher/${classId}` : `https://classmatebe-final.onrender.com/class/joinClass/${classId}`, user, {
+      axios.post(role === 'teacher' ? `http://localhost:3001/class/joinClassAsTeacher/${classId}` : `http://localhost:3001/class/joinClass/${classId}`, user, {
         headers: {
           Authorization: "Bearer " + token?.refreshToken,
         },
