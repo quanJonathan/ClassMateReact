@@ -232,8 +232,9 @@ const StudentHomeworkPage = ({ course, homeworkId }) => {
                     flexGrow: 2,
                   }}
                 >
+                  <Typography>{m?.user.studentId}</Typography>
                   <Link
-                    color="black"
+                    color="text.secondary"
                     underline="hover"
                     key={m._id}
                     sx={{
@@ -276,9 +277,10 @@ const StudentHomeworkPage = ({ course, homeworkId }) => {
             flexDirection="column"
             sx={{
               flex: 2,
-              maxHeight: "80%",
-              height: "70%",
-              p: 4,
+              maxHeight: "90%",
+              height: "75%",
+              py: 1,
+              px: 2,
               borderBottom: "1px solid #ddd",
             }}
           >
@@ -343,13 +345,6 @@ const StudentHomeworkPage = ({ course, homeworkId }) => {
                         homework?.composition?.homeworks?.length}
                       %
                     </Typography> */}
-                  </Box>
-                )}
-                <Divider sx={{ m: 2 }} />
-                {currentStudent?.gradeReview != null && (
-                  <List
-                    sx={{ maxHeight: "50%", overflowY: "auto", height: "auto" }}
-                  >
                     <ListItem
                       key={currentStudent?.gradeReview?._id}
                       sx={{ width: "100%" }}
@@ -359,17 +354,15 @@ const StudentHomeworkPage = ({ course, homeworkId }) => {
                           display: "flex",
                           flexDirection: "column",
                           justifyContent: "center",
-                          px: 2,
-                          pt: 2,
-                          width: "100%",
+                          width: "80%",
                         }}
                       >
                         <CardContent>
-                          <Typography sx={{ fontWeight: 600 }}>
+                          <Typography sx={{ fontWeight: 500 }}>
                             Expected Grade:{" "}
                             {currentStudent?.gradeReview?.expectedGrade}
                           </Typography>
-                          <Typography sx={{ fontWeight: 600, pb: 2 }}>
+                          <Typography sx={{ fontWeight: 500, pb: 2 }}>
                             Explanation
                           </Typography>
                           <Typography>
@@ -378,25 +371,68 @@ const StudentHomeworkPage = ({ course, homeworkId }) => {
                         </CardContent>
                       </Card>
                     </ListItem>
-                    {currentStudent?.gradeReview?.comments?.map((c) => (
-                      <ListItem
-                        key={c?.userId?._id}
-                        sx={{
-                          pl: c?.userId?._id == user?._id ? 60 : 0,
-                        }}
-                      >
-                        <Link underline="none" color="blue">
-                          {c?.userId?.email}
-                        </Link>
-                        <Typography sx={{ ml: 2 }}>{c?.content}</Typography>
-                      </ListItem>
-                    ))}
+                  </Box>
+                )}
+                <Divider sx={{ m: 2 }} />
+                {currentStudent?.gradeReview != null && (
+                  <List
+                    sx={{ maxHeight: "50%", overflowY: "auto", height: "auto" }}
+                  >
+                    {currentStudent?.gradeReview?.comments?.map((c) =>
+                      c?.userId?._id == user?._id ? (
+                        <ListItem
+                          key={c?.userId?._id}
+                          sx={{
+                            pl: 40,
+                            display: "flex",
+                            alignContent: "flex-end",
+                            justifyContent: "flex-end",
+                          }}
+                        >
+                          <Typography
+                            textAlign="right"
+                            sx={{
+                              wordBreak: "break-word",
+                              width: "45%",
+                              mr: 1,
+                            }}
+                          >
+                            {c?.content}
+                          </Typography>
+                          <Avatar
+                            {...stringAvatar(
+                              user
+                                ? `${user.firstName} ${user.lastName}`
+                                : "Default Name"
+                            )}
+                          />
+                        </ListItem>
+                      ) : (
+                        <ListItem
+                          alignItems="flex-start"
+                          key={c?.userId?._id}
+                          sx={{
+                            display: "flex",
+                            flexDirection: "column",
+                            alignContent: "left",
+                            justifyContent: "left",
+                          }}
+                        >
+                          <Link color="black" underline="none" fontWeight="500">
+                            {c?.userId?.email}
+                          </Link>
+                          <Typography sx={{ width: "45%" }}>
+                            {c?.content}
+                          </Typography>
+                        </ListItem>
+                      )
+                    )}
                   </List>
                 )}
               </>
             )}{" "}
             {currentStudent?.gradeReview != null && (
-              <Box sx={{ width: "100%" }}>
+              <Box sx={{ width: "100%", mt: 3 }}>
                 <div
                   style={{
                     display: "flex",

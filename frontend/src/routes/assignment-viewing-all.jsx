@@ -39,7 +39,7 @@ export const AssignmentViewingAllMain = () => {
 
   const totalPercent = calculateTotalScore(
     user,
-    course.homeworks,
+    course?.homeworks,
     course?.compositions
   );
   const homeworks = course?.homeworks;

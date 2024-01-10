@@ -87,7 +87,7 @@ export class GradeReviewService {
 
   async addNewComment(_id: ObjectId, comment: Comment) {
     const gradeReview = await this.gradeReviewModel.findById(_id).populate({
-      path: 'homeworkId',
+      path: 'homeWorkId',
       select: 'name',
     });
     const foundUser = await this.userModel.findById(comment.id);

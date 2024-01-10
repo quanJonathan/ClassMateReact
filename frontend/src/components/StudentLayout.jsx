@@ -155,7 +155,7 @@ export default function StudentLayout({ course, homework }) {
             </Typography>
           </Box>
 
-          <Box sx={{ width: "100%", mt: 10, ml: 0 }}>
+          <Box sx={{ width: "100%", mt: 10 }}>
             <div
               style={{
                 display: "flex",
