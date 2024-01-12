@@ -59,3 +59,4 @@ lerna-debug.log*
 !.vscode/launch.json
 !.vscode/extensions.json
 >>>>>>> Stashed changes
+.vscode/tasks.json

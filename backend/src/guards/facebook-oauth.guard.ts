@@ -2,11 +2,10 @@
 import {
   ExecutionContext,
   Injectable,
-  UnauthorizedException,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { AuthGuard, IAuthModuleOptions } from '@nestjs/passport';
-import { Request, Response } from 'express';
+import { AuthGuard } from '@nestjs/passport';
+import { Request } from 'express';
 
 @Injectable()
 export class FacebookOAuthGuard extends AuthGuard('facebook') {

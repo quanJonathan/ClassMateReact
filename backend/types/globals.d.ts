@@ -1,5 +1,8 @@
 /* eslint-disable prettier/prettier */
+import { ObjectId, mongo } from 'mongoose';
 import { authTypeEnum } from 'src/enum/authType.enum';
+import { gradingStateEnum } from 'src/enum/gradeState';
+import { Homework } from 'src/model/homework.schema';
 import {User as UserEntity } from 'src/user/model/user.schema'
 /* eslint-disable prettier/prettier */
 declare global {
@@ -32,6 +35,7 @@ declare global {
     photo: string;
     accessToken?: string;
     refreshToken?: string;
+    studentId?: string;
   }
 
   interface IFaceBookUser{
@@ -43,6 +47,7 @@ declare global {
     photo: string;
     accessToken: string;
     refreshToken: string;
+    studentId: string;
   }
 
   namespace Express {
@@ -60,6 +65,54 @@ declare global {
     accessToken: string;
     refreshToken: string;
   }
+
+  interface MailUser{
+    memberId: ObjectId | User;
+    score: number;
+    state: string;
+  }
+
+  interface MailHomework{
+    state: string;
+    maxScore: number;
+    name: string;
+  }
+
+  interface Student{
+    studentId: string,
+    fullName: string,
+    _id: ObjectId
+  }
+
+  interface UpdateHomework{
+    _id: ObjectId,
+    memberId: ObjectId,
+    score: number,
+    state: gradingStateEnum,
+    studentId: string
+  }
+
+  interface UpdateGradeComposition{
+    _id: mongoose.Schema.Types.ObjectId,
+    courseId: Class,
+    gradeScale: number,
+    name: string,
+    homework: Homework[],
+    isDelete: boolean
+  }
+
+  interface CustomNotification{
+    name: string,
+    url: string,
+    content: string
+  }
+
+  interface Comment{
+    role: string,
+    id: ObjectId,
+    content: string
+  }
+
 }
 
 export {};

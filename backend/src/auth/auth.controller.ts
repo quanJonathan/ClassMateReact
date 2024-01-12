@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import {
   Body,
   Controller,
@@ -8,6 +9,7 @@ import {
   Res,
   UseGuards,
   Query,
+  Param,
   UnauthorizedException,
 } from '@nestjs/common';
 import { GoogleOAuthGuard } from '../guards/google-oauth.guard';
@@ -24,6 +26,7 @@ import { FacebookOAuthGuard } from 'src/guards/facebook-oauth.guard';
 import { AuthGuard } from '@nestjs/passport';
 
 import { EmailConfirmationService } from 'src/email/emailConfirmation.service';
+import { RolesGuard } from 'src/authorization/roles.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -40,13 +43,13 @@ export class AuthController {
   @Get('google-redirect')
   @UseGuards(GoogleOAuthGuard)
   async googleAuthRedirect(@Req() req: Request, @Res() res: Response) {
-    console.log(req.user);
+   // console.log(req.user);
     const auth = await this.authService.login(req.user as User);
-    console.log('from ' + req.params.from);
-    console.log('accessToken of google ' + auth.accessToken);
-    console.log('refreshToken ' + auth.refreshToken);
+    //console.log('from ' + req.params.from);
+    //console.log('accessToken of google ' + auth.accessToken);
+    //console.log('refreshToken ' + auth.refreshToken);
     res.redirect(
-      `http://localhost:5173/google-oauth-success-redirect/${auth.accessToken}/${auth.refreshToken}${req.params.from}`,
+      `https://classmatefe-final.onrender.com/google-oauth-success-redirect/${auth.accessToken}/${auth.refreshToken}${req.params.from}`,
     );
   }
 
@@ -58,13 +61,13 @@ export class AuthController {
   @UseGuards(FacebookOAuthGuard)
   async facebookAuthRedirect(@Req() req: Request, @Res() res: Response) {
     // console.log(req.user);
-    console.log(req);
+    //console.log(req);
     const auth = await this.authService.login(req.user as User);
-    console.log('from ' + req.params.from);
-    console.log('accessToken of facebook ' + auth.accessToken);
-    console.log('refreshToken ' + auth.refreshToken);
+    //console.log('from ' + req.params.from);
+    //console.log('accessToken of facebook ' + auth.accessToken);
+    //console.log('refreshToken ' + auth.refreshToken);
     res.redirect(
-      `http://localhost:5173/facebook-oauth-success-redirect/${auth.accessToken}/${auth.refreshToken}${req.params.from}`,
+      `https://classmatefe-final.onrender.com/facebook-oauth-success-redirect/${auth.accessToken}/${auth.refreshToken}${req.params.from}`,
     );
   }
 
@@ -100,6 +103,16 @@ export class AuthController {
     });
   }
 
+  @Post('activateEmptyAccount/update')
+  async activateEmptyAccount(@Res() response, @Body() user: User) {
+    const newUSer = this.authService.localSignUp(user);
+    await this.emailConfirmationService.sendVerificationLink(user);
+    return response.status(HttpStatus.CREATED).json({
+      token: newUSer,
+      email: user.email
+    });
+  }
+
   @Post('signIn')
   @UseGuards(LocalAuthGuard)
   async SignIn(@Req() req) {
@@ -111,7 +124,7 @@ export class AuthController {
     const user = await this.authService.checkUserExist(body.email);
 
     if (user) {
-      console.log(user);
+      //console.log(user);
       const sendEmail =
         await this.emailConfirmationService.sendResetPasswordLink(user);
       if (sendEmail) {
@@ -121,6 +134,33 @@ export class AuthController {
       }
     }
   }
+
+  @Post('/joinClassByEmail/:classId')
+  @UseGuards(RefreshTokenGuard)
+  async JoinClassByEmail(@Res() response, @Body() body: { email: string,url: string }, @Param() params: any) {
+    try {
+      const user = await this.authService.checkUserExist(body.email);
+
+      if (user) {
+        await this.emailConfirmationService.sendJoinClassLink(user, body.url, params.classId);
+
+        return response.status(HttpStatus.ACCEPTED).json({
+          message: 'Email sent successfully.',
+        });
+      } else {
+        return response.status(HttpStatus.NOT_FOUND).json({
+          message: 'User not found.',
+        });
+      }
+    } catch (error) {
+      console.error('Error sending email:', error);
+
+      return response.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
+        message: 'Failed to send email.',
+      });
+    }
+  }
+
 
   @Post('reset-password')
   async ResetPassword(
@@ -157,8 +197,17 @@ export class AuthController {
   @Post('profile/update')
   @UseGuards(RefreshTokenGuard)
   async updateData(@Res() response, @Body() user: User) {
+    // console.log(user)
     const result = await this.userService.update(user);
-    console.log(result);
+    // console.log(result);
+    return response.status(HttpStatus.ACCEPTED).json(result);
+  }
+
+  @Post('setUserStudentId')
+  @UseGuards(RefreshTokenGuard)
+  async setStudentId(@Res() response, @Body() student: Student){
+    // console.log(student)
+    const result = await this.userService.setUserStudentId(student);
     return response.status(HttpStatus.ACCEPTED).json(result);
   }
 }

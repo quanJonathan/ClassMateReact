@@ -1,60 +1,50 @@
 import { Box, Button, Divider, Typography, styled } from "@mui/material";
-import React, { useEffect, useState } from "react";
-import CourseCard from "./CourseCard";
 import { useAuth } from "../hook/useAuth";
+import ClassCard from "./ClassCard";
 
 export default function HomeContent() {
-  const { user, readFromStorage } = useAuth();
-  console.log(user?.firstName);
+  const { user } = useAuth();
 
-  // const [isLoading, setLoading] = useState(true);
-  // useEffect(() => {
-  //   if (user) {
-  //     setLoading(false);
-  //   }else{
-  //     readFromStorage()
-  //   }
-  // }, [isLoading, user]);
-  const courses = [
-    {
-      id: "1",
-      img: "/assets/writing.jpg",
-      title: "Creative Writing",
-      description:
-        "Lorem ipsum dolor sit amet, in sed integer. Scelerisque nam evget imperdiet accumsan, ipsum  turpis cursus. In elit amet, tortor nunc.",
-    },
+  // const courses = [
+  //   {
+  //     id: "1",
+  //     img: "/assets/writing.jpg",
+  //     title: "Creative Writing",
+  //     description:
+  //       "Lorem ipsum dolor sit amet, in sed integer. Scelerisque nam evget imperdiet accumsan, ipsum  turpis cursus. In elit amet, tortor nunc.",
+  //   },
 
-    {
-      id: "2",
-      img: "/assets/webdev.jpg",
-      title: "Web Development",
-      description:
-        "Lorem ipsum dolor sit amet, in sed integer. Scelerisque nam evget imperdiet accumsan, ipsum  turpis cursus. In elit amet, tortor nunc.",
-    },
+  //   {
+  //     id: "2",
+  //     img: "/assets/webdev.jpg",
+  //     title: "Web Development",
+  //     description:
+  //       "Lorem ipsum dolor sit amet, in sed integer. Scelerisque nam evget imperdiet accumsan, ipsum  turpis cursus. In elit amet, tortor nunc.",
+  //   },
 
-    {
-      id: "3",
-      img: "/assets/graphic.jpg",
-      title: "Graphic Design",
-      description:
-        "Lorem ipsum dolor sit amet, in sed integer. Scelerisque nam evget imperdiet accumsan, ipsum  turpis cursus. In elit amet, tortor nunc.",
-    },
-    {
-      id: "4",
-      img: "/assets/writing.jpg",
-      title: "Creative Writing",
-      description:
-        "Lorem ipsum dolor sit amet, in sed integer. Scelerisque nam evget imperdiet accumsan, ipsum  turpis cursus. In elit amet, tortor nunc.",
-    },
+  //   {
+  //     id: "3",
+  //     img: "/assets/graphic.jpg",
+  //     title: "Graphic Design",
+  //     description:
+  //       "Lorem ipsum dolor sit amet, in sed integer. Scelerisque nam evget imperdiet accumsan, ipsum  turpis cursus. In elit amet, tortor nunc.",
+  //   },
+  //   {
+  //     id: "4",
+  //     img: "/assets/writing.jpg",
+  //     title: "Creative Writing",
+  //     description:
+  //       "Lorem ipsum dolor sit amet, in sed integer. Scelerisque nam evget imperdiet accumsan, ipsum  turpis cursus. In elit amet, tortor nunc.",
+  //   },
 
-    {
-      id: "5",
-      img: "/assets/webdev.jpg",
-      title: "Web Development",
-      description:
-        "Lorem ipsum dolor sit amet, in sed integer. Scelerisque nam evget imperdiet accumsan, ipsum  turpis cursus. In elit amet, tortor nunc.",
-    },
-  ];
+  //   {
+  //     id: "5",
+  //     img: "/assets/webdev.jpg",
+  //     title: "Web Development",
+  //     description:
+  //       "Lorem ipsum dolor sit amet, in sed integer. Scelerisque nam evget imperdiet accumsan, ipsum  turpis cursus. In elit amet, tortor nunc.",
+  //   },
+  // ];
 
   const CustomBox = styled(Box)(({ theme }) => ({
     display: "flex",
@@ -92,6 +82,12 @@ export default function HomeContent() {
     [theme.breakpoints.down("md")]: {
       width: "100%",
     },
+    [theme.breakpoints.down("sm")]: {
+      width: "100%",
+      flexDirection: "column",
+      justifyContent: "flex-start",
+      alignContent: "flex-start",
+    },
     display: "flex",
   }));
 
@@ -100,25 +96,25 @@ export default function HomeContent() {
       {/* {isLoading ? (
         <Typography>Loading</Typography>
       ) : ( */}
-        <CustomBox>
-          <Box
+      <CustomBox>
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "row",
+            alignItems: "center",
+          }}
+        >
+          <Typography variant="h4">Hello, {user?.firstName || ""}</Typography>
+          <Divider
             sx={{
-              display: "flex",
-              flexDirection: "row",
-              alignItems: "center",
+              ml: 2,
+              mr: 2,
+              display: { xs: "none", md: "flex" },
+              width: "50%",
             }}
-          >
-            <Typography variant="h4">Hello, {user?.firstName || ""}</Typography>
-            <Divider
-              sx={{
-                ml: 2,
-                mr: 2,
-                display: { xs: "none", md: "flex" },
-                width: "50%",
-              }}
-            ></Divider>
-          </Box>
-          <Typography
+          ></Divider>
+        </Box>
+        {/* <Typography
             variant="body2"
             sx={{
               fontSize: "16px",
@@ -127,19 +123,15 @@ export default function HomeContent() {
             }}
           >
             Recent Courses
-          </Typography>
+          </Typography> */}
 
-          <CourseBoxes>
-            {courses.map((course) => (
-              <CourseCard
-                key={course.id}
-                item={course}
-                courseWidth={200}
-                courseHeight={300}
-              />
-            ))}
-          </CourseBoxes>
-          <Box
+        <CourseBoxes>
+          {user?.classes?.map((course) => (
+            <ClassCard key={course?.classId?._id} item={course} user={user} />
+          ))}
+        </CourseBoxes>
+      </CustomBox>
+      {/* <Box
             sx={{
               justifyContent: "center",
               display: "flex",
@@ -176,7 +168,7 @@ export default function HomeContent() {
           >
             <CustomButton variant="contained">View More</CustomButton>
           </Box>
-        </CustomBox>
+        </CustomBox> */}
       {/* )} */}
     </>
   );

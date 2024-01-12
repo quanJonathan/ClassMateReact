@@ -77,7 +77,7 @@ export class AuthService {
   async facebookUserValidate(
     facebookUser: IFaceBookUser
     ): Promise<Partial<User> | null> {
-      console.log(facebookUser.email)
+      //console.log(facebookUser.email)
       const [user] = await this.userService.findByEmail(facebookUser?.email);
       if (!user) {
         const newUser = await this.userService.createUserWithFacebook(facebookUser);
@@ -98,7 +98,7 @@ export class AuthService {
   async googleUserValidate(
     googleUser: IGoogleUser,
   ): Promise<Partial<User> | null> {
-    console.log(googleUser.email)
+    //console.log(googleUser.email)
     const [user] = await this.userService.findByEmail(googleUser?.email);
     if (!user) {
       const newUser = await this.userService.createUserWithGoogle(googleUser);
@@ -128,6 +128,25 @@ export class AuthService {
       tokens.refreshToken,
     );
     return tokens;
+  }
+
+  async adminSignUp(user: User) {
+    try {
+    const newUser = await this.userService.createUserByAdmin(user);
+    const tokens = await this.getTokens(
+      newUser.email,
+      authTypeEnum[newUser.provider],
+    );
+    await this.updateRefreshToken(
+      newUser.email,
+      authTypeEnum[newUser.provider],
+      tokens.refreshToken,
+    );
+    return tokens;
+    } catch(BadRequestException) {
+      // console.log('error created')
+      return 'error';
+    }
   }
 
   async login(user: User): Promise<IJWTTokensPair> {
@@ -167,7 +186,7 @@ export class AuthService {
   ): Promise<IJWTTokensPair> {
     //console.log(id);
     const payload = { email: email, provider: provider };
-    console.log('payload ' + payload.email + ' ' + payload.provider);
+    //console.log('payload ' + payload.email + ' ' + payload.provider);
     const [accessToken, refreshToken] = await Promise.all([
       this.jwtService.signAsync(payload, {
         secret: this.configService.get<string>('JWT_ACCESS_SECRET'),
@@ -179,8 +198,8 @@ export class AuthService {
       }),
     ]);
 
-    console.log("accessToken " + accessToken);
-    console.log("refreshToken " + refreshToken);
+    //console.log("accessToken " + accessToken);
+    //console.log("refreshToken " + refreshToken);
 
     return {
       accessToken: accessToken,

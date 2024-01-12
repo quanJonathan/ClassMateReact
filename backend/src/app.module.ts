@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import {  Module } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { AppService } from './app.service';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
@@ -13,11 +13,17 @@ import EmailService from './email/email.service';
 import { EmailConfirmationService } from './email/emailConfirmation.service';
 import { EmailModule } from './email/email.module';
 import { JwtModule } from '@nestjs/jwt';
+import { ClassesModule } from './modules/class.module';
+import { ClassController } from './controllers/class.controller';
+import { GradeReviewController } from './controllers/grade-review.controller';
+import { GradeReviewModule } from './modules/grade-review.module';
+import { NotificationModule } from './modules/notification.module';
+import { NotificationController } from './controllers/notification.controller';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
-      isGlobal: true
+      isGlobal: true,
     }),
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', 'public'),
@@ -25,16 +31,25 @@ import { JwtModule } from '@nestjs/jwt';
     MongooseModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => ({
-        uri: configService.get<string>('MONGODB_URI')
+        uri: configService.get<string>('MONGODB_URI'),
       }),
       inject: [ConfigService],
     }),
     AuthModule,
     UsersModule,
     EmailModule,
+    ClassesModule,
+    GradeReviewModule,
+    NotificationModule,
     JwtModule.register({}),
   ],
-  controllers: [UserController, EmailConfirmationController],
+  controllers: [
+    UserController,
+    EmailConfirmationController,
+    ClassController,
+    GradeReviewController,
+    NotificationController,
+  ],
   providers: [AppService, EmailConfirmationService, EmailService],
 })
 export class AppModule {}

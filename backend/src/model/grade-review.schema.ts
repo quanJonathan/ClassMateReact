@@ -1,6 +1,8 @@
 /* eslint-disable prettier/prettier */
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import mongoose, { Document } from 'mongoose';
+import mongoose, { Document, ObjectId } from 'mongoose';
+import { Homework } from './homework.schema';
+import { User } from 'src/user/model/user.schema';
 export type GradeReviewDocument = GradeReview & Document;
 
 // Note that the classId is for shown only
@@ -8,26 +10,25 @@ export type GradeReviewDocument = GradeReview & Document;
 @Schema()
 export class GradeReview {
 
-  // the class _id field
-  @Prop({required: true})
-  classId: {type: mongoose.ObjectId, ref: 'Class'}
-  @Prop({required: true})
-  homeWorkId: {type: mongoose.ObjectId, ref: 'Homework'}
-  
-  @Prop({required: true})
-  teacherId: {type: mongoose.ObjectId, ref: 'User'}
-  @Prop({required: true})
-  studentId: {type: mongoose.ObjectId, ref: 'User'}
+  @Prop({ type: mongoose.Schema.Types.ObjectId, auto: true })
+  _id: mongoose.Types.ObjectId;
+
+  @Prop({type: mongoose.Schema.Types.ObjectId, ref: 'Homework'})
+  homeWorkId: Homework
+
+  @Prop({type: [{type: mongoose.Schema.Types.ObjectId, ref: 'User'}]})
+  user: User[]
 
   @Prop({required: true})
   studentExplanation: string
-  @Prop({required: true})
-  teacherComment: {type: string, max: 400}
 
-  @Prop()
-  expectedGrade: {type: number, min: 0, max: 10}
+  @Prop({ type: [{userId: {type: mongoose.Schema.Types.ObjectId, ref: 'User'}, content: String, role: String}]})
+  comments: {userId: User, content: string, role: string}[];
 
-  // accepted, declined, pending, finalized
+  @Prop({type: Number, min: 0, max: 10})
+  expectedGrade: number
+
+  // accepted, declined, pending
   @Prop()
   state: string
 }

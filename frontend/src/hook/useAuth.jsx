@@ -3,8 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useLocalStorage } from "./useLocalStorage";
 import axios from "axios";
 import { toast } from "react-toastify";
-import { Email } from "@mui/icons-material";
-import { set } from "lodash";
+import useSWR from "swr";
 
 const AuthContext = createContext();
 
@@ -15,27 +14,57 @@ export const AuthProvider = ({ children }) => {
     localStorage.getItem("token")
   );
 
-  const [tempEmail, setTempEmail] = useLocalStorage("tempEmail",
-  localStorage.getItem("tempEmail")
+  const [isLoading, setIsLoading] = useState(false);
+
+  const fetcher = (url) => {
+    if (!token) return;
+    axios
+      .get(url, {
+        headers: {
+          Authorization: "Bearer " + token?.refreshToken,
+        },
+      })
+      .then((res) => {
+        setUser(res.data);
+        setIsLoading(false);
+      });
+  };
+
+  useSWR("https://classmatebe-final.onrender.com/auth/profile", fetcher);
+
+  const [tempEmail, setTempEmail] = useLocalStorage(
+    "tempEmail",
+    localStorage.getItem("tempEmail")
+  );
+
+  const [joining, setJoining] = useLocalStorage("joining", false);
+
+  const [currentJoiningLink, setCurrentJoiningLink] = useLocalStorage(
+    "currentJoiningLink",
+    null
   );
 
   const navigate = useNavigate();
 
+  // const serverUrl = import.meta.env.VITE_SERVER_URL
+  //console.log(serverUrl)
+
   useEffect(() => {
     // Check if the token is expired or not present
-    //console.log(JSON.stringify(token));
-    //console.log(user);
+
     const isTokenValid = (token1) => {
-      let decodedAccessToken = '';
+      let decodedAccessToken = "";
       if (!token1) {
         return false;
       }
       try {
-        if(token1.accessToken){
-           decodedAccessToken = JSON.parse(atob(token1.accessToken.split(".")[1]));
-           if(decodedAccessToken.exp * 1000 > Date.now()){
-              token1.accessToken = ''
-           }
+        if (token1.accessToken) {
+          decodedAccessToken = JSON.parse(
+            atob(token1.accessToken.split(".")[1])
+          );
+          if (decodedAccessToken.exp * 1000 > Date.now()) {
+            token1.accessToken = "";
+          }
         }
         const decodeRefreshToken = JSON.parse(
           atob(token1.refreshToken.split(".")[1])
@@ -48,58 +77,35 @@ export const AuthProvider = ({ children }) => {
       }
     };
 
-    const fetchData = async () => {
-      console.log(token)
-      try {
-        const { data } = await axios.get("http://localhost:3001/auth/profile", {
-          headers: {
-            Authorization: "Bearer " + token.refreshToken,
-          },
-        });
-        console.log("update \n" + Object.values(data));
-        if (data) {
-          setUser(data);
-          // navigate(0);
-        }
-      } catch (exception) {
-        console.log(exception);
-      }
-    };
-
     if (user) {
       if (!isTokenValid(token)) {
-        setToken(null);
         setUser(null);
-        navigate("/", {replace: true});
-      }
-    } else {
-      if (isTokenValid(token)) {
-        console.log("fetch data");
-        fetchData();
+        setToken(null);
+        localStorage.setItem("user", null);
+        localStorage.setItem("token", null);
       }
     }
-  }, [navigate, setToken, setUser, token, user]);
-
+  }, [navigate, setToken, setUser, token?.refreshToken, user?._id]);
 
   const login = async (form) => {
     try {
       const response = await axios.post(
-        "http://localhost:3001/auth/signIn",
+        "https://classmatebe-final.onrender.com/auth/signIn",
         form
       );
       const token = response.data;
-      console.log(response)
-      console.log(Object.values(token));
+      // console.log(response);
+      // console.log(Object.values(token));
+      // console.log(token);
       if (token) {
         setToken(token);
         localStorage.setItem("token", JSON.stringify(token));
-        if (user && user.status !== 'activated') {
-          toast.error("Please Check Verification Email!");
-          navigate("/confirm-email/send",  { replace: true });
-          console.log("unactivated")
-        }
-        else {
-          toast.success("Successfully Login");
+        console.log(user);
+        setIsLoading(true);
+
+        if (joining) {
+          navigate(currentJoiningLink);
+        } else {
           navigate("/dashboard", { replace: true });
         }
       } else {
@@ -111,16 +117,13 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-
-
-
   const readFromStorage = async () => {
     setUser(localStorage.getItem("user"));
   };
 
   const updateUser = async (data) => {
-    setUser(JSON.stringify(data));
-    localStorage.setItem("user", JSON.stringify(data));
+    setUser(JSON.stringify({ ...user, data }));
+    localStorage.setItem("user", JSON.stringify({ ...user, data }));
   };
 
   const logout = async () => {
@@ -140,15 +143,34 @@ export const AuthProvider = ({ children }) => {
       token,
       setToken,
       user,
+      setIsLoading,
       login,
       logout,
       updateUser,
       isAuthenticated,
       readFromStorage,
       setTempEmail,
-      tempEmail
+      tempEmail,
+      joining,
+      isLoading,
+      setJoining,
+      currentJoiningLink,
+      setCurrentJoiningLink,
     }),
-    [token, setToken, user, isAuthenticated, setTempEmail, tempEmail]
+    [
+      token,
+      isLoading,
+      setToken,
+      joining,
+      setJoining,
+      user,
+      isAuthenticated,
+      setTempEmail,
+      tempEmail,
+      currentJoiningLink,
+      setCurrentJoiningLink,
+      setIsLoading,
+    ]
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

@@ -1,10 +1,9 @@
 import { useNavigate, useOutlet } from "react-router-dom";
 import { useAuth } from "../hook/useAuth.jsx";
 import { useEffect } from "react";
-import { toast } from "react-toastify";
 
 export const ProtectedLayout = () => {
-  const { token, user } = useAuth();
+  const { token, user, joining, currentJoiningLink, isLoading } = useAuth();
   const outlet = useOutlet();
   const navigate = useNavigate();
 
@@ -12,18 +11,19 @@ export const ProtectedLayout = () => {
   useEffect(() => {
     if (!token) {
       navigate("/", { replace: true });
-      console.log("expired!")
+      console.log("expired!");
+      return;
     }
-    if (user && user.state !== 'activated') {
-      toast.error("Please Check Verification Email!");
-      navigate("/confirm-email/send",  { replace: true });
-      console.log("unactivated")
+    if (user && joining) {
+      navigate(currentJoiningLink);
+    } else {
+      if (!isLoading && user?.state !== "activated") {
+        // toast.error("Please Check Verification Email!");
+        navigate("/confirm-email/send", { replace: true });
+        // console.log("unactivated");
+      }
     }
-  });
+  }, [user?.state, joining, token?.refreshToken, navigate, currentJoiningLink]);
 
-  return (
-    <div>
-      {outlet}
-    </div>
-  );
+  return <div>{outlet}</div>;
 };
